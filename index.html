@@ -5,287 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Painel Interativo - Fauna</title>
     
-    <style>
-        /* =========================================
-           DESIGN SYSTEM
-           ========================================= */
-        :root {
-            --cor-sucesso: #38a169;
-            --cor-card: #ffffff;
-            --fonte: system-ui, -apple-system, sans-serif;
-        }
-
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none; 
-            user-select: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: var(--fonte);
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-            color: #ffffff;
-            overflow: hidden; 
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* =========================================
-           ESTRUTURA DA TELA
-           ========================================= */
-        .tela { 
-            flex: 1;
-            padding: 30px 20px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-        }
-
-        h1 { 
-            font-size: 3rem; 
-            text-align: center; 
-            margin-bottom: 10px; 
-            font-weight: 800; 
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            color: #f1c40f;
-        }
-
-        .subtitulo {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            color: #e2e8f0;
-        }
-
-        /* =========================================
-           GRID ASSIMÉTRICO (Layout Fauna)
-           ========================================= */
-        .grid-container {
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            grid-auto-rows: 160px; /* Altura base */
-            gap: 20px; 
-            width: 100%; 
-            max-width: 1200px;
-        }
-
-        /* Classes de tamanho para imitar o painel físico */
-        .tamanho-largo { grid-column: span 2; }
-        .tamanho-alto { grid-row: span 2; }
-        .tamanho-gigante { grid-column: span 2; grid-row: span 2; }
-
-        .card {
-            background: var(--cor-card); 
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            display: flex; align-items: center; justify-content: center;
-            border: 6px solid transparent; 
-            transition: all 0.3s ease-in-out;
-            cursor: pointer; 
-            position: relative;
-            overflow: hidden; 
-        }
-        
-        .card:active { transform: scale(0.97); }
-
-        .imagem-card {
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            pointer-events: none; 
-            transition: filter 0.3s ease;
-        }
-
-        .nome-animal {
-            position: absolute;
-            bottom: 15px;
-            right: -5px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            transform: rotate(-90deg);
-            transform-origin: bottom right;
-            pointer-events: none;
-        }
-
-        /* Estado Ligado */
-        .card.card-ligado {
-            border-color: var(--cor-sucesso); 
-            box-shadow: 0 0 35px rgba(56, 161, 105, 0.8); 
-            transform: scale(1.03); 
-            z-index: 10;
-        }
-        
-        .card.card-ligado .imagem-card {
-            filter: brightness(1.2);
-        }
-
-        /* =========================================
-           TOAST DE AVISO & ANIMAÇÕES
-           ========================================= */
-        .toast {
-            position: fixed;
-            top: 40px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-150px);
-            background-color: black;
-            color: #00aeff;
-            padding: 20px 40px;
-            border-radius: 50px;
-            font-size: 1.6rem;
-            font-weight: bold;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            z-index: 9999;
-            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            pointer-events: none;
-        }
-        
-        .toast.mostrar {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .shake { animation: tremer 0.3s cubic-bezier(.36,.07,.19,.97) both; }
-        @keyframes tremer {
-            10%, 90% { transform: translate3d(-2px, 0, 0); }
-            20%, 80% { transform: translate3d(5px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-10px, 0, 0); }
-            40%, 60% { transform: translate3d(10px, 0, 0); }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-    <div id="toast-aviso" class="toast">
-        <span style="font-size: 2rem;">⚠️</span>
-        <span id="toast-mensagem">Mensagem de aviso aqui</span>
-    </div>
-
     <div class="tela">
         <h1>Sons da Natureza</h1>
-        <p class="subtitulo">Toque em um animal para ouvir o seu vamo atualiza</p>
+        <p class="subtitulo">Toque em um animal para escutar seu canto/som e ver suas características</p>
         
         <div id="grid-animais" class="grid-container">
             </div>
     </div>
 
-    <script>
-        // ==========================================
-        // DADOS DOS ANIMAIS
-        // ==========================================
-        const animais = [
-            { id: 'coruja', nome: 'coruja-buraqueira', img: 'assets/img/coruja.jpg', audio: 'assets/audio/coruja.mp3', classeTamanho: 'tamanho-alto' },
-            { id: 'gato', nome: 'gato-mourisco', img: 'assets/img/gato-mourisco.jpg', audio: 'assets/audio/gato.wav', classeTamanho: '' },
-            { id: 'onca-pintada', nome: 'onça-pintada', img: 'assets/img/onca_pintada.jpg', audio: 'assets/audio/onca-pintada.mp3', classeTamanho: 'tamanho-alto' },
-            { id: 'sai', nome: 'sai-azul', img: 'assets/img/sai_azul.jpg', audio: 'assets/audio/sai.mp3', classeTamanho: '' },
-            { id: 'tatu', nome: 'tatu', img: 'assets/img/tatu.jpg', audio: 'assets/audio/tatu.mp3', classeTamanho: '' },
-            { id: 'urutu', nome: 'urutu', img: 'assets/img/urutu.jpg', audio: 'assets/audio/urutu.mp3', classeTamanho: '' },
-            { id: 'aranha', nome: 'aranha-lobo', img: 'assets/img/aranha.jpg', audio: 'assets/audio/aranha.mp3', classeTamanho: '' },
-            { id: 'teiu', nome: 'teiú', img: 'assets/img/teiu.jpg', audio: 'assets/audio/teiu.mp3', classeTamanho: 'tamanho-largo' },
-            { id: 'saua', nome: 'saua', img: 'assets/img/saua.jpg', audio: 'assets/audio/tico.mp3', classeTamanho: '' },
-            { id: 'gafanhoto', nome: 'gafanhoto', img: 'assets/img/gafanhoto.jpg', audio: 'assets/audio/gafanhoto.mp3', classeTamanho: '' },
-            { id: 'picapau', nome: 'pica-pau', img: 'assets/img/picapau.jpg', audio: 'assets/audio/picapau.mp3', classeTamanho: 'tamanho-alto' },
-            { id: 'lobo', nome: 'lobo', img: 'assets/img/lobo.jpg', audio: 'assets/audio/lobo.mp3', classeTamanho: '' },
-            { id: 'seriema', nome: 'seriema', img: 'assets/img/seriema.jpg', audio: 'assets/audio/seriema.mp3', classeTamanho: '' },
-            { id: 'galito', nome: 'galito fêmea', img: 'assets/img/galito.jpg', audio: 'assets/audio/galito.mp3', classeTamanho: '' },
-            { id: 'onca-parda', nome: 'onça-parda', img: 'assets/img/onca-parda.jpg', audio: 'assets/audio/onca-parda.wav', classeTamanho: 'tamanho-largo' }
-        ];
-
-        // ==========================================
-        // ESTADO GLOBAL E CONTROLE DE ÁUDIO
-        // ==========================================
-        let apresentacaoRodando = false; 
-
-        // ==========================================
-        // LÓGICA DE INTERAÇÃO
-        // ==========================================
-        function tentarTocar(alvoId) {
-            const cardClicado = document.getElementById(`card-${alvoId}`);
-
-            // Se já tem um áudio rolando, bloqueia a nova ação e vibra o card clicado
-            if (apresentacaoRodando) {
-                mostrarAviso("Aguarde o som atual terminar!");
-                cardClicado.classList.add('shake');
-                setTimeout(() => cardClicado.classList.remove('shake'), 300);
-                return;
-            }
-
-            // Inicia o novo áudio
-            apresentacaoRodando = true;
-            cardClicado.classList.add('card-ligado');
-
-            const animalData = animais.find(a => a.id === alvoId);
-            const audioAtual = new Audio(animalData.audio);
-
-            audioAtual.play().catch(e => {
-                console.log("Erro ao reproduzir áudio (verifique o arquivo):", e);
-                // Finaliza visualmente após 2s caso dê erro por falta do arquivo
-                setTimeout(() => finalizarToque(cardClicado), 2000);
-            });
-            
-            // Quando o áudio termina naturalmente
-            audioAtual.onended = () => {
-                finalizarToque(cardClicado);
-            };
-        }
-
-        function finalizarToque(cardElement) {
-            cardElement.classList.remove('card-ligado');
-            apresentacaoRodando = false;
-        }
-
-        // ==========================================
-        // TOAST DE AVISO
-        // ==========================================
-        let timerToast;
-
-        function mostrarAviso(mensagem) {
-            const toast = document.getElementById('toast-aviso');
-            const toastMsg = document.getElementById('toast-mensagem');
-            
-            toastMsg.innerText = mensagem;
-            toast.classList.add('mostrar');
-            
-            clearTimeout(timerToast);
-            
-            timerToast = setTimeout(() => {
-                toast.classList.remove('mostrar');
-            }, 2500);
-        }
-
-        // ==========================================
-        // GERAÇÃO DE INTERFACE
-        // ==========================================
-        function gerarCards() {
-            const container = document.getElementById('grid-animais');
-            container.innerHTML = '';
-
-            animais.forEach((animal) => {
-                const cardHTML = `
-                    <div class="card ${animal.classeTamanho}" id="card-${animal.id}"
-                        onpointerdown="tentarTocar('${animal.id}')">
-                        
-                        <img class="imagem-card" src="${animal.img}" alt="${animal.nome}"
-                            onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'100\\' height=\\'100\\'><rect width=\\'100\\' height=\\'100\\' fill=\\'%23555\\'/><text x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'14\\'>Sem Foto</text></svg>'">
-                        <div class="nome-animal">${animal.nome}</div>
+    <div id="modal-animal" class="modal-overlay" onclick="fecharModalFora(event)">
+        <div class="modal-content">
+            <button class="btn-fechar" onclick="fecharModal()">×</button>
+            <div class="modal-hero">
+                <img id="modal-img" src="" alt="Imagem do Animal">
+            </div>
+            <div class="modal-corpo">
+                <div id="modal-status-som" class="tocando-indicador">🔊 Tocando Som do Animal...</div>
+                <h2 id="modal-titulo" class="modal-titulo">Nome</h2>
+                <div id="modal-cientifico" class="modal-cientifico">Científico</div>
+                
+                <div class="modal-tags" id="modal-tags-container">
                     </div>
-                `;
-                container.innerHTML += cardHTML;
-            });
-        }
 
-        window.onload = () => {
-            gerarCards();
-        };
-    </script>
+                <div id="modal-texto" class="modal-texto">
+                    </div>
+
+                <div id="modal-fonte" class="modal-fonte">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dados/dados.js"></script>
+    
+    <script src="js/main.js"></script>
+
 </body>
 </html>
