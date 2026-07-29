@@ -6,17 +6,66 @@
     <title>Painel Interativo - Fauna</title>
     
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Estilos adicionais rápidos para o vídeo (você pode mover para o style.css depois) */
+        .secao-video {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .card-video {
+            cursor: pointer;
+            display: inline-block;
+            background: #fff;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .card-video:hover {
+            transform: scale(1.05);
+        }
+        .card-video img {
+            max-width: 100%;
+            border-radius: 8px;
+            width: 300px;
+            height: auto;
+        }
+        .modal-video-content {
+            background: #000;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-video-content video {
+            width: 100%;
+            max-height: 85vh;
+        }
+    </style>
 </head>
 <body>
 
     <div class="tela">
-        <h1>Sons da Natureza</h1>
+        <h1>Animais da Região</h1>
         <p class="subtitulo">Toque em um animal para escutar seu canto/som e ver suas características</p>
         
         <div id="grid-animais" class="grid-container">
+            <!-- Cards gerados via JS -->
+        </div>
+
+        <!-- NOVA SEÇÃO DE VÍDEO -->
+        <div class="secao-video">
+            <h1>Sons da Natureza</h1>
+            <div class="card-video" onclick="abrirModalVideo()">
+                <!-- Imagem de capa do vídeo -->
+                <img src="https://img.magnific.com/free-vector/video-media-player-design_114579-839.jpg?semt=ais_hybrid&w=740&q=80" alt="Capa do Vídeo">
+                <p>▶ Assistir Vídeo</p>
             </div>
+        </div>
     </div>
 
+    <!-- MODAL DOS ANIMAIS -->
     <div id="modal-animal" class="modal-overlay" onclick="fecharModalFora(event)">
         <div class="modal-content">
             <button class="btn-fechar" onclick="fecharModal()">×</button>
@@ -29,19 +78,30 @@
                 <div id="modal-cientifico" class="modal-cientifico">Científico</div>
                 
                 <div class="modal-tags" id="modal-tags-container">
-                    </div>
+                </div>
 
                 <div id="modal-texto" class="modal-texto">
-                    </div>
+                </div>
 
                 <div id="modal-fonte" class="modal-fonte">
-                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- NOVO MODAL DO VÍDEO -->
+    <div id="modal-video" class="modal-overlay" onclick="fecharModalVideoFora(event)">
+        <div class="modal-content modal-video-content">
+            <button class="btn-fechar" onclick="fecharModalVideo()" style="z-index: 10; background: rgba(0,0,0,0.5); color: white;">×</button>
+            <video id="player-video" controls>
+                <!-- Insira o caminho do seu vídeo aqui -->
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
+        </div>
+    </div>
+
     <script src="dados/dados.js"></script>
-    
     <script src="js/main.js"></script>
 
 </body>

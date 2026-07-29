@@ -92,7 +92,43 @@ function fecharModalFora(event) {
     }
 }
 
+
+
 // Inicializador
 window.onload = () => {
     gerarCards();
 };
+
+// ... [Mantenha todo o seu código JS anterior intacto] ... //
+
+// --- NOVAS FUNÇÕES PARA O MODAL DO VÍDEO ---
+
+function abrirModalVideo() {
+    const modalVideo = document.getElementById('modal-video');
+    modalVideo.classList.add('ativo');
+
+    // Se houver algum áudio de animal tocando, pausa ele para não misturar com o vídeo
+    if (audioAtual) {
+        audioAtual.pause();
+    }
+
+    // Opcional: Iniciar o vídeo automaticamente ao abrir o modal
+    const player = document.getElementById('player-video');
+    player.play().catch(e => console.log("O autoplay pode estar bloqueado pelo navegador", e));
+}
+
+function fecharModalVideo() {
+    const modalVideo = document.getElementById('modal-video');
+    modalVideo.classList.remove('ativo');
+
+    // Pausa o vídeo quando o modal é fechado para não continuar tocando o som no fundo
+    const player = document.getElementById('player-video');
+    player.pause();
+    player.currentTime = 0; // Volta o vídeo para o início (opcional)
+}
+
+function fecharModalVideoFora(event) {
+    if (event.target.id === 'modal-video') {
+        fecharModalVideo();
+    }
+}
