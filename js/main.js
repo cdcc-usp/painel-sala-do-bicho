@@ -1,6 +1,5 @@
 let audioAtual = null;
 
-
 function gerarCards() {
     const container = document.getElementById('grid-animais');
     container.innerHTML = '';
@@ -17,7 +16,6 @@ function gerarCards() {
         container.innerHTML += cardHTML;
     });
 }
-
 
 function abrirModal(alvoId) {
     const animalData = animais.find(a => a.id === alvoId);
@@ -92,16 +90,15 @@ function fecharModalFora(event) {
     }
 }
 
-
-
 // Inicializador
 window.onload = () => {
     gerarCards();
 };
 
-// ... [Mantenha todo o seu código JS anterior intacto] ... //
 
-// --- NOVAS FUNÇÕES PARA O MODAL DO VÍDEO ---
+// ==========================================
+// FUNÇÕES PARA O MODAL E TELA CHEIA DO VÍDEO
+// ==========================================
 
 function abrirModalVideo() {
     const modalVideo = document.getElementById('modal-video');
@@ -112,23 +109,43 @@ function abrirModalVideo() {
         audioAtual.pause();
     }
 
-    // Opcional: Iniciar o vídeo automaticamente ao abrir o modal
     const player = document.getElementById('player-video');
+    
+    // Inicia o vídeo
     player.play().catch(e => console.log("O autoplay pode estar bloqueado pelo navegador", e));
+
+    // Solicita a tela cheia para o elemento de vídeo (com suporte a múltiplos navegadores)
+    if (player.requestFullscreen) {
+        player.requestFullscreen();
+    } else if (player.webkitRequestFullscreen) { /* Safari */
+        player.webkitRequestFullscreen();
+    } else if (player.msRequestFullscreen) { /* IE11 / Edge antigo */
+        player.msRequestFullscreen();
+    }
 }
 
 function fecharModalVideo() {
     const modalVideo = document.getElementById('modal-video');
     modalVideo.classList.remove('ativo');
 
-    // Pausa o vídeo quando o modal é fechado para não continuar tocando o som no fundo
     const player = document.getElementById('player-video');
     player.pause();
-    player.currentTime = 0; // Volta o vídeo para o início (opcional)
+    player.currentTime = 0; 
 }
 
 function fecharModalVideoFora(event) {
     if (event.target.id === 'modal-video') {
+        fecharModalVideo();
+    }
+}
+
+// Detecta quando o usuário sai da tela cheia (ex: apertando ESC) para fechar o modal
+document.addEventListener('fullscreenchange', verificarSaidaTelaCheia);
+document.addEventListener('webkitfullscreenchange', verificarSaidaTelaCheia);
+
+function verificarSaidaTelaCheia() {
+    // Se não houver nenhum elemento em tela cheia no documento, significa que o usuário saiu
+    if (!document.fullscreenElement && !document.webkitIsFullScreen) {
         fecharModalVideo();
     }
 }
