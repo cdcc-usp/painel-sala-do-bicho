@@ -33,7 +33,7 @@ const CONFIG = Object.freeze({
                 rotulo: 'ANTES DE COMEÇAR…',
                 fala: 'Você já conhece alguns desses animais?',
                 complemento: 'Toque nas imagens, observe os detalhes e descubra quem vive por aqui!',
-                botao: 'Conhecer os animais'
+                botao: 'Assistir ao Vídeo'
             }
         ]
     }

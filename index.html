@@ -39,7 +39,19 @@
                 </div>
             </section>
 
+            <section id="tela-video" class="tela tela-video" aria-label="Ecrã do vídeo principal">
+                <button id="seta-avancar" class="seta-avancar" type="button" aria-label="Ir para animais">›</button>
+                <div class="conteudo-video">
+                    <video id="player-video" controls playsinline preload="metadata"></video>
+                    <p id="erro-video" class="media-erro" hidden>
+                        O vídeo ainda não foi adicionado. Consulte o tutorial do projeto.
+                    </p>
+                </div>
+            </section>
+
             <section id="tela-galeria" class="tela tela-galeria" aria-labelledby="titulo-galeria">
+                <button id="seta-voltar" class="seta-voltar" type="button" aria-label="Voltar ao vídeo">‹</button>
+
                 <div class="cabecalho-galeria">
                     <h1 id="titulo-galeria">Animais da região</h1>
                     <p>Toque em um animal para conhecê-lo e ouvir seu som.</p>
@@ -90,10 +102,6 @@
     <div id="modal-video" class="modal-overlay modal-video-overlay" role="dialog" aria-modal="true" aria-label="Vídeo sobre a fauna" hidden>
         <div class="modal-content modal-video-content">
             <button id="btn-fechar-video" class="btn-fechar" type="button" aria-label="Fechar vídeo">×</button>
-            <video id="player-video" controls playsinline preload="metadata"></video>
-            <p id="erro-video" class="media-erro" hidden>
-                O vídeo ainda não foi adicionado. Consulte o tutorial do projeto.
-            </p>
         </div>
     </div>
 

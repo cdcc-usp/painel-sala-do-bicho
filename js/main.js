@@ -20,13 +20,14 @@ function iniciarAplicacao() {
     atualizarControleSom();
     atualizarEtapaDante();
     atualizarVersao();
+    mudarTela('dante');
 
     console.info(`Painel Interativo — versão ${CONFIG.versao}`);
 }
 
 function mapearElementos() {
     const ids = [
-        'tela-dante', 'tela-galeria', 'imagem-dante', 'dante-substituto',
+        'tela-dante', 'tela-video', 'tela-galeria', 'imagem-dante', 'dante-substituto',
         'rotulo-etapa', 'fala-dante', 'complemento-dante', 'btn-avancar',
         'indicador-etapas', 'btn-inicio', 'btn-som', 'icone-som', 'texto-som',
         'grid-animais', 'btn-video', 'capa-video', 'versao-app',
@@ -34,7 +35,8 @@ function mapearElementos() {
         'btn-repetir-som', 'modal-titulo', 'modal-cientifico',
         'modal-tags-container', 'modal-texto', 'modal-fonte',
         'modal-video', 'btn-fechar-video', 'player-video', 'erro-video',
-        'modal-inatividade', 'contador-inatividade', 'btn-continuar'
+        'modal-inatividade', 'contador-inatividade', 'btn-continuar',
+        'seta-avancar', 'seta-voltar'
     ];
 
     ids.forEach((id) => {
@@ -46,7 +48,9 @@ function configurarEventos() {
     elementos['btn-avancar'].addEventListener('click', avancarApresentacao);
     elementos['btn-inicio'].addEventListener('click', reiniciarExperiencia);
     elementos['btn-som'].addEventListener('click', alternarSom);
-    elementos['btn-video'].addEventListener('click', abrirVideo);
+    elementos['btn-video'].addEventListener('click', () => mudarTela('video'));
+    elementos['seta-avancar'].addEventListener('click', () => mudarTela('galeria'));
+    elementos['seta-voltar'].addEventListener('click', () => mudarTela('video'));
     elementos['btn-fechar-animal'].addEventListener('click', fecharAnimal);
     elementos['btn-repetir-som'].addEventListener('click', repetirSomAnimal);
     elementos['btn-fechar-video'].addEventListener('click', fecharVideo);
@@ -60,7 +64,7 @@ function configurarEventos() {
         if (evento.target === elementos['modal-video']) fecharVideo();
     });
 
-    elementos['player-video'].addEventListener('ended', fecharVideo);
+    elementos['player-video'].addEventListener('ended', () => mudarTela('galeria'));
     elementos['player-video'].addEventListener('error', mostrarErroVideo);
 
     document.addEventListener('pointerdown', registrarAtividade, { passive: true });
@@ -124,15 +128,58 @@ function avancarApresentacao() {
         return;
     }
 
-    mostrarGaleria();
+    mudarTela('video');
+}
+
+function mudarTela(idTela) {
+    const aliases = {
+        dante: 'tela-dante',
+        video: 'tela-video',
+        galeria: 'tela-galeria'
+    };
+    const telaAtiva = aliases[idTela] || idTela;
+    const telas = ['tela-dante', 'tela-video', 'tela-galeria'];
+
+    telas.forEach((id) => {
+        const tela = document.getElementById(id);
+        if (tela) {
+            tela.classList.toggle('ativa', id === telaAtiva);
+        }
+    });
+
+    if (telaAtiva === 'tela-video') {
+        videoAberto = true;
+        cancelarInatividade();
+        pararAudioAnimal();
+        elementos['erro-video'].hidden = true;
+        elementos['player-video'].pause();
+        elementos['player-video'].currentTime = 0;
+        elementos['player-video'].muted = !somAtivo;
+        elementos['player-video'].play().catch(mostrarErroVideo);
+        elementos['btn-inicio'].classList.remove('oculto');
+        return;
+    }
+
+    if (telaAtiva === 'tela-galeria') {
+        videoAberto = false;
+        elementos['player-video'].pause();
+        elementos['player-video'].currentTime = 0;
+        pararAudioAnimal();
+        elementos['btn-inicio'].classList.remove('oculto');
+        agendarInatividade();
+        return;
+    }
+
+    videoAberto = false;
+    cancelarInatividade();
+    elementos['player-video'].pause();
+    elementos['player-video'].currentTime = 0;
+    pararAudioAnimal();
+    elementos['btn-inicio'].classList.add('oculto');
 }
 
 function mostrarGaleria() {
-    elementos['tela-dante'].classList.remove('ativa');
-    elementos['tela-galeria'].classList.add('ativa');
-    elementos['btn-inicio'].classList.remove('oculto');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    agendarInatividade();
+    mudarTela('galeria');
 }
 
 function gerarCards() {
@@ -274,24 +321,12 @@ function atualizarControleSom() {
 }
 
 function abrirVideo() {
-    pararAudioAnimal();
-    videoAberto = true;
-    cancelarInatividade();
-    elementos['erro-video'].hidden = true;
-    abrirModal(elementos['modal-video']);
-
-    elementos['player-video'].currentTime = 0;
-    elementos['player-video'].muted = !somAtivo;
-    elementos['player-video'].play().catch(mostrarErroVideo);
+    mudarTela('video');
 }
 
 function fecharVideo() {
     if (!videoAberto && elementos['modal-video'].hidden) return;
-    elementos['player-video'].pause();
-    elementos['player-video'].currentTime = 0;
-    videoAberto = false;
-    fecharModal(elementos['modal-video']);
-    agendarInatividade();
+    mudarTela('galeria');
 }
 
 function mostrarErroVideo() {
@@ -386,9 +421,7 @@ function reiniciarExperiencia() {
 
     etapaDanteAtual = 0;
     atualizarEtapaDante();
-    elementos['tela-galeria'].classList.remove('ativa');
-    elementos['tela-dante'].classList.add('ativa');
-    elementos['btn-inicio'].classList.add('oculto');
+    mudarTela('dante');
     window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
