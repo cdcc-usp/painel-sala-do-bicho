@@ -1,71 +1,114 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Painel Interativo - Fauna</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#102f29">
+    <title>Painel Interativo — Animais da Região</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div id="app" class="app">
+        <header class="barra-superior" aria-label="Controles da experiência">
+            <button id="btn-inicio" class="botao-controle oculto" type="button" aria-label="Voltar ao início">
+                <span aria-hidden="true">⌂</span>
+                <span>Início</span>
+            </button>
 
-    <div class="tela">
-        <h1>ANIMAIS DA REGIÃO</h1>
-        <p class="subtitulo">TOQUE PARA OUVIR OS SONS E CONHECER OS ANIMAIS</p>
-        
-        <div id="grid-animais" class="grid-container">
-            <!-- Cards gerados via JS -->
-        </div>
+            <button id="btn-som" class="botao-controle" type="button" aria-pressed="false" aria-label="Desativar som">
+                <span id="icone-som" aria-hidden="true">🔊</span>
+                <span id="texto-som">Som ligado</span>
+            </button>
+        </header>
 
-        <!-- SEÇÃO DE VÍDEO (Agora vai ficar com a largura do grid) -->
-        <div class="secao-video">
-            <h1>ESCREVA ALGO AQUI, OU NÃO</h1>
-            <div class="card-video" onclick="abrirModalVideo()">
-                <!-- Imagem de capa do vídeo -->
-                <img src="https://ciclovivo.com.br/wp-content/uploads/2023/05/mata-atlantica-Du-Zuppani-3.jpeg" alt="Capa do Vídeo">
-                <p>▶ Assistir Vídeo</p>
-            </div>
-        </div>
+        <main>
+            <section id="tela-dante" class="tela tela-dante ativa" aria-labelledby="fala-dante">
+                <div class="cenario-dante">
+                    <div class="personagem-dante" aria-label="Dante, o lobo-guará mascote do centro">
+                        <img id="imagem-dante" src="assets/dante/dante.png" alt="Dante, o lobo-guará">
+                        <div id="dante-substituto" class="dante-substituto" aria-hidden="true">🐺</div>
+                    </div>
+
+                    <article id="balao-dante" class="balao-dante">
+                        <p id="rotulo-etapa" class="rotulo-etapa"></p>
+                        <h1 id="fala-dante"></h1>
+                        <p id="complemento-dante" class="complemento-dante"></p>
+                        <button id="btn-avancar" class="botao-principal" type="button"></button>
+                        <div id="indicador-etapas" class="indicador-etapas" aria-label="Progresso da apresentação"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="tela-galeria" class="tela tela-galeria" aria-labelledby="titulo-galeria">
+                <div class="cabecalho-galeria">
+                    <p class="sobretitulo">EXPLORE A FAUNA</p>
+                    <h1 id="titulo-galeria">Animais da região</h1>
+                    <p>Toque em um animal para conhecê-lo e ouvir seu som.</p>
+                </div>
+
+                <div id="grid-animais" class="grid-container" aria-live="polite"></div>
+
+                <section class="secao-video" aria-labelledby="titulo-video">
+                    <div class="cabecalho-video">
+                        <p class="sobretitulo">ASSISTA</p>
+                        <h2 id="titulo-video">Conheça melhor a fauna da nossa região</h2>
+                    </div>
+                    <button id="btn-video" class="card-video" type="button">
+                        <img id="capa-video" src="assets/videos/capa.jpg" alt="Capa do vídeo sobre a fauna">
+                        <span class="acao-video"><span aria-hidden="true">▶</span> Assistir ao vídeo</span>
+                    </button>
+                </section>
+            </section>
+        </main>
+
+        <footer class="rodape-versao">
+            <span>Painel Interativo</span>
+            <span aria-hidden="true">•</span>
+            <span id="versao-app"></span>
+        </footer>
     </div>
 
-    <!-- MODAL DOS ANIMAIS -->
-    <div id="modal-animal" class="modal-overlay" onclick="fecharModalFora(event)">
-        <div class="modal-content">
-            <button class="btn-fechar" onclick="fecharModal()">×</button>
+    <div id="modal-animal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" hidden>
+        <article class="modal-content modal-animal-content">
+            <button id="btn-fechar-animal" class="btn-fechar" type="button" aria-label="Fechar informações do animal">×</button>
             <div class="modal-hero">
-                <img id="modal-img" src="" alt="Imagem do Animal">
+                <img id="modal-img" src="" alt="">
             </div>
             <div class="modal-corpo">
-                <div id="modal-status-som" class="tocando-indicador">🔊 Tocando Som do Animal...</div>
-                <h2 id="modal-titulo" class="modal-titulo">Nome</h2>
-                <div id="modal-cientifico" class="modal-cientifico">Científico</div>
-                
-                <div class="modal-tags" id="modal-tags-container">
+                <div class="linha-som">
+                    <div id="modal-status-som" class="tocando-indicador" role="status"></div>
+                    <button id="btn-repetir-som" class="botao-secundario" type="button">🔊 Ouvir novamente</button>
                 </div>
-
-                <div id="modal-texto" class="modal-texto">
-                </div>
-
-                <div id="modal-fonte" class="modal-fonte">
-                </div>
+                <h2 id="modal-titulo" class="modal-titulo"></h2>
+                <p id="modal-cientifico" class="modal-cientifico"></p>
+                <div id="modal-tags-container" class="modal-tags"></div>
+                <div id="modal-texto" class="modal-texto"></div>
+                <div id="modal-fonte" class="modal-fonte"></div>
             </div>
-        </div>
+        </article>
     </div>
 
-    <!-- MODAL DO VÍDEO -->
-    <div id="modal-video" class="modal-overlay" onclick="fecharModalVideoFora(event)">
+    <div id="modal-video" class="modal-overlay modal-video-overlay" role="dialog" aria-modal="true" aria-label="Vídeo sobre a fauna" hidden>
         <div class="modal-content modal-video-content">
-            <button class="btn-fechar" onclick="fecharModalVideo()" style="z-index: 10; background: rgba(0,0,0,0.5); color: white;">×</button>
-            <video id="player-video" controls>
-                <!-- Insira o caminho do seu vídeo aqui -->
-                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-                Seu navegador não suporta o elemento de vídeo.
-            </video>
+            <button id="btn-fechar-video" class="btn-fechar" type="button" aria-label="Fechar vídeo">×</button>
+            <video id="player-video" controls playsinline preload="metadata"></video>
+            <p id="erro-video" class="media-erro" hidden>
+                O vídeo ainda não foi adicionado. Consulte o tutorial do projeto.
+            </p>
         </div>
     </div>
 
-    <script src="dados/dados.js"></script>
-    <script src="js/main.js"></script>
+    <div id="modal-inatividade" class="modal-overlay modal-inatividade" role="alertdialog" aria-modal="true" aria-labelledby="titulo-inatividade" hidden>
+        <div class="aviso-inatividade">
+            <div class="icone-aviso" aria-hidden="true">🐺</div>
+            <h2 id="titulo-inatividade">Você ainda está por aqui?</h2>
+            <p>A experiência voltará ao início em <strong><span id="contador-inatividade">15</span> segundos</strong>.</p>
+            <button id="btn-continuar" class="botao-principal" type="button">Continuar explorando</button>
+        </div>
+    </div>
 
+    <script src="js/config.js"></script>
+    <script src="js/dados.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

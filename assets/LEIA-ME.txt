@@ -1,0 +1,18 @@
+MÍDIAS NECESSÁRIAS
+
+Dante:
+  assets/dante/dante.png
+
+Vídeo:
+  assets/videos/fauna.mp4
+  assets/videos/capa.jpg
+
+Animais:
+  Para cada item de js/dados.js, crie a pasta indicada nos campos "img" e
+  "audio". Exemplo:
+
+  assets/lobo-guara/imagem.jpg
+  assets/lobo-guara/audio.mp3
+
+A aplicação mostra imagens substitutas quando fotografias não existem. Áudios e
+vídeo, porém, precisam ser adicionados para a experiência final.
