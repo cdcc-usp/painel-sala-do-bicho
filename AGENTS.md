@@ -30,10 +30,14 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   avanço abrem a galeria; voltar ao vídeo reinicia a reprodução.
 - O evento `ended` avança automaticamente; pausar o vídeo mantém sua tela.
   A galeria não possui seção de vídeo nem modal de vídeo residual.
-- Em telas acima de 1100px, o mosaico ocupa a janela inteira, com seis linhas
-  flexíveis. Título fica acessível sem ocupar espaço; rodapé fica oculto na
-  galeria. Controles permanecem sobre as imagens. `galeria-ativa` no body
-  controla o rodapé e a rolagem; telas menores mantêm a galeria com rolagem.
+- Em telas acima de 1100px, o mosaico ocupa o espaço disponível, com seis linhas
+  flexíveis, margem superior para Início/Som e margens laterais para as setas.
+  Setas grandes ficam no centro vertical das bordas, com área de toque ampliada.
+  O vídeo centralizado preenche sua área, mantendo a proporção com `contain`.
+  Espaçamentos compartilhados são variáveis CSS em `:root`. Título fica acessível
+  sem ocupar espaço; rodapé fica oculto na galeria e no vídeo. `galeria-ativa` e
+  `video-ativo` no body controlam rodapé/rolagem; telas menores mantêm a galeria
+  com rolagem.
 - Preservar a disposição atual do mosaico. Em telas acima de 1100px, os 18
   primeiros cards têm posições definidas por `nth-child`: a ordem do array
   determina a posição visual, independentemente de `classeTamanho`.

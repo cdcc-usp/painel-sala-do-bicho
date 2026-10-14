@@ -131,6 +131,7 @@ function mudarTela(idTela) {
     const telas = ['tela-dante', 'tela-video', 'tela-galeria'];
 
     document.body.classList.toggle('galeria-ativa', telaAtiva === 'tela-galeria');
+    document.body.classList.toggle('video-ativo', telaAtiva === 'tela-video');
     window.scrollTo({ top: 0, behavior: 'auto' });
 
     telas.forEach((id) => {

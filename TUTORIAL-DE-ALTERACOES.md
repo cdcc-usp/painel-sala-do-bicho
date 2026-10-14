@@ -154,8 +154,11 @@ de animais e centraliza o controle das mídias. Os eventos são cadastrados com
 
 Os modais utilizam o atributo `hidden` quando fechados e a classe `ativo` durante
 a animação de abertura. O vídeo usa um player com controles em sua própria tela.
-Em telas acima de 1100px, a galeria ocupa toda a janela com seis linhas flexíveis;
-título e rodapé não reservam espaço no mosaico. Em telas menores, há rolagem.
+Em telas acima de 1100px, a galeria usa seis linhas flexíveis, com margem acima
+para os controles e nas laterais para as setas. O vídeo centralizado preenche
+sua área sem distorção. Setas grandes ficam no centro vertical das bordas.
+Título não reserva espaço no mosaico; rodapé aparece na apresentação. Em telas
+menores, a galeria possui rolagem. Os espaçamentos estão em variáveis CSS em `:root`.
 
 ## 11. Instalar no Windows 11 em modo quiosque
 
