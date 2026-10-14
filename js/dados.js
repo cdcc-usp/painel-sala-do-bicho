@@ -1,4 +1,5 @@
-// BANCO DE DADOS DOS ANIMAIS 
+// BANCO DE DADOS DOS ANIMAIS
+// A ordem dos registros corresponde às posições nth-child do mosaico em css/style.css.
 const animais = [
     {
         id: 'gato-mourisco',
@@ -68,17 +69,6 @@ const animais = [
         fonte: 'https://www.inaturalist.org/taxa/43683-Callicebus-personatus'
     },
     {
-        id: 'jaguatirica',
-        nome: 'Jaguatirica',
-        img: 'assets/animais/jaguatirica/imagem.jpg',
-        audio: 'assets/animais/jaguatirica/audio.mp3',
-        cientifico: 'Leopardus pardalis',
-        destaques: ['⚖️ 8 a 16 kg', '🥩 Carnívoro', '🌳 Noturno e solitário'],
-        classeTamanho: 'tamanho-gigante',
-        descricao: 'É um felino de médio porte nativo do continente americano.\nExcelente escaladora e nadadora, possui pelagem amarelada com rosetas e manchas pretas que garantem camuflagem na vegetação densa.',
-        fonte: 'https://www.inaturalist.org/taxa/41980-Leopardus-pardalis'
-    },
-    {
         id: 'sapo-cururu',
         nome: 'Sapo-Cururu',
         img: 'assets/animais/sapo-cururu/imagem.jpg',
@@ -88,6 +78,17 @@ const animais = [
         classeTamanho: '',
         descricao: 'Nativo das Américas Central e do Sul.\nMais ativo durante a noite e pode viver longe da água, procurando a água somente para se reproduzir.\nDimorfismo sexual: As fêmeas são maiores de cor sépia ou marrom, enquanto os machos são menores e mais claros.\nUma das poucas espécies onívoras de sapos.',
         fonte: 'https://www.inaturalist.org/taxa/553515-Rhinella-marina'
+    },
+    {
+        id: 'jaguatirica',
+        nome: 'Jaguatirica',
+        img: 'assets/animais/jaguatirica/imagem.jpg',
+        audio: 'assets/animais/jaguatirica/audio.mp3',
+        cientifico: 'Leopardus pardalis',
+        destaques: ['⚖️ 8 a 16 kg', '🥩 Carnívoro', '🌳 Noturno e solitário'],
+        classeTamanho: 'tamanho-gigante',
+        descricao: 'É um felino de médio porte nativo do continente americano.\nExcelente escaladora e nadadora, possui pelagem amarelada com rosetas e manchas pretas que garantem camuflagem na vegetação densa.',
+        fonte: 'https://www.inaturalist.org/taxa/41980-Leopardus-pardalis'
     },
     {
         id: 'seriema',
@@ -112,6 +113,17 @@ const animais = [
         fonte: 'https://www.inaturalist.org/taxa/47075-Dasypus-novemcinctus'
     },
     {
+        id: 'raposa-do-campo',
+        nome: 'Raposa-do-Campo',
+        img: 'assets/animais/raposa-do-campo/imagem.jpg',
+        audio: 'assets/animais/raposa-do-campo/audio.mp3',
+        cientifico: '',
+        destaques: [],
+        classeTamanho: 'tamanho-gigante',
+        descricao: 'Informações sobre este animal serão adicionadas em breve.',
+        fonte: ''
+    },
+    {
         id: 'anta',
         nome: 'Anta',
         img: 'assets/animais/anta/imagem.jpg',
@@ -121,28 +133,6 @@ const animais = [
         classeTamanho: '',
         descricao: 'A anta brasileira é o maior mamífero terrestre da América do Sul.\nPossui uma pequena tromba móvel (probóscide) usada para pegar folhas e frutos.\nSão excelentes nadadoras e desempenham papel vital como dispersoras de sementes.',
         fonte: 'https://www.inaturalist.org/taxa/43355-Tapirus-terrestris'
-    },
-    {
-        id: 'cachorro-do-mato',
-        nome: 'Cachorro-do-Mato',
-        img: 'assets/animais/cachorro-do-mato/imagem.jpg',
-        audio: 'assets/animais/cachorro-do-mato/audio.mp3',
-        cientifico: 'Cerdocyon thous',
-        destaques: ['⚖️ 5 a 8 kg', '🍽️ Onívoro', '🌙 Hábitos noturnos'],
-        classeTamanho: 'tamanho-gigante',
-        descricao: 'Também conhecido como graxaim, é um canídeo de médio porte nativo da América do Sul.\nPossui pelagem cinza-escura com partes amareladas e cauda frondosa com ponta preta.\nAdapta-se facilmente a diferentes ambientes e vive geralmente em casais.',
-        fonte: 'https://www.inaturalist.org/taxa/42080-Cerdocyon-thous'
-    },
-    {
-        id: 'jacare',
-        nome: 'Jacaré-do-Pantanal',
-        img: 'assets/animais/jacare/imagem.jpg',
-        audio: 'assets/animais/jacare/audio.mp3',
-        cientifico: 'Caiman yacare',
-        destaques: ['📏 2 a 3 metros', '🥩 Carnívoro/Piscívoro', '🐊 Réptil semiaquático'],
-        classeTamanho: 'tamanho-largo',
-        descricao: 'Espécie de crocodiliano nativa do centro da América do Sul.\nAlimenta-se principalmente de peixes, caramujos e pequenos invertebrados.\nDesempenha papel ecológico crucial no controle de populações aquáticas.',
-        fonte: 'https://www.inaturalist.org/taxa/116527-Caiman-yacare'
     },
     {
         id: 'coruja',
@@ -163,20 +153,9 @@ const animais = [
         audio: 'assets/animais/bugio/audio.mp3',
         cientifico: 'Alouatta caraya',
         destaques: ['🐒 Primata', '🍃 Predominantemente folívora', '🗣️ Forte vocalização territorial'],
-        classeTamanho: '',
+        classeTamanho: 'tamanho-alto',
         descricao: 'Habitam florestas tropicais e savanas do sudeste e centro do Brasil.\nDimorfismo sexual, de modo que os machos são totalmente pretos e as fêmeas um coloração de castanho claro.\nVocalização principalmente para sinalizar a outros grupos a posse de determinado espaço.\nDieta predominantemente folívora, mas pode variar para dietas mais onívoras.',
         fonte: 'https://www.inaturalist.org/taxa/43435-Alouatta-caraya'
-    },
-    {
-        id: 'onca-parda',
-        nome: 'Onça-Parda',
-        img: 'assets/animais/onca-parda/imagem.png',
-        audio: 'assets/animais/onca-parda/audio.mp3',
-        cientifico: 'Puma concolor',
-        destaques: ['🐈 Felino de grande porte', '🥩 Carnívoro', '🧗 Excelente escaladora'],
-        classeTamanho: 'tamanho-largo',
-        descricao: 'Mamífero com maior distribuição geográfica no ocidente.\nAnimal solitário e mais ativo à noite, alimentando-se principalmente de cervídeos.\nApesar de apresentar hábitos terrestres, ela é uma excelente escaladora e capaz de nadar longas distâncias.\nA presença da onça-pintada influencia diretamente na alimentação da onça parda, de modo que ela passa a atacar animais de pequeno porte.\nAmpla variedade de vocalização, usando em contextos sexual, parental e agonístico.',
-        fonte: 'https://www.inaturalist.org/taxa/42007-Puma-concolor'
     },
     {
         id: 'onca-pintada',
@@ -185,7 +164,7 @@ const animais = [
         audio: 'assets/animais/onca-pintada/audio.mp3',
         cientifico: 'Panthera onca',
         destaques: ['⚖️ 65 a 100 kg', '🥩 Carnívoro', '👑 Topo da Cadeia Alimentar'],
-        classeTamanho: 'tamanho-largo',
+        classeTamanho: 'tamanho-alto',
         descricao: 'É uma espécie de mamífero carnívoro encontrado nas américas, sendo o maior felino do continente americano e o terceiro no ranking mundial.\nHábitos crepusculares e solitários.\nSeus hábitos de caça consistem em emboscadas, ocupando o topo da cadeia alimentar.',
         fonte: 'https://www.inaturalist.org/taxa/41970-Panthera-onca'
     },
@@ -199,5 +178,27 @@ const animais = [
         classeTamanho: 'tamanho-alto',
         descricao: 'Presente na América Central e América do Sul, sendo encontrada em todo o Brasil.\nPara encontrar seus alimentos, começa a dar fortes pancadas, retirando lascas grandes de madeira e usando a longa língua (que tem cerdas nas pontas) para capturar formigas e insetos.\nApresentam dimorfismo sexual, de modo que o macho apresenta uma faixa próxima ao bico de cor vermelha, de modo que as fêmeas apresentam a região anterior da cabeça preta e sem faixa vermelha.\nVivem em pares ou em grupos familiares.',
         fonte: 'https://www.wikiaves.com.br/wiki/pica-pau-de-banda-branca'
+    },
+    {
+        id: 'jacare',
+        nome: 'Jacaré-do-Pantanal',
+        img: 'assets/animais/jacare/imagem.jpg',
+        audio: 'assets/animais/jacare/audio.mp3',
+        cientifico: 'Caiman yacare',
+        destaques: ['📏 2 a 3 metros', '🥩 Carnívoro/Piscívoro', '🐊 Réptil semiaquático'],
+        classeTamanho: 'tamanho-gigante',
+        descricao: 'Espécie de crocodiliano nativa do centro da América do Sul.\nAlimenta-se principalmente de peixes, caramujos e pequenos invertebrados.\nDesempenha papel ecológico crucial no controle de populações aquáticas.',
+        fonte: 'https://www.inaturalist.org/taxa/116527-Caiman-yacare'
+    },
+    {
+        id: 'onca-parda',
+        nome: 'Onça-Parda',
+        img: 'assets/animais/onca-parda/imagem.png',
+        audio: 'assets/animais/onca-parda/audio.mp3',
+        cientifico: 'Puma concolor',
+        destaques: ['🐈 Felino de grande porte', '🥩 Carnívoro', '🧗 Excelente escaladora'],
+        classeTamanho: 'tamanho-largo',
+        descricao: 'Mamífero com maior distribuição geográfica no ocidente.\nAnimal solitário e mais ativo à noite, alimentando-se principalmente de cervídeos.\nApesar de apresentar hábitos terrestres, ela é uma excelente escaladora e capaz de nadar longas distâncias.\nA presença da onça-pintada influencia diretamente na alimentação da onça parda, de modo que ela passa a atacar animais de pequeno porte.\nAmpla variedade de vocalização, usando em contextos sexual, parental e agonístico.',
+        fonte: 'https://www.inaturalist.org/taxa/42007-Puma-concolor'
     }
 ];

@@ -11,8 +11,18 @@ Animais:
   Para cada item de js/dados.js, crie a pasta indicada nos campos "img" e
   "audio". Exemplo:
 
-  assets/lobo-guara/imagem.jpg
-  assets/lobo-guara/audio.mp3
+  assets/animais/lobo-guara/imagem.jpg
+  assets/animais/lobo-guara/audio.mp3
+
+Pastas preparadas para mídias ainda não adicionadas:
+  assets/animais/tamandua/
+  assets/animais/jaguatirica/
+  assets/animais/raposa-do-campo/
+  assets/animais/anta/
+  assets/animais/jacare/
+
+  Em cada pasta, adicione imagem.jpg e audio.mp3, conforme js/dados.js.
+  Os arquivos .gitkeep apenas preservam as pastas vazias no Git.
 
 A aplicação mostra imagens substitutas quando fotografias não existem. Áudios e
 vídeo, porém, precisam ser adicionados para a experiência final.

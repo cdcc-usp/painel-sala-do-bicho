@@ -1,0 +1,90 @@
+# Contexto do projeto
+
+Painel educativo offline de fauna para touchscreen do CDCC, com o mascote Dante,
+vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`.
+
+## Tecnologias e arquitetura
+
+- HTML, CSS e JavaScript puro; sem framework, backend, dependências de pacotes
+  ou etapa de compilação.
+- `index.html`: telas Dante, vídeo e galeria; controles globais e modais.
+- `js/config.js`: `CONFIG`, com falas do Dante, caminhos das mídias, versão,
+  parâmetros de som e tempos em milissegundos. `Object.freeze` é superficial.
+- `js/dados.js`: array `animais`, contendo `id`, `nome`, `img`, `audio`,
+  `cientifico`, `destaques`, `classeTamanho`, `descricao`, `fonte` e `imgModal`
+  opcional. Quebras `\n` na descrição viram parágrafos.
+- `js/main.js`: estado em memória, inicialização em `DOMContentLoaded`, eventos,
+  navegação, geração dos cards, modais, mídias e inatividade.
+- `css/style.css`: variáveis de tema, CSS Grid, animações e media queries.
+- `assets/animais/<id>/`, `assets/dante/` e `assets/videos/`: mídias locais.
+- Scripts clássicos compartilham o escopo global: preservar a ordem
+  `config.js` → `dados.js` → `main.js`. Não há módulos ES, classes ou serviços.
+- Não há banco de dados, persistência de sessão ou chamadas a APIs externas.
+  URLs de fontes são exibidas como texto, sem navegação externa.
+
+## Fluxos e requisitos confirmados
+
+- Painel final: tela 4K horizontal; navegador ainda sem escolha específica.
+- Fluxo: três etapas do Dante → vídeo → galeria. O fim do vídeo e a seta de
+  avanço abrem a galeria; voltar ao vídeo reinicia a reprodução.
+- Preservar a disposição atual do mosaico. Em telas acima de 1100px, os 18
+  primeiros cards têm posições definidas por `nth-child`: a ordem do array
+  determina a posição visual, independentemente de `classeTamanho`.
+- Abrir um animal preenche o modal e toca seu som. Fechar interrompe o áudio.
+  “Ouvir novamente” reproduz o áudio e reativa o som global se necessário.
+- Inatividade é monitorada apenas na galeria, por `pointerdown` e `keydown`.
+  O aviso começa após `tempoInatividadeMs - tempoAvisoMs`. Vídeo e apresentação
+  não têm reinício por inatividade. Reiniciar fecha modais, para mídias e volta
+  ao Dante, restaurando o som conforme a configuração.
+- Os tempos elevados atuais são temporários, conforme informado pelo usuário.
+  A composição atual do catálogo segue o mosaico fornecido pelo usuário.
+  Vídeo, mídias faltantes, créditos e conteúdo da raposa ainda serão definidos
+  ou fornecidos pelo usuário; não preencher por suposição.
+
+## Convenções e cuidados
+
+- Manter a separação entre configuração, conteúdo, comportamento e aparência.
+- Seguir o estilo existente: quatro espaços, nomes em português, `camelCase`
+  no JavaScript, IDs/classes com hífens, strings geralmente com aspas simples.
+- Usar IDs de animais únicos, minúsculos, sem espaços ou acentos.
+- Preservar `addEventListener`, `textContent` e criação de elementos para os
+  textos dinâmicos. IDs do HTML devem acompanhar `mapearElementos()` e eventos.
+- Preservar os estados CSS `ativa`, `ativo`, `hidden`, `oculto` e `modal-aberto`.
+  O fechamento de modal usa 220ms no JS, correspondente à transição CSS.
+- Manter caminhos relativos e mídias locais: deve funcionar offline e ao abrir
+  `index.html` diretamente. Preservar substitutos de imagens e mensagens de erro.
+- Conferir ordem, quantidade e posicionamento dos cards ao alterar o catálogo.
+  Nas telas menores, `.card:nth-child(n)` tem maior especificidade que as classes
+  de tamanho e atualmente anula seus spans; considerar isso ao modificar o CSS.
+- Preservar alterações locais preexistentes e limitar mudanças ao pedido atual.
+
+## Execução e validação
+
+Abrir `index.html` em um navegador ou executar, na raiz:
+
+```bash
+python3 -m http.server 8080 --bind 127.0.0.1
+```
+
+Acessar `http://127.0.0.1:8080`. Não há comandos de build, lint, testes
+automatizados ou CI configurados. Validar manualmente os fluxos afetados:
+apresentação, vídeo/setas, galeria, modais, áudio/repetição/mute, botão Início,
+inatividade e erros de mídia. Conferir console, funcionamento offline, layout
+4K horizontal, resoluções menores e touchscreen real quando disponível.
+
+## Pendências identificadas
+
+- O catálogo tem 18 registros, ordenados conforme o mosaico de referência:
+  gato-mourisco, gafanhoto, cascavel, tamanduá, lobo-guará, sauá, sapo-cururu,
+  jaguatirica, seriema, tatu-galinha, raposa-do-campo, anta, coruja, bugio,
+  onça-pintada, pica-pau, jacaré e onça-parda. A raposa ainda tem conteúdo pendente.
+- Pastas com `.gitkeep` estão preparadas para imagem e áudio de tamanduá,
+  jaguatirica, raposa-do-campo, anta e jacaré. Faltam também
+  `assets/videos/fauna.mp4` e `assets/videos/capa.jpg`.
+- Há mídias não referenciadas, inclusive de ema, tico-tico e urutu. Não removê-las
+  automaticamente. `tico-tico/imagem.jpg` contém uma imagem WebP.
+- Existe um modal de vídeo residual; o player atual pertence à tela de vídeo.
+- Modais têm atributos ARIA, mas não gerenciamento de foco completo.
+- `README.md`, `TUTORIAL-DE-ALTERACOES.md` e `assets/LEIA-ME.txt` têm divergências
+  em relação ao código. `CHANGELOG.md` é citado, mas não existe. Conferir o código
+  antes de seguir exemplos e atualizar documentação quando pertinente ao pedido.
