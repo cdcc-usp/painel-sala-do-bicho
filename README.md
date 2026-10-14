@@ -6,15 +6,15 @@ Aplicação web offline para um painel touchscreen do CDCC.
 
 Dante, o lobo-guará mascote, apresenta a experiência em três etapas. 
 
-Depois, o visitante
-pode explorar os animais, ouvir seus sons e assistir a um vídeo.
+Depois, o visitante assiste a um vídeo e explora os animais e seus sons.
+Ao terminar o vídeo, a galeria abre automaticamente; pausar mantém a tela do vídeo.
 
 ## Recursos implementados
 
 - apresentação do Dante em três etapas;
-- galeria com 16 animais;
+- galeria com 18 animais, em mosaico que ocupa a janela no painel horizontal;
 - informações, curiosidades e som em cada animal;
-- reprodução de vídeo em tela cheia dentro do quiosque;
+- reprodução de vídeo em uma tela anterior à galeria;
 - controle global para ligar e desligar o som;
 - botão para voltar ao início;
 - aviso e reinício automático por inatividade;

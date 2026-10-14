@@ -5,7 +5,6 @@ Dante:
 
 Vídeo:
   assets/videos/fauna.mp4
-  assets/videos/capa.jpg
 
 Animais:
   Para cada item de js/dados.js, crie a pasta indicada nos campos "img" e

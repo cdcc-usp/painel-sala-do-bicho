@@ -30,11 +30,11 @@ function mapearElementos() {
         'tela-dante', 'tela-video', 'tela-galeria', 'imagem-dante', 'dante-substituto',
         'rotulo-etapa', 'fala-dante', 'complemento-dante', 'btn-avancar',
         'indicador-etapas', 'btn-inicio', 'btn-som', 'icone-som', 'texto-som',
-        'grid-animais', 'btn-video', 'capa-video', 'versao-app',
+        'grid-animais', 'versao-app',
         'modal-animal', 'btn-fechar-animal', 'modal-img', 'modal-status-som',
         'btn-repetir-som', 'modal-titulo', 'modal-cientifico',
         'modal-tags-container', 'modal-texto', 'modal-fonte',
-        'modal-video', 'btn-fechar-video', 'player-video', 'erro-video',
+        'player-video', 'erro-video',
         'modal-inatividade', 'contador-inatividade', 'btn-continuar',
         'seta-avancar', 'seta-voltar'
     ];
@@ -48,22 +48,17 @@ function configurarEventos() {
     elementos['btn-avancar'].addEventListener('click', avancarApresentacao);
     elementos['btn-inicio'].addEventListener('click', reiniciarExperiencia);
     elementos['btn-som'].addEventListener('click', alternarSom);
-    elementos['btn-video'].addEventListener('click', () => mudarTela('video'));
     elementos['seta-avancar'].addEventListener('click', () => mudarTela('galeria'));
     elementos['seta-voltar'].addEventListener('click', () => mudarTela('video'));
     elementos['btn-fechar-animal'].addEventListener('click', fecharAnimal);
     elementos['btn-repetir-som'].addEventListener('click', repetirSomAnimal);
-    elementos['btn-fechar-video'].addEventListener('click', fecharVideo);
     elementos['btn-continuar'].addEventListener('click', continuarSessao);
 
     elementos['modal-animal'].addEventListener('click', (evento) => {
         if (evento.target === elementos['modal-animal']) fecharAnimal();
     });
 
-    elementos['modal-video'].addEventListener('click', (evento) => {
-        if (evento.target === elementos['modal-video']) fecharVideo();
-    });
-
+    // Pausar mantém a tela atual; somente o término da reprodução avança automaticamente.
     elementos['player-video'].addEventListener('ended', () => mudarTela('galeria'));
     elementos['player-video'].addEventListener('error', mostrarErroVideo);
 
@@ -91,11 +86,6 @@ function prepararMidias() {
     elementos['imagem-dante'].addEventListener('error', () => {
         elementos['imagem-dante'].hidden = true;
         elementos['dante-substituto'].hidden = false;
-    });
-
-    elementos['capa-video'].src = CONFIG.video.capa;
-    elementos['capa-video'].addEventListener('error', () => {
-        elementos['capa-video'].src = criarImagemSubstituta('Vídeo da fauna', '#234e43');
     });
 
     elementos['player-video'].src = CONFIG.video.arquivo;
@@ -140,6 +130,9 @@ function mudarTela(idTela) {
     const telaAtiva = aliases[idTela] || idTela;
     const telas = ['tela-dante', 'tela-video', 'tela-galeria'];
 
+    document.body.classList.toggle('galeria-ativa', telaAtiva === 'tela-galeria');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+
     telas.forEach((id) => {
         const tela = document.getElementById(id);
         if (tela) {
@@ -176,10 +169,6 @@ function mudarTela(idTela) {
     elementos['player-video'].currentTime = 0;
     pararAudioAnimal();
     elementos['btn-inicio'].classList.add('oculto');
-}
-
-function mostrarGaleria() {
-    mudarTela('galeria');
 }
 
 function gerarCards() {
@@ -320,15 +309,6 @@ function atualizarControleSom() {
     elementos['player-video'].muted = !somAtivo;
 }
 
-function abrirVideo() {
-    mudarTela('video');
-}
-
-function fecharVideo() {
-    if (!videoAberto && elementos['modal-video'].hidden) return;
-    mudarTela('galeria');
-}
-
 function mostrarErroVideo() {
     elementos['erro-video'].hidden = false;
 }
@@ -353,8 +333,6 @@ function fecharModal(modal) {
 function fecharModalAtivo() {
     if (!elementos['modal-inatividade'].hidden) {
         continuarSessao();
-    } else if (!elementos['modal-video'].hidden) {
-        fecharVideo();
     } else if (!elementos['modal-animal'].hidden) {
         fecharAnimal();
     }
@@ -408,7 +386,7 @@ function reiniciarExperiencia() {
     videoAberto = false;
     animalAberto = null;
 
-    [elementos['modal-animal'], elementos['modal-video'], elementos['modal-inatividade']].forEach((modal) => {
+    [elementos['modal-animal'], elementos['modal-inatividade']].forEach((modal) => {
         modal.classList.remove('ativo');
         modal.hidden = true;
     });

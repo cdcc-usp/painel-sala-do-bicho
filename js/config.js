@@ -10,8 +10,7 @@ const CONFIG = Object.freeze({
     restaurarSomAoReiniciar: true,
 
     video: {
-        arquivo: 'assets/videos/fauna.mp4',
-        capa: 'assets/videos/capa.jpg'
+        arquivo: 'assets/videos/fauna.mp4'
     },
 
     dante: {

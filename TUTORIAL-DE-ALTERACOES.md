@@ -54,15 +54,18 @@ retorna à primeira fala do Dante e restaura o estado inicial do som.
 
 ## 4. Alterar o vídeo
 
-Coloque o vídeo e sua capa nestes caminhos:
+Coloque o vídeo neste caminho:
 
 ```text
 assets/videos/fauna.mp4
-assets/videos/capa.jpg
 ```
 
-Para maior compatibilidade, use MP4 com vídeo H.264 e áudio AAC. Se os nomes
-forem diferentes, altere o objeto `video` em `js/config.js`.
+Para maior compatibilidade, use MP4 com vídeo H.264 e áudio AAC. Se o nome
+for diferente, altere `video.arquivo` em `js/config.js`.
+
+O vídeo vem antes da galeria e avança automaticamente ao terminar. Enquanto
+estiver pausado, permanece na tela do vídeo. A seta permite avançar manualmente.
+A galeria não possui mais card ou capa de vídeo; use a seta para voltar ao vídeo.
 
 Todo o conteúdo deve ser local. Não use links do YouTube ou arquivos hospedados
 em sites externos, pois o painel precisa continuar funcionando sem internet.
@@ -142,7 +145,7 @@ Registre a alteração também em `CHANGELOG.md`.
 
 ## 10. Como a aplicação funciona internamente
 
-`index.html` possui duas telas principais: apresentação e galeria. Somente uma
+`index.html` possui três telas: apresentação, vídeo e galeria. Somente uma
 recebe a classe CSS `ativa` por vez.
 
 `main.js` mantém o estado atual da apresentação, cria os cards a partir da lista
@@ -150,9 +153,9 @@ de animais e centraliza o controle das mídias. Os eventos são cadastrados com
 `addEventListener`, sem código JavaScript espalhado pelo HTML.
 
 Os modais utilizam o atributo `hidden` quando fechados e a classe `ativo` durante
-a animação de abertura. O vídeo ocupa toda a janela do navegador por CSS, sem
-solicitar outra camada de tela cheia. Isso é mais previsível quando o navegador
-já está em modo quiosque.
+a animação de abertura. O vídeo usa um player com controles em sua própria tela.
+Em telas acima de 1100px, a galeria ocupa toda a janela com seis linhas flexíveis;
+título e rodapé não reservam espaço no mosaico. Em telas menores, há rolagem.
 
 ## 11. Instalar no Windows 11 em modo quiosque
 
@@ -173,7 +176,7 @@ local restrita, inicialização automática e recuperação após queda de energ
 - [ ] Dante definitivo foi adicionado.
 - [ ] Todas as imagens aparecem.
 - [ ] Todos os sons funcionam e têm volume semelhante.
-- [ ] O vídeo e a capa são locais.
+- [ ] O vídeo é local e avança para a galeria ao terminar.
 - [ ] Textos e nomes científicos foram revisados por especialista.
 - [ ] Fontes e licenças das mídias foram registradas.
 - [ ] Botões foram testados no touchscreen real.

@@ -25,8 +25,15 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 ## Fluxos e requisitos confirmados
 
 - Painel final: tela 4K horizontal; navegador ainda sem escolha específica.
+  Usado em mediações espontâneas e agendadas do CDCC.
 - Fluxo: três etapas do Dante → vídeo → galeria. O fim do vídeo e a seta de
   avanço abrem a galeria; voltar ao vídeo reinicia a reprodução.
+- O evento `ended` avança automaticamente; pausar o vídeo mantém sua tela.
+  A galeria não possui seção de vídeo nem modal de vídeo residual.
+- Em telas acima de 1100px, o mosaico ocupa a janela inteira, com seis linhas
+  flexíveis. Título fica acessível sem ocupar espaço; rodapé fica oculto na
+  galeria. Controles permanecem sobre as imagens. `galeria-ativa` no body
+  controla o rodapé e a rolagem; telas menores mantêm a galeria com rolagem.
 - Preservar a disposição atual do mosaico. Em telas acima de 1100px, os 18
   primeiros cards têm posições definidas por `nth-child`: a ordem do array
   determina a posição visual, independentemente de `classeTamanho`.
@@ -86,11 +93,10 @@ inatividade e erros de mídia. Conferir console, funcionamento offline, layout
   no documento são omitidos. Múltiplas fontes ficam no campo `fonte`, separadas
   por ` | `. Não completar ou revisar conteúdo científico por suposição.
 - Pastas com `.gitkeep` estão preparadas para imagem e áudio de tamanduá,
-  jaguatirica, raposa-do-campo, anta e jacaré. Faltam também
-  `assets/videos/fauna.mp4` e `assets/videos/capa.jpg`.
+  jaguatirica, raposa-do-campo, anta e jacaré. O vídeo local está em
+  `assets/videos/fauna.mp4`; não há mais capa de vídeo na galeria.
 - Há mídias não referenciadas, inclusive de ema, tico-tico e urutu. Não removê-las
   automaticamente. `tico-tico/imagem.jpg` contém uma imagem WebP.
-- Existe um modal de vídeo residual; o player atual pertence à tela de vídeo.
 - Modais têm atributos ARIA, mas não gerenciamento de foco completo.
 - `README.md`, `TUTORIAL-DE-ALTERACOES.md` e `assets/LEIA-ME.txt` têm divergências
   em relação ao código. `CHANGELOG.md` é citado, mas não existe. Conferir o código
