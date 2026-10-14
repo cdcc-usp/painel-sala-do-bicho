@@ -38,7 +38,7 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   ao Dante, restaurando o som conforme a configuração.
 - Os tempos elevados atuais são temporários, conforme informado pelo usuário.
   A composição atual do catálogo segue o mosaico fornecido pelo usuário.
-  Vídeo, mídias faltantes, créditos e conteúdo da raposa ainda serão definidos
+  Vídeo, mídias faltantes e créditos ainda serão definidos
   ou fornecidos pelo usuário; não preencher por suposição.
 
 ## Convenções e cuidados
@@ -77,7 +77,14 @@ inatividade e erros de mídia. Conferir console, funcionamento offline, layout
 - O catálogo tem 18 registros, ordenados conforme o mosaico de referência:
   gato-mourisco, gafanhoto, cascavel, tamanduá, lobo-guará, sauá, sapo-cururu,
   jaguatirica, seriema, tatu-galinha, raposa-do-campo, anta, coruja, bugio,
-  onça-pintada, pica-pau, jacaré e onça-parda. A raposa ainda tem conteúdo pendente.
+  onça-pintada, pica-pau, jacaré e onça-parda.
+- Textos de 17 animais foram atualizados com o documento fornecido pelo usuário;
+  o jacaré agora é Jacaré-de-Papo-Amarelo (`Caiman latirostris`). A jaguatirica
+  mantém o texto anterior, pois não constava no documento. Urutu, ema, tico-tico
+  e rã-touro ficam para depois, conforme confirmado pelo usuário.
+- Os destaques novos usam Grupo, Alimentação e Periodicidade; campos vazios
+  no documento são omitidos. Múltiplas fontes ficam no campo `fonte`, separadas
+  por ` | `. Não completar ou revisar conteúdo científico por suposição.
 - Pastas com `.gitkeep` estão preparadas para imagem e áudio de tamanduá,
   jaguatirica, raposa-do-campo, anta e jacaré. Faltam também
   `assets/videos/fauna.mp4` e `assets/videos/capa.jpg`.
