@@ -40,7 +40,11 @@
             </section>
 
             <section id="tela-video" class="tela tela-video" aria-label="Ecrã do vídeo principal">
-                <button id="seta-avancar" class="seta-avancar" type="button" aria-label="Ir para animais">›</button>
+                <button id="seta-avancar" class="seta-avancar" type="button" aria-label="Ir para animais">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <polyline points="8 4 16 12 8 20" />
+                    </svg>
+                </button>
                 <div class="conteudo-video">
                     <video id="player-video" controls playsinline preload="metadata"></video>
                     <p id="erro-video" class="media-erro" hidden>
@@ -50,7 +54,11 @@
             </section>
 
             <section id="tela-galeria" class="tela tela-galeria" aria-labelledby="titulo-galeria">
-                <button id="seta-voltar" class="seta-voltar" type="button" aria-label="Voltar ao vídeo">‹</button>
+                <button id="seta-voltar" class="seta-voltar" type="button" aria-label="Voltar ao vídeo">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <polyline points="16 4 8 12 16 20" />
+                    </svg>
+                </button>
 
                 <div class="cabecalho-galeria">
                     <h1 id="titulo-galeria">Animais da região</h1>

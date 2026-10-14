@@ -33,6 +33,8 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 - Em telas acima de 1100px, o mosaico ocupa o espaço disponível, com seis linhas
   flexíveis, margem superior para Início/Som e margens laterais para as setas.
   Setas grandes ficam no centro vertical das bordas, com área de toque ampliada.
+  Usam SVGs simétricos centralizados nos círculos, com fundo branco e ícone verde escuro;
+  evitar caracteres de fonte, cujo alinhamento visual varia entre navegadores.
   O vídeo centralizado preenche sua área, mantendo a proporção com `contain`.
   Espaçamentos compartilhados são variáveis CSS em `:root`. Título fica acessível
   sem ocupar espaço; rodapé fica oculto na galeria e no vídeo. `galeria-ativa` e
