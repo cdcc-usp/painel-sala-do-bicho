@@ -53,7 +53,7 @@ const animais = [
         id: 'lobo-guara',
         nome: 'Lobo-Guará',
         img: 'assets/animais/lobo-guara/imagem.jpg',
-        imgModal: 'assets/animais/lobo-guara/imagem-modal.png',
+        imgModal: 'assets/animais/lobo-guara/imagem.jpg',
         audio: 'assets/animais/lobo-guara/audio.mp3',
         cientifico: 'Chrysocyon brachyurus',
         destaques: ['Grupo: Canídeo', 'Alimentação: Onívoro', 'Periodicidade: Crepusculares'],
