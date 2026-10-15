@@ -18,6 +18,9 @@ Abra `js/config.js` e procure por `dante.etapas`. Cada item representa uma tela:
 
 É possível alterar os textos ou acrescentar novas etapas copiando esse formato.
 O indicador de progresso é criado automaticamente.
+As duas primeiras falas vêm antes do vídeo. A terceira tem `aposVideo: true`:
+esse campo marca a primeira fala após o vídeo e deve ser mantido nela.
+O botão da segunda fala abre o vídeo; o da última abre a galeria.
 
 ## 2. Adicionar a imagem do Dante
 
@@ -75,9 +78,11 @@ assets/videos/fauna.mp4
 Para maior compatibilidade, use MP4 com vídeo H.264 e áudio AAC. Se o nome
 for diferente, altere `video.arquivo` em `js/config.js`.
 
-O vídeo vem antes da galeria e avança automaticamente ao terminar. Enquanto
-estiver pausado, permanece na tela do vídeo. A seta permite avançar manualmente.
-A galeria não possui mais card ou capa de vídeo; use a seta para voltar ao vídeo.
+O vídeo vem depois das duas primeiras falas do Dante. Ao terminar, abre
+automaticamente a terceira fala, que orienta a tocar nos animais. Enquanto
+estiver pausado, permanece na tela do vídeo. A seta permite avançar manualmente
+para a mesma fala. O botão dela abre a galeria; a seta dela permite rever o vídeo.
+A seta da galeria volta às orientações do Dante.
 
 Todo o conteúdo deve ser local. Não use links do YouTube ou arquivos hospedados
 em sites externos, pois o painel precisa continuar funcionando sem internet.
@@ -203,7 +208,7 @@ local restrita, inicialização automática e recuperação após queda de energ
 - [ ] Dante definitivo foi adicionado.
 - [ ] Todas as imagens aparecem.
 - [ ] Todos os sons funcionam e têm volume semelhante.
-- [ ] O vídeo é local e avança para a galeria ao terminar.
+- [ ] O vídeo é local e abre a terceira fala do Dante ao terminar; o botão dela abre a galeria.
 - [ ] Textos e nomes científicos foram revisados por especialista.
 - [ ] Fontes e licenças das mídias foram registradas.
 - [ ] Botões foram testados no touchscreen real.

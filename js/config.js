@@ -27,13 +27,14 @@ const CONFIG = Object.freeze({
                 rotulo: 'UM CONVITE ESPECIAL',
                 fala: 'Quero convidar você para conhecer os animais que vivem em nossa região.',
                 complemento: 'Você poderá conhecer curiosidades e ouvir os sons de cada um deles.',
-                botao: 'Continuar'
+                botao: 'Assistir ao Vídeo'
             },
             {
+                aposVideo: true,
                 rotulo: 'ANTES DE COMEÇAR…',
                 fala: 'Você já conhece alguns desses animais?',
                 complemento: 'Toque nas imagens, observe os detalhes e descubra quem vive por aqui!',
-                botao: 'Assistir ao Vídeo'
+                botao: 'Conhecer os animais'
             }
         ]
     }

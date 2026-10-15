@@ -40,7 +40,7 @@ function mapearElementos() {
         'modal-referencias', 'modal-credito-imagem',
         'player-video', 'erro-video',
         'modal-inatividade', 'contador-inatividade', 'btn-continuar',
-        'seta-avancar', 'seta-voltar', 'btn-reinicio', 'texto-reinicio',
+        'seta-avancar', 'seta-voltar', 'seta-voltar-video', 'btn-reinicio', 'texto-reinicio',
         'modal-senha', 'btn-fechar-senha', 'form-senha', 'senha-mediacao',
         'teclado-senha', 'erro-senha', 'btn-mostrar-senha',
         'btn-limpar-senha', 'btn-apagar-senha', 'btn-confirmar-senha'
@@ -55,8 +55,9 @@ function configurarEventos() {
     elementos['btn-avancar'].addEventListener('click', avancarApresentacao);
     elementos['btn-inicio'].addEventListener('click', reiniciarExperiencia);
     elementos['btn-som'].addEventListener('click', alternarSom);
-    elementos['seta-avancar'].addEventListener('click', () => mudarTela('galeria'));
-    elementos['seta-voltar'].addEventListener('click', () => mudarTela('video'));
+    elementos['seta-avancar'].addEventListener('click', mostrarDanteAposVideo);
+    elementos['seta-voltar'].addEventListener('click', mostrarDanteAposVideo);
+    elementos['seta-voltar-video'].addEventListener('click', () => mudarTela('video'));
     elementos['btn-fechar-animal'].addEventListener('click', fecharAnimal);
     elementos['btn-repetir-som'].addEventListener('click', repetirSomAnimal);
     elementos['btn-continuar'].addEventListener('click', continuarSessao);
@@ -79,7 +80,9 @@ function configurarEventos() {
     });
 
     // Pausar mantém a tela atual; somente o término da reprodução avança automaticamente.
-    elementos['player-video'].addEventListener('ended', () => mudarTela('galeria'));
+    elementos['player-video'].addEventListener('ended', () => {
+        if (videoAberto) mostrarDanteAposVideo();
+    });
     elementos['player-video'].addEventListener('error', mostrarErroVideo);
 
     document.addEventListener('pointerdown', registrarAtividade, { passive: true });
@@ -121,12 +124,14 @@ function atualizarEtapaDante() {
     elementos['fala-dante'].textContent = etapa.fala;
     elementos['complemento-dante'].textContent = etapa.complemento;
     elementos['btn-avancar'].textContent = etapa.botao;
+    elementos['seta-voltar-video'].hidden = !etapa.aposVideo;
 
     elementos['indicador-etapas'].replaceChildren();
     CONFIG.dante.etapas.forEach((_, indice) => {
         const ponto = document.createElement('span');
         ponto.className = indice === etapaDanteAtual ? 'ponto ativo' : 'ponto';
         ponto.setAttribute('aria-label', `Etapa ${indice + 1} de ${CONFIG.dante.etapas.length}`);
+        if (indice === etapaDanteAtual) ponto.setAttribute('aria-current', 'step');
         elementos['indicador-etapas'].appendChild(ponto);
     });
 
@@ -136,13 +141,25 @@ function atualizarEtapaDante() {
 }
 
 function avancarApresentacao() {
-    if (etapaDanteAtual < CONFIG.dante.etapas.length - 1) {
+    const proximaEtapa = CONFIG.dante.etapas[etapaDanteAtual + 1];
+    if (proximaEtapa?.aposVideo) {
+        mudarTela('video');
+        return;
+    }
+
+    if (proximaEtapa) {
         etapaDanteAtual += 1;
         atualizarEtapaDante();
         return;
     }
 
-    mudarTela('video');
+    mudarTela('galeria');
+}
+
+function mostrarDanteAposVideo() {
+    etapaDanteAtual = CONFIG.dante.etapas.findIndex((etapa) => etapa.aposVideo);
+    atualizarEtapaDante();
+    mudarTela('dante');
 }
 
 function mudarTela(idTela) {
@@ -194,7 +211,7 @@ function mudarTela(idTela) {
     elementos['player-video'].pause();
     elementos['player-video'].currentTime = 0;
     pararAudioAnimal();
-    elementos['btn-inicio'].classList.add('oculto');
+    elementos['btn-inicio'].classList.toggle('oculto', etapaDanteAtual === 0);
 }
 
 function gerarCards() {
