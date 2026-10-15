@@ -88,19 +88,26 @@
     <div id="modal-animal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" hidden>
         <article class="modal-content modal-animal-content">
             <button id="btn-fechar-animal" class="btn-fechar" type="button" aria-label="Fechar informações do animal">×</button>
-            <div class="modal-hero">
-                <img id="modal-img" src="" alt="">
+            <div class="modal-cabecalho">
+                <div class="modal-hero">
+                    <img id="modal-img" src="" alt="">
+                </div>
+                <div class="modal-resumo">
+                    <h2 id="modal-titulo" class="modal-titulo"></h2>
+                    <p id="modal-cientifico" class="modal-cientifico"></p>
+                    <div id="modal-tags-container" class="modal-tags"></div>
+                </div>
             </div>
             <div class="modal-corpo">
                 <div class="linha-som">
                     <div id="modal-status-som" class="tocando-indicador" role="status"></div>
                     <button id="btn-repetir-som" class="botao-secundario" type="button">🔊 Ouvir novamente</button>
                 </div>
-                <h2 id="modal-titulo" class="modal-titulo"></h2>
-                <p id="modal-cientifico" class="modal-cientifico"></p>
-                <div id="modal-tags-container" class="modal-tags"></div>
                 <div id="modal-texto" class="modal-texto"></div>
-                <div id="modal-fonte" class="modal-fonte"></div>
+                <div id="modal-referencias" class="modal-referencias" hidden>
+                    <p id="modal-fonte" class="modal-fonte" hidden></p>
+                    <p id="modal-credito-imagem" class="modal-credito-imagem" hidden></p>
+                </div>
             </div>
         </article>
     </div>

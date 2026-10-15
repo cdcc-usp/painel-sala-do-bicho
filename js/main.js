@@ -37,6 +37,7 @@ function mapearElementos() {
         'modal-animal', 'btn-fechar-animal', 'modal-img', 'modal-status-som',
         'btn-repetir-som', 'modal-titulo', 'modal-cientifico',
         'modal-tags-container', 'modal-texto', 'modal-fonte',
+        'modal-referencias', 'modal-credito-imagem',
         'player-video', 'erro-video',
         'modal-inatividade', 'contador-inatividade', 'btn-continuar',
         'seta-avancar', 'seta-voltar', 'btn-reinicio', 'texto-reinicio',
@@ -261,6 +262,11 @@ function abrirAnimal(animalId) {
     } else {
         elementos['modal-fonte'].hidden = true;
     }
+
+    const creditoImagem = (animal.creditoImagem || '').trim();
+    elementos['modal-credito-imagem'].textContent = creditoImagem ? `Crédito da imagem: ${creditoImagem}` : '';
+    elementos['modal-credito-imagem'].hidden = !creditoImagem;
+    elementos['modal-referencias'].hidden = !animal.fonte && !creditoImagem;
 
     abrirModal(elementos['modal-animal']);
     tocarSomAnimal(animal.audio);

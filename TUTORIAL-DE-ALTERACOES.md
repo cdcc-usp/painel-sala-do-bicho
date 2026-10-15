@@ -96,7 +96,8 @@ Abra `js/dados.js`. Cada animal possui este formato:
     destaques: ['Curiosidade 1', 'Curiosidade 2'],
     classeTamanho: '',
     descricao: 'Primeiro parágrafo.\nSegundo parágrafo.',
-    fonte: 'Endereço da fonte consultada'
+    fonte: 'Endereço da fonte consultada',
+    creditoImagem: ''
 }
 ```
 
@@ -105,6 +106,17 @@ nela e confira se os caminhos estão iguais aos registrados em `dados.js`.
 
 As fontes são apresentadas somente como texto. Isso evita que o visitante abra
 um navegador externo e saia do quiosque.
+
+Preencha `creditoImagem` com o nome do fotógrafo, instituição e/ou licença da
+foto, conforme as informações da mídia. Esse crédito aparece junto da fonte
+no painel de informações do animal. Se ficar vazio, a linha não é exibida.
+Quando houver `imgModal`, informe o crédito dessa foto. Não invente atribuições.
+
+O painel de informações usa a variável CSS `--escala-animal`, baseada na altura
+da janela, para manter uma proporção semelhante em HD e 4K. O cabeçalho mostra
+a foto ao lado do nome e destaques, e o texto fica abaixo. A foto usa sua proporção
+natural, sem faixas laterais. Em telas estreitas, o cabeçalho fica vertical.
+O conteúdo tem rolagem interna quando ultrapassa a altura disponível.
 
 ### Tamanhos possíveis dos cards
 

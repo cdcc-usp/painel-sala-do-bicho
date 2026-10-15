@@ -10,7 +10,8 @@ const animais = [
         destaques: ['Grupo: Felinos', 'Alimentação: Carnívoro'],
         classeTamanho: '',
         descricao: 'É tipicamente solitário na natureza.\nÉ duas vezes maior que um gato doméstico.\nPossui coloração uniforme composta pelas cores cinza e vermelho.',
-        fonte: ''
+        fonte: 'teste',
+        creditoImagem: 'teste'
     },
     {
         id: 'gafanhoto',
@@ -21,7 +22,8 @@ const animais = [
         destaques: ['Grupo: Inseto', 'Alimentação: Herbívoro', 'Periodicidade: Diurno'],
         classeTamanho: 'tamanho-alto',
         descricao: 'Tem ampla distribuição no Brasil, América do Sul e América Central.\nOs adultos apresentam coloração verde e amarela e as ninfas são negras com manchas vermelhas.\nSe alimentam de Solanáceas (grupo de plantas com flor do grupo das dicotiledôneas), como a Lobeira.',
-        fonte: 'https://www.inaturalist.org/taxa/320746-Chromacris-speciosa | https://g1.globo.com/sp/campinas-regiao/terra-da-gente/fauna/noticia/2015/01/gafanhoto-soldado.html'
+        fonte: 'https://www.inaturalist.org/taxa/320746-Chromacris-speciosa | https://g1.globo.com/sp/campinas-regiao/terra-da-gente/fauna/noticia/2015/01/gafanhoto-soldado.html',
+        creditoImagem: ''
     },
     {
         id: 'cascavel',
@@ -32,7 +34,8 @@ const animais = [
         destaques: ['Grupo: Réptil', 'Alimentação: Carnívoro', 'Periodicidade: Noturna'],
         classeTamanho: '',
         descricao: 'Facilmente reconhecida pelo chocalho caudal.\nÉ uma espécie venenosa, apesar de não ser agressiva.\nPodem gerar cerca de 14 filhotes por gestação.',
-        fonte: 'https://www.nationalgeographicbrasil.com/animais/2024/01/conheca-5-caracteristicas-da-cascavel-uma-das-cobras-mais-perigosas-do-mundo | https://www.inaturalist.org/taxa/30693-Crotalus-durissus | https://www.britannica.com/animal/rattlesnake#ref837078'
+        fonte: 'https://www.nationalgeographicbrasil.com/animais/2024/01/conheca-5-caracteristicas-da-cascavel-uma-das-cobras-mais-perigosas-do-mundo | https://www.inaturalist.org/taxa/30693-Crotalus-durissus | https://www.britannica.com/animal/rattlesnake#ref837078',
+        creditoImagem: ''
     },
     {
         id: 'tamandua',
@@ -43,7 +46,8 @@ const animais = [
         destaques: ['Grupo: Mamífero', 'Periodicidade: Diurnos'],
         classeTamanho: 'tamanho-largo',
         descricao: 'Por se alimentarem exclusivamente de cupins e formigas, eles não apresentam dentes.\nSua língua possui 60 centímetros de comprimento.\nSão animais solitários.',
-        fonte: 'https://www.inaturalist.org/taxa/47107-Myrmecophaga-tridactyla'
+        fonte: 'https://www.inaturalist.org/taxa/47107-Myrmecophaga-tridactyla',
+        creditoImagem: ''
     },
     {
         id: 'lobo-guara',
@@ -55,7 +59,8 @@ const animais = [
         destaques: ['Grupo: Canídeo', 'Alimentação: Onívoro', 'Periodicidade: Crepusculares'],
         classeTamanho: 'tamanho-alto',
         descricao: 'É o maior canídeo da América do Sul.\nCaracterizado por pernas longas e finas e uma densa pelagem avermelhada.\nSeu habitat é, principalmente, campos abertos, com vegetação arbustiva e áreas florestais com dossel aberto.',
-        fonte: 'https://www.inaturalist.org/taxa/42091-Chrysocyon-brachyurus'
+        fonte: 'https://www.inaturalist.org/taxa/42091-Chrysocyon-brachyurus',
+        creditoImagem: ''
     },
     {
         id: 'saua',
@@ -66,7 +71,8 @@ const animais = [
         destaques: ['Grupo: Primata', 'Alimentação: Frugívora'],
         classeTamanho: '',
         descricao: 'Marcado por toda a face na cor preta, assim como os pés e mãos, e o resto do corpo de cor amarronzada.\nPossui apenas um filho por ano.\nPodem ser geofágicos, se alimentando de solo às vezes.',
-        fonte: 'https://www.inaturalist.org/taxa/43683-Callicebus-personatus'
+        fonte: 'https://www.inaturalist.org/taxa/43683-Callicebus-personatus',
+        creditoImagem: ''
     },
     {
         id: 'sapo-cururu',
@@ -77,7 +83,8 @@ const animais = [
         destaques: ['Grupo: Anuro', 'Alimentação: Onívoros', 'Periodicidade: Noturno'],
         classeTamanho: '',
         descricao: 'Considerado como praga em regiões onde foi introduzido.\nPossui glândulas de veneno e os adultos e girinos são altamente tóxicos quando ingeridos.\nApresentam dimorfismo sexual, na qual, as fêmeas são maiores de cor sépia ou marrom, enquanto os machos são menores e mais claros.',
-        fonte: 'https://www.inaturalist.org/taxa/553515-Rhinella-marina | https://riodejaneiroambiental.blogspot.com/2009/08/rhinella-icterica-sapo-cururu.html'
+        fonte: 'https://www.inaturalist.org/taxa/553515-Rhinella-marina | https://riodejaneiroambiental.blogspot.com/2009/08/rhinella-icterica-sapo-cururu.html',
+        creditoImagem: ''
     },
     {
         id: 'jaguatirica',
@@ -88,7 +95,8 @@ const animais = [
         destaques: ['⚖️ 8 a 16 kg', '🥩 Carnívoro', '🌳 Noturno e solitário'],
         classeTamanho: 'tamanho-gigante',
         descricao: 'É um felino de médio porte nativo do continente americano.\nExcelente escaladora e nadadora, possui pelagem amarelada com rosetas e manchas pretas que garantem camuflagem na vegetação densa.',
-        fonte: 'https://www.inaturalist.org/taxa/41980-Leopardus-pardalis'
+        fonte: 'https://www.inaturalist.org/taxa/41980-Leopardus-pardalis',
+        creditoImagem: ''
     },
     {
         id: 'seriema',
@@ -99,7 +107,8 @@ const animais = [
         destaques: ['Grupo: Aves', 'Alimentação: Onívoras', 'Periodicidade: Diurnas'],
         classeTamanho: 'tamanho-alto',
         descricao: 'Não apresentam dimorfismo sexual, ou seja, os machos e fêmeas são iguais.\nSão monogâmicas\nPodem alcançar velocidades de até 25km/h antes de levantar voo.',
-        fonte: 'https://www.inaturalist.org/taxa/14-Cariama-cristata'
+        fonte: 'https://www.inaturalist.org/taxa/14-Cariama-cristata',
+        creditoImagem: ''
     },
     {
         id: 'tatu-galinha',
@@ -110,7 +119,8 @@ const animais = [
         destaques: ['Grupo: Mamífero', 'Alimentação: Insetívoro', 'Periodicidade: Noturnos'],
         classeTamanho: '',
         descricao: 'São extensos cavadores, suas tocas chegam a ter 2,1 metros de profundidade.\nMachos são agressivos quando se trata de território, principalmente quando outro macho se aproxima da sua área de vida.',
-        fonte: 'https://www.inaturalist.org/taxa/47075-Dasypus-novemcinctus'
+        fonte: 'https://www.inaturalist.org/taxa/47075-Dasypus-novemcinctus',
+        creditoImagem: ''
     },
     {
         id: 'raposa-do-campo',
@@ -121,7 +131,8 @@ const animais = [
         destaques: ['Grupo: Canídeo', 'Alimentação: Onívoro', 'Periodicidade: Noturno'],
         classeTamanho: 'tamanho-gigante',
         descricao: 'Os cupins são a base da sua alimentação.\nUtilizam tocas de tatus abandonadas para criar seus filhotes.\nÉ uma raposa pequena, pesando apenas 4kg.',
-        fonte: 'https://pt.wikipedia.org/wiki/Raposa-do-campo'
+        fonte: 'https://pt.wikipedia.org/wiki/Raposa-do-campo',
+        creditoImagem: ''
     },
     {
         id: 'anta',
@@ -132,7 +143,8 @@ const animais = [
         destaques: ['Grupo: Mamífero', 'Alimentação: Frugívora', 'Periodicidade: Diurnos'],
         classeTamanho: '',
         descricao: 'Maior mamífero terrestre do Brasil.\nSua gestação pode durar 400 dias.\nPodem viver até 35 anos de idade.',
-        fonte: 'https://www.inaturalist.org/taxa/43353-Tapirus-terrestris'
+        fonte: 'https://www.inaturalist.org/taxa/43353-Tapirus-terrestris',
+        creditoImagem: ''
     },
     {
         id: 'coruja',
@@ -144,7 +156,8 @@ const animais = [
         destaques: ['Grupo: Aves', 'Alimentação: Carnívoro-insetívoro', 'Periodicidade: Diurnos e noturnos'],
         classeTamanho: 'tamanho-alto',
         descricao: 'Apresentam um voo suave e silencioso.\nOs machos são ligeiramente maiores que as fêmeas, sendo elas ligeiramente mais escuras que os machos, principalmente na face.\nAo qualquer sinal de perigo emitem um som forte, alto e estridente',
-        fonte: 'https://www.wikiaves.com.br/wiki/coruja-buraqueira?s[]=coruja&s[]=buraqueira'
+        fonte: 'https://www.wikiaves.com.br/wiki/coruja-buraqueira?s[]=coruja&s[]=buraqueira',
+        creditoImagem: ''
     },
     {
         id: 'bugio',
@@ -155,7 +168,8 @@ const animais = [
         destaques: ['Grupo: Primata', 'Alimentação: Predominante folívora', 'Periodicidade: Diurno'],
         classeTamanho: 'tamanho-alto',
         descricao: 'Dimorfismo sexual, de modo que os machos são totalmente pretos e as fêmeas um coloração de castanho claro.\nVocalização principalmente para sinalizar a outros grupos a posse de determinado espaço.',
-        fonte: 'https://www.inaturalist.org/taxa/43435-Alouatta-caraya'
+        fonte: 'https://www.inaturalist.org/taxa/43435-Alouatta-caraya',
+        creditoImagem: ''
     },
     {
         id: 'onca-pintada',
@@ -166,7 +180,8 @@ const animais = [
         destaques: ['Grupo: Felino', 'Alimentação: Carnívoro', 'Periodicidade: Crepuscular'],
         classeTamanho: 'tamanho-alto',
         descricao: 'O terceiro maior felino do mundo.\nConhecida como Onça-Preta em indivíduos melânicos.\nApresentam a mordida mais forte entre todos os felinos.',
-        fonte: 'https://www.inaturalist.org/taxa/41970-Panthera-onca'
+        fonte: 'https://www.inaturalist.org/taxa/41970-Panthera-onca',
+        creditoImagem: ''
     },
     {
         id: 'pica-pau',
@@ -177,7 +192,8 @@ const animais = [
         destaques: ['Grupo: Aves', 'Alimentação: Onívoro', 'Periodicidade: Diurnos'],
         classeTamanho: 'tamanho-alto',
         descricao: 'Para encontrar seus alimentos, começa a dar fortes pancadas, retirando lascas grandes de madeira e usando a longa língua (que tem cerdas nas pontas) para capturar formigas e insetos.\nVivem em pares ou em grupos familiares.\nAmbos (macho e fêmea) apresentam cuidado parental com a prole.',
-        fonte: 'https://www.wikiaves.com.br/wiki/pica-pau-de-banda-branca?s[]=dryocopus&s[]=lineatus'
+        fonte: 'https://www.wikiaves.com.br/wiki/pica-pau-de-banda-branca?s[]=dryocopus&s[]=lineatus',
+        creditoImagem: ''
     },
     {
         id: 'jacare',
@@ -188,7 +204,8 @@ const animais = [
         destaques: ['Grupo: Réptil', 'Alimentação: Carnívoro', 'Periodicidade: Diurnos'],
         classeTamanho: 'tamanho-gigante',
         descricao: 'Dentre os crocodilianos, possuem o focinho mais largo, vivendo aproximadamente cerca de 50 anos.\nO cuidado parental ocorre tanto pela parte da fêmea quanto do macho no primeiro ano de vida.',
-        fonte: 'https://www.inaturalist.org/taxa/116518-Caiman-latirostris'
+        fonte: 'https://www.inaturalist.org/taxa/116518-Caiman-latirostris',
+        creditoImagem: ''
     },
     {
         id: 'onca-parda',
@@ -199,6 +216,7 @@ const animais = [
         destaques: ['Grupo: Felino', 'Alimentação: Carnívoro', 'Periodicidade: Noturno'],
         classeTamanho: 'tamanho-largo',
         descricao: 'Mamífero com maior distribuição geográfica no Ocidente.\nÉ um importante predador de cervídeos.\nTem hábitos de um animal solitário.',
-        fonte: 'https://www.inaturalist.org/taxa/42007-Puma-concolor'
+        fonte: 'https://www.inaturalist.org/taxa/42007-Puma-concolor',
+        creditoImagem: ''
     }
 ];

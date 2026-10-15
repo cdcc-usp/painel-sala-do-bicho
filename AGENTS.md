@@ -11,8 +11,8 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 - `js/config.js`: `CONFIG`, com falas do Dante, caminhos das mídias, versão,
   parâmetros de som e tempos em milissegundos. `Object.freeze` é superficial.
 - `js/dados.js`: array `animais`, contendo `id`, `nome`, `img`, `audio`,
-  `cientifico`, `destaques`, `classeTamanho`, `descricao`, `fonte` e `imgModal`
-  opcional. Quebras `\n` na descrição viram parágrafos.
+  `cientifico`, `destaques`, `classeTamanho`, `descricao`, `fonte`, `creditoImagem`
+  e `imgModal` opcional. Quebras `\n` na descrição viram parágrafos.
 - `js/main.js`: estado em memória, inicialização em `DOMContentLoaded`, eventos,
   navegação, geração dos cards, modais, mídias e inatividade.
 - `css/style.css`: variáveis de tema, CSS Grid, animações e media queries.
@@ -52,6 +52,14 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   cabeça e dorso no recorte horizontal, sem alterar a foto original.
 - Abrir um animal preenche o modal e toca seu som. Fechar interrompe o áudio.
   “Ouvir novamente” reproduz o áudio e reativa o som global se necessário.
+- O modal dos animais usa `--escala-animal`, baseada na altura da janela, para
+  manter proporções semelhantes em HD e 4K, com dimensões mais compactas e rolagem
+  interna quando necessário. O cabeçalho coloca foto ao lado de nome e destaques;
+  descrição e áudio ficam abaixo. A imagem tem largura de 100% e altura automática,
+  sem faixa lateral, corte ou distorção. Em telas estreitas, o cabeçalho é vertical.
+  Fonte e crédito da imagem ficam juntos no rodapé do conteúdo. `creditoImagem`
+  está vazio nos 18 registros para preenchimento posterior e só aparece quando
+  informado; creditar a foto exibida no modal (`imgModal`, quando existir).
 - Inatividade é monitorada apenas na galeria, por `pointerdown` e `keydown`.
   Reinício após 120000ms sem interação; aviso nos últimos 15000ms (começa em
   105000ms). Vídeo e apresentação não têm reinício por inatividade.

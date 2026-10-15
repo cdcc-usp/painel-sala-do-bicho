@@ -584,6 +584,24 @@ body.video-ativo .rodape-versao {
     transition: transform 220ms ease;
 }
 
+.modal-animal-content {
+    --escala-animal: clamp(0.9px, 0.125vh, 2.7px);
+    --espaco-animal: clamp(20px, calc(24 * var(--escala-animal)), 64px);
+    --fechar-animal: clamp(48px, calc(48 * var(--escala-animal)), 100px);
+    width: min(100%, 92vw, calc(740 * var(--escala-animal)));
+    max-height: 90vh;
+    max-height: 90dvh;
+    border-radius: clamp(22px, calc(24 * var(--escala-animal)), 56px);
+}
+
+.modal-animal-content .btn-fechar {
+    width: var(--fechar-animal);
+    height: var(--fechar-animal);
+    top: clamp(10px, calc(12 * var(--escala-animal)), 28px);
+    right: clamp(10px, calc(12 * var(--escala-animal)), 28px);
+    font-size: clamp(1.8rem, calc(30 * var(--escala-animal)), 4rem);
+}
+
 .modal-overlay.ativo .modal-content,
 .modal-overlay.ativo .aviso-inatividade {
     transform: translateY(0) scale(1);
@@ -607,26 +625,47 @@ body.video-ativo .rodape-versao {
     line-height: 1;
 }
 
+.modal-cabecalho {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(16px, calc(18 * var(--escala-animal)), 48px);
+    align-items: center;
+    padding: var(--espaco-animal) var(--espaco-animal) 0;
+}
+
 .modal-hero {
-    height: clamp(280px, 42vh, 450px);
+    min-width: 0;
+    overflow: hidden;
+    border-radius: clamp(12px, calc(14 * var(--escala-animal)), 36px);
 }
 
 .modal-hero img {
+    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+}
+
+.modal-resumo {
+    min-width: 0;
 }
 
 .modal-corpo {
-    padding: clamp(28px, 5vw, 54px);
+    padding: var(--espaco-animal);
 }
 
 .linha-som {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: clamp(12px, calc(12 * var(--escala-animal)), 28px);
+    margin-bottom: clamp(16px, calc(16 * var(--escala-animal)), 40px);
+}
+
+.modal-animal-content .tocando-indicador,
+.modal-animal-content .botao-secundario {
+    min-height: clamp(48px, calc(40 * var(--escala-animal)), 88px);
+    padding: clamp(10px, calc(10 * var(--escala-animal)), 24px) clamp(16px, calc(16 * var(--escala-animal)), 40px);
+    font-size: clamp(0.9rem, calc(13 * var(--escala-animal)), 2rem);
 }
 
 .tocando-indicador,
@@ -666,49 +705,58 @@ body.video-ativo .rodape-versao {
 
 .modal-titulo {
     color: var(--amarelo);
-    font-size: clamp(2.1rem, 5vw, 3.7rem);
-    line-height: 1;
+    padding-right: var(--fechar-animal);
+    font-size: clamp(1.65rem, calc(30 * var(--escala-animal)), 5.25rem);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
 }
 
 .modal-cientifico {
-    margin-top: 10px;
+    margin-top: clamp(8px, calc(8 * var(--escala-animal)), 20px);
     color: #b9ccc4;
-    font-size: 1.25rem;
+    font-size: clamp(1rem, calc(18 * var(--escala-animal)), 3rem);
     font-style: italic;
 }
 
 .modal-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin: 28px 0;
+    gap: clamp(8px, calc(8 * var(--escala-animal)), 20px);
+    margin-top: clamp(14px, calc(14 * var(--escala-animal)), 36px);
 }
 
 .tag {
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 999px;
-    padding: 9px 16px;
+    padding: clamp(6px, calc(6 * var(--escala-animal)), 16px) clamp(12px, calc(12 * var(--escala-animal)), 30px);
     background: rgba(255, 255, 255, 0.08);
     color: #eef6f2;
     font-weight: 700;
+    font-size: clamp(0.8125rem, calc(12 * var(--escala-animal)), 2rem);
 }
 
 .modal-texto {
     color: #f1f7f4;
-    font-size: clamp(1.05rem, 1.8vw, 1.22rem);
-    line-height: 1.65;
+    font-size: clamp(1rem, calc(14 * var(--escala-animal)), 2.4rem);
+    line-height: 1.55;
 }
 
 .modal-texto p + p {
-    margin-top: 13px;
+    margin-top: clamp(12px, calc(12 * var(--escala-animal)), 28px);
 }
 
-.modal-fonte {
-    margin-top: 30px;
+.modal-referencias {
+    display: grid;
+    gap: clamp(10px, calc(10 * var(--escala-animal)), 24px);
+    margin-top: clamp(20px, calc(20 * var(--escala-animal)), 48px);
     border-top: 1px solid rgba(255, 255, 255, 0.12);
-    padding-top: 22px;
+    padding-top: clamp(14px, calc(14 * var(--escala-animal)), 36px);
+}
+
+.modal-fonte,
+.modal-credito-imagem {
     color: #9db3aa;
-    font-size: 0.9rem;
+    font-size: clamp(0.8125rem, calc(10 * var(--escala-animal)), 1.6rem);
     line-height: 1.5;
     overflow-wrap: anywhere;
     user-select: text;
@@ -1024,8 +1072,8 @@ body.video-ativo .rodape-versao {
         border-radius: 28px 28px 0 0;
     }
 
-    .modal-hero {
-        height: 260px;
+    .modal-cabecalho {
+        grid-template-columns: 1fr;
     }
 
     .aviso-inatividade {
