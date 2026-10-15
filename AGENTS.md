@@ -28,6 +28,11 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   Usado em mediações espontâneas e agendadas do CDCC.
 - Fluxo: três etapas do Dante → vídeo → galeria. O fim do vídeo e a seta de
   avanço abrem a galeria; voltar ao vídeo reinicia a reprodução.
+- A apresentação dimensiona Dante, balão, textos, botão e progresso conforme a
+  janela, sem os antigos limites de 1320px/740px. O balão tem proporção próxima
+  de um quadrado e largura limitada pela altura da janela. Botão e indicadores
+  ficam fora do balão, abaixo dele, em `.controles-dante`; `.apresentacao-dante`
+  agrupa fala e controles. Em telas estreitas, o layout é vertical.
 - O evento `ended` avança automaticamente; pausar o vídeo mantém sua tela.
   A galeria não possui seção de vídeo nem modal de vídeo residual.
 - Em telas acima de 1100px, o mosaico ocupa o espaço disponível, com seis linhas

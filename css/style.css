@@ -113,24 +113,25 @@ button:focus-visible {
 
 /* TELA DANTE */
 .tela-dante {
+    --altura-dante: min(76vh, calc(100vh - 180px));
     align-items: center;
     justify-content: center;
-    padding: 110px clamp(24px, 6vw, 100px) 70px;
+    padding: 110px clamp(24px, 4vw, 160px) 70px;
     background:
         linear-gradient(rgba(10, 36, 32, 0.25), rgba(10, 36, 32, 0.62)),
         radial-gradient(circle at 72% 35%, rgba(240, 199, 94, 0.2), transparent 34rem);
 }
 
 .cenario-dante {
-    width: min(1320px, 100%);
+    width: min(100%, calc(var(--altura-dante) * 1.75 + 3vw));
     display: grid;
-    grid-template-columns: minmax(300px, 0.85fr) minmax(460px, 1.15fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: center;
-    gap: clamp(30px, 6vw, 90px);
+    gap: clamp(30px, 3vw, 120px);
 }
 
 .personagem-dante {
-    min-height: min(68vh, 740px);
+    min-height: var(--altura-dante);
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -153,7 +154,7 @@ button:focus-visible {
     position: relative;
     z-index: 1;
     width: 100%;
-    height: min(68vh, 740px);
+    height: var(--altura-dante);
     object-fit: contain;
     filter: drop-shadow(0 22px 25px rgba(0, 0, 0, 0.3));
 }
@@ -162,20 +163,31 @@ button:focus-visible {
     position: relative;
     z-index: 1;
     display: grid;
-    width: min(430px, 80vw);
+    width: min(100%, calc(var(--altura-dante) * 0.78));
     aspect-ratio: 0.78;
     place-items: center;
     border: 5px dashed rgba(255, 255, 255, 0.25);
     border-radius: 48% 48% 28% 28%;
     background: rgba(255, 255, 255, 0.06);
-    font-size: clamp(9rem, 18vw, 18rem);
+    font-size: clamp(9rem, 16vw, 36rem);
+}
+
+.apresentacao-dante {
+    display: grid;
+    width: min(100%, 62vh);
+    justify-self: center;
+    gap: clamp(18px, 1.8vh, 40px);
 }
 
 .balao-dante {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    aspect-ratio: 1.1;
     border: 5px solid rgba(23, 70, 61, 0.14);
-    border-radius: 42px;
-    padding: clamp(34px, 5vw, 68px);
+    border-radius: clamp(28px, 2vw, 64px);
+    padding: clamp(28px, 2.5vw, 104px);
     background: var(--creme);
     box-shadow: var(--sombra);
     color: var(--texto-escuro);
@@ -204,23 +216,52 @@ button:focus-visible {
 }
 
 .rotulo-etapa {
-    margin-bottom: 14px;
+    margin-bottom: clamp(12px, 1.2vh, 28px);
     color: var(--laranja);
-    font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+    font-size: clamp(1rem, 1.1vw, 2.5rem);
     font-weight: 900;
     letter-spacing: 0.16em;
 }
 
 .balao-dante h1 {
-    font-size: clamp(2rem, 3.7vw, 4rem);
+    font-size: clamp(2rem, min(3.2vw, 5.1vh), 8rem);
     line-height: 1.08;
 }
 
 .complemento-dante {
-    margin-top: 24px;
+    margin-top: clamp(12px, 1.6vh, 36px);
     color: #465851;
-    font-size: clamp(1.15rem, 1.7vw, 1.45rem);
-    line-height: 1.55;
+    font-size: clamp(1.125rem, min(1.7vw, 2.6vh), 3.25rem);
+    line-height: 1.45;
+}
+
+.controles-dante {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(14px, 1.5vh, 32px);
+}
+
+.controles-dante .botao-principal {
+    min-height: clamp(68px, 6vh, 132px);
+    margin-top: 0;
+    padding: clamp(14px, 1.2vh, 30px) clamp(24px, 2vw, 76px);
+    border-radius: clamp(18px, 1.2vw, 46px);
+    font-size: clamp(1.25rem, 1.5vw, 3rem);
+}
+
+.controles-dante .indicador-etapas {
+    gap: clamp(10px, 0.7vw, 28px);
+    margin-top: 0;
+}
+
+.controles-dante .ponto {
+    width: clamp(12px, 0.65vw, 26px);
+    height: clamp(12px, 0.65vw, 26px);
+}
+
+.controles-dante .ponto.ativo {
+    width: clamp(40px, 2.1vw, 84px);
 }
 
 .botao-principal {
@@ -720,7 +761,7 @@ body.video-ativo .rodape-versao {
     }
 
     .cenario-dante {
-        grid-template-columns: 0.78fr 1.22fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 34px;
     }
 
@@ -769,18 +810,18 @@ body.video-ativo .rodape-versao {
     }
 
     .cenario-dante {
+        width: 100%;
         grid-template-columns: 1fr;
         gap: 0;
     }
 
     .personagem-dante {
-        min-height: 32vh;
-        max-height: 340px;
+        min-height: 0;
+        height: clamp(240px, 36vh, 440px);
     }
 
     #imagem-dante {
-        height: 36vh;
-        max-height: 350px;
+        height: 100%;
     }
 
     .dante-substituto {
@@ -792,6 +833,10 @@ body.video-ativo .rodape-versao {
         margin-top: -16px;
         border-radius: 28px;
         padding: 28px;
+    }
+
+    .balao-dante h1 {
+        font-size: clamp(2rem, 5.4vw, 3.5rem);
     }
 
     .balao-dante::before {
