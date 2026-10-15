@@ -45,12 +45,24 @@ tempoAvisoMs: 15000,
 
 Os valores estão em milissegundos:
 
-- `120000` = 2 minutos até aparecer o aviso;
-- `15000` = 15 segundos de contagem antes do reinício.
+- `120000` = 2 minutos até o reinício;
+- `15000` = aviso nos últimos 15 segundos (aparece após 1 minuto e 45 segundos).
 
 O temporizador é renovado a cada toque ou tecla. Ele fica pausado enquanto o
 vídeo está aberto. Ao reiniciar, a aplicação fecha os modais, para as mídias,
 retorna à primeira fala do Dante e restaura o estado inicial do som.
+
+Na galeria, o botão “Pausar reinício” permite que o mediador mantenha a experiência
+aberta durante uma atividade. Digite o PIN de quatro dígitos usando o teclado
+numérico na tela ou um teclado físico e confirme. PIN incorreto não pausa o
+reinício. É possível mostrar/ocultar o PIN, apagar dígitos, limpar ou cancelar.
+
+O PIN é configurado em `CONFIG.senhaMediacao`, em `js/config.js`. Use uma string
+com quatro dígitos. É um controle
+local da interface, sem autenticação remota. A pausa não é gravada: continua ao
+rever o vídeo, mas termina ao voltar ao Início ou recarregar a página. Clique em
+“Reinício pausado · Reativar” para restaurar imediatamente o prazo completo de
+inatividade. Esse retorno ao modo automático não pede senha.
 
 ## 4. Alterar o vídeo
 
@@ -185,4 +197,5 @@ local restrita, inicialização automática e recuperação após queda de energ
 - [ ] Botões foram testados no touchscreen real.
 - [ ] A página foi testada sem internet.
 - [ ] O reinício por inatividade foi testado.
+- [ ] Senha incorreta, pausa, reativação e retorno ao Início foram testados.
 - [ ] A versão foi atualizada e registrada no changelog.

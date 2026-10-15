@@ -2,9 +2,10 @@
 const CONFIG = Object.freeze({
     versao: '1.0.0',
 
-    // Após 120 segundos sem interação, o aviso de reinício será exibido.
-    tempoInatividadeMs: 12000000,
-    tempoAvisoMs: 1500000,
+    // Reinicia após 2 minutos sem interação, com aviso nos últimos 15 segundos.
+    tempoInatividadeMs: 120000,
+    tempoAvisoMs: 15000,
+    senhaMediacao: '1980',
 
     somInicialmenteAtivo: true,
     restaurarSomAoReiniciar: true,

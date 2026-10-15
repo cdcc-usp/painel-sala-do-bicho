@@ -15,6 +15,11 @@
                 <span>Início</span>
             </button>
 
+            <button id="btn-reinicio" class="botao-controle oculto" type="button" aria-pressed="false" aria-label="Pausar reinício automático">
+                <span aria-hidden="true">⏱</span>
+                <span id="texto-reinicio" aria-live="polite">Pausar reinício</span>
+            </button>
+
             <button id="btn-som" class="botao-controle" type="button" aria-pressed="false" aria-label="Desativar som">
                 <span id="icone-som" aria-hidden="true">🔊</span>
                 <span id="texto-som">Som ligado</span>
@@ -98,6 +103,28 @@
                 <div id="modal-fonte" class="modal-fonte"></div>
             </div>
         </article>
+    </div>
+
+    <div id="modal-senha" class="modal-overlay modal-senha" role="dialog" aria-modal="true" aria-labelledby="titulo-senha" aria-describedby="descricao-senha" hidden>
+        <div class="modal-content modal-senha-content">
+            <button id="btn-fechar-senha" class="btn-fechar" type="button" aria-label="Cancelar e fechar teclado">×</button>
+            <h2 id="titulo-senha">PIN do monitor</h2>
+            <p id="descricao-senha">Digite o PIN para pausar o reinício automático.</p>
+            <form id="form-senha">
+                <label for="senha-mediacao">PIN de 4 dígitos</label>
+                <div class="campo-senha">
+                    <input id="senha-mediacao" type="password" readonly inputmode="none" autocomplete="off" maxlength="4" aria-describedby="erro-senha">
+                    <button id="btn-mostrar-senha" class="tecla-senha" type="button" aria-pressed="false">Mostrar</button>
+                </div>
+                <p id="erro-senha" class="erro-senha" role="alert"></p>
+                <div id="teclado-senha" class="teclado-senha" role="group" aria-label="Teclado numérico para digitar o PIN"></div>
+                <div class="acoes-teclado">
+                    <button id="btn-limpar-senha" class="tecla-senha" type="button">Limpar</button>
+                    <button id="btn-apagar-senha" class="tecla-senha" type="button">⌫ Apagar</button>
+                </div>
+                <button id="btn-confirmar-senha" class="botao-principal" type="submit" disabled>Pausar reinício</button>
+            </form>
+        </div>
     </div>
 
     <div id="modal-inatividade" class="modal-overlay modal-inatividade" role="alertdialog" aria-modal="true" aria-labelledby="titulo-inatividade" hidden>

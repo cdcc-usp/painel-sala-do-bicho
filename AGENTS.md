@@ -51,11 +51,19 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 - Abrir um animal preenche o modal e toca seu som. Fechar interrompe o áudio.
   “Ouvir novamente” reproduz o áudio e reativa o som global se necessário.
 - Inatividade é monitorada apenas na galeria, por `pointerdown` e `keydown`.
-  O aviso começa após `tempoInatividadeMs - tempoAvisoMs`. Vídeo e apresentação
-  não têm reinício por inatividade. Reiniciar fecha modais, para mídias e volta
-  ao Dante, restaurando o som conforme a configuração.
-- Os tempos elevados atuais são temporários, conforme informado pelo usuário.
-  A composição atual do catálogo segue o mosaico fornecido pelo usuário.
+  Reinício após 120000ms sem interação; aviso nos últimos 15000ms (começa em
+  105000ms). Vídeo e apresentação não têm reinício por inatividade.
+- Na galeria, “Pausar reinício” abre um teclado numérico de três colunas com
+  zero centralizado na última linha, sem depender do teclado do sistema.
+  O PIN tem quatro dígitos e está em `CONFIG.senhaMediacao`;
+  o teclado físico também funciona. O controle é local, sem autenticação remota.
+  Apenas a senha correta pausa os temporizadores. A pausa dura na sessão atual,
+  inclusive ao rever o vídeo; reativar pelo botão inicia um prazo completo.
+  Voltar ao Início ou recarregar a página restaura o reinício automático.
+- Reiniciar fecha modais, limpa a senha digitada, para mídias e volta ao Dante,
+  restaurando o som conforme a configuração. O aviso de inatividade fecha o
+  teclado se ele estiver aberto; abrir o teclado não desativa a inatividade.
+- A composição atual do catálogo segue o mosaico fornecido pelo usuário.
   Vídeo, mídias faltantes e créditos ainda serão definidos
   ou fornecidos pelo usuário; não preencher por suposição.
 
@@ -108,7 +116,8 @@ inatividade e erros de mídia. Conferir console, funcionamento offline, layout
   `assets/videos/fauna.mp4`; não há mais capa de vídeo na galeria.
 - Há mídias não referenciadas, inclusive de ema, tico-tico e urutu. Não removê-las
   automaticamente. `tico-tico/imagem.jpg` contém uma imagem WebP.
-- Modais têm atributos ARIA, mas não gerenciamento de foco completo.
+- O modal de senha contém o foco e o devolve ao controle ao fechar. Os demais
+  modais têm atributos ARIA, mas não gerenciamento de foco completo.
 - `README.md`, `TUTORIAL-DE-ALTERACOES.md` e `assets/LEIA-ME.txt` têm divergências
   em relação ao código. `CHANGELOG.md` é citado, mas não existe. Conferir o código
   antes de seguir exemplos e atualizar documentação quando pertinente ao pedido.

@@ -18,6 +18,7 @@ Ao terminar o vídeo, a galeria abre automaticamente; pausar mantém a tela do v
 - controle global para ligar e desligar o som;
 - botão para voltar ao início;
 - aviso e reinício automático por inatividade;
+- pausa do reinício com senha do mediador e teclado na tela;
 - funcionamento sem internet;
 - versão visível no rodapé e registrada no código;
 - substitutos visuais quando uma imagem ainda não foi adicionada.

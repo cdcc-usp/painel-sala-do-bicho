@@ -7,6 +7,7 @@ let animalAberto = null;
 let temporizadorInatividade = null;
 let intervaloContagem = null;
 let videoAberto = false;
+let reinicioAutomaticoPausado = false;
 
 const elementos = {};
 
@@ -15,9 +16,11 @@ document.addEventListener('DOMContentLoaded', iniciarAplicacao);
 function iniciarAplicacao() {
     mapearElementos();
     configurarEventos();
+    gerarTecladoSenha();
     prepararMidias();
     gerarCards();
     atualizarControleSom();
+    atualizarControleReinicio();
     atualizarEtapaDante();
     atualizarVersao();
     mudarTela('dante');
@@ -36,7 +39,10 @@ function mapearElementos() {
         'modal-tags-container', 'modal-texto', 'modal-fonte',
         'player-video', 'erro-video',
         'modal-inatividade', 'contador-inatividade', 'btn-continuar',
-        'seta-avancar', 'seta-voltar'
+        'seta-avancar', 'seta-voltar', 'btn-reinicio', 'texto-reinicio',
+        'modal-senha', 'btn-fechar-senha', 'form-senha', 'senha-mediacao',
+        'teclado-senha', 'erro-senha', 'btn-mostrar-senha',
+        'btn-limpar-senha', 'btn-apagar-senha', 'btn-confirmar-senha'
     ];
 
     ids.forEach((id) => {
@@ -53,6 +59,19 @@ function configurarEventos() {
     elementos['btn-fechar-animal'].addEventListener('click', fecharAnimal);
     elementos['btn-repetir-som'].addEventListener('click', repetirSomAnimal);
     elementos['btn-continuar'].addEventListener('click', continuarSessao);
+    elementos['btn-reinicio'].addEventListener('click', alternarReinicioAutomatico);
+    elementos['btn-fechar-senha'].addEventListener('click', fecharSenhaMediacao);
+    elementos['form-senha'].addEventListener('submit', confirmarSenhaMediacao);
+    elementos['btn-limpar-senha'].addEventListener('click', () => atualizarSenhaDigitada(''));
+    elementos['btn-apagar-senha'].addEventListener('click', apagarCaractereSenha);
+    elementos['btn-mostrar-senha'].addEventListener('click', alternarVisibilidadeSenha);
+    elementos['teclado-senha'].addEventListener('click', (evento) => {
+        const tecla = evento.target.closest('[data-caractere]');
+        if (tecla) atualizarSenhaDigitada(elementos['senha-mediacao'].value + tecla.dataset.caractere);
+    });
+    elementos['modal-senha'].addEventListener('click', (evento) => {
+        if (evento.target === elementos['modal-senha']) fecharSenhaMediacao();
+    });
 
     elementos['modal-animal'].addEventListener('click', (evento) => {
         if (evento.target === elementos['modal-animal']) fecharAnimal();
@@ -65,6 +84,10 @@ function configurarEventos() {
     document.addEventListener('pointerdown', registrarAtividade, { passive: true });
     document.addEventListener('keydown', (evento) => {
         registrarAtividade();
+        if (!elementos['modal-senha'].hidden && elementos['modal-inatividade'].hidden) {
+            tratarTeclaSenha(evento);
+            return;
+        }
         if (evento.key === 'Escape') fecharModalAtivo();
     });
 
@@ -132,6 +155,7 @@ function mudarTela(idTela) {
 
     document.body.classList.toggle('galeria-ativa', telaAtiva === 'tela-galeria');
     document.body.classList.toggle('video-ativo', telaAtiva === 'tela-video');
+    elementos['btn-reinicio'].classList.toggle('oculto', telaAtiva !== 'tela-galeria');
     window.scrollTo({ top: 0, behavior: 'auto' });
 
     telas.forEach((id) => {
@@ -310,6 +334,114 @@ function atualizarControleSom() {
     elementos['player-video'].muted = !somAtivo;
 }
 
+function atualizarControleReinicio() {
+    elementos['texto-reinicio'].textContent = reinicioAutomaticoPausado ? 'Reinício pausado · Reativar' : 'Pausar reinício';
+    elementos['btn-reinicio'].setAttribute('aria-pressed', String(reinicioAutomaticoPausado));
+    elementos['btn-reinicio'].setAttribute('aria-label', reinicioAutomaticoPausado
+        ? 'Reinício automático pausado. Reativar reinício automático'
+        : 'Pausar reinício automático com senha do mediador');
+}
+
+function gerarTecladoSenha() {
+    Array.from('1234567890').forEach((caractere) => {
+        const tecla = document.createElement('button');
+        tecla.type = 'button';
+        tecla.className = 'tecla-senha';
+        tecla.dataset.caractere = caractere;
+        tecla.textContent = caractere;
+        elementos['teclado-senha'].appendChild(tecla);
+    });
+}
+
+function alternarReinicioAutomatico() {
+    if (reinicioAutomaticoPausado) {
+        reinicioAutomaticoPausado = false;
+        atualizarControleReinicio();
+        agendarInatividade();
+        return;
+    }
+
+    atualizarSenhaDigitada('');
+    elementos['senha-mediacao'].type = 'password';
+    elementos['btn-mostrar-senha'].textContent = 'Mostrar';
+    elementos['btn-mostrar-senha'].setAttribute('aria-pressed', 'false');
+    abrirModal(elementos['modal-senha']);
+    elementos['senha-mediacao'].focus();
+}
+
+function atualizarSenhaDigitada(valor) {
+    elementos['senha-mediacao'].value = valor.replace(/\D/g, '').slice(0, 4);
+    elementos['senha-mediacao'].setAttribute('aria-invalid', 'false');
+    elementos['erro-senha'].textContent = '';
+    elementos['btn-confirmar-senha'].disabled = elementos['senha-mediacao'].value.length !== 4;
+}
+
+function apagarCaractereSenha() {
+    atualizarSenhaDigitada(elementos['senha-mediacao'].value.slice(0, -1));
+}
+
+function alternarVisibilidadeSenha() {
+    const mostrar = elementos['senha-mediacao'].type === 'password';
+    elementos['senha-mediacao'].type = mostrar ? 'text' : 'password';
+    elementos['btn-mostrar-senha'].textContent = mostrar ? 'Ocultar' : 'Mostrar';
+    elementos['btn-mostrar-senha'].setAttribute('aria-pressed', String(mostrar));
+}
+
+function fecharSenhaMediacao() {
+    fecharModal(elementos['modal-senha']);
+    atualizarSenhaDigitada('');
+    if (telaGaleriaAtiva()) elementos['btn-reinicio'].focus();
+}
+
+function confirmarSenhaMediacao(evento) {
+    evento.preventDefault();
+    if (elementos['senha-mediacao'].value.length !== 4) return;
+    if (elementos['senha-mediacao'].value !== CONFIG.senhaMediacao) {
+        atualizarSenhaDigitada('');
+        elementos['senha-mediacao'].setAttribute('aria-invalid', 'true');
+        elementos['erro-senha'].textContent = 'PIN incorreto. Tente novamente.';
+        elementos['senha-mediacao'].focus();
+        return;
+    }
+
+    reinicioAutomaticoPausado = true;
+    cancelarInatividade();
+    fecharModal(elementos['modal-inatividade']);
+    atualizarControleReinicio();
+    fecharSenhaMediacao();
+}
+
+function tratarTeclaSenha(evento) {
+    if (evento.key === 'Tab') {
+        const focaveis = Array.from(elementos['modal-senha'].querySelectorAll('button:not([disabled]), input'));
+        const primeiro = focaveis[0];
+        const ultimo = focaveis[focaveis.length - 1];
+        if (evento.shiftKey && document.activeElement === primeiro) {
+            evento.preventDefault();
+            ultimo.focus();
+        } else if (!evento.shiftKey && document.activeElement === ultimo) {
+            evento.preventDefault();
+            primeiro.focus();
+        }
+        return;
+    }
+    if (evento.ctrlKey || evento.altKey || evento.metaKey) return;
+    if (evento.key === 'Escape') {
+        evento.preventDefault();
+        fecharSenhaMediacao();
+    } else if (evento.key === 'Enter') {
+        confirmarSenhaMediacao(evento);
+    } else if (evento.key === 'Backspace' || evento.key === 'Delete') {
+        evento.preventDefault();
+        apagarCaractereSenha();
+    } else if (/^\d$/.test(evento.key)) {
+        evento.preventDefault();
+        atualizarSenhaDigitada(elementos['senha-mediacao'].value + evento.key);
+    } else if (evento.key.length === 1) {
+        evento.preventDefault();
+    }
+}
+
 function mostrarErroVideo() {
     elementos['erro-video'].hidden = false;
 }
@@ -334,6 +466,8 @@ function fecharModal(modal) {
 function fecharModalAtivo() {
     if (!elementos['modal-inatividade'].hidden) {
         continuarSessao();
+    } else if (!elementos['modal-senha'].hidden) {
+        fecharSenhaMediacao();
     } else if (!elementos['modal-animal'].hidden) {
         fecharAnimal();
     }
@@ -349,15 +483,20 @@ function agendarInatividade() {
     cancelarInatividade();
     if (!telaGaleriaAtiva()) return;
     if (videoAberto) return;
+    if (reinicioAutomaticoPausado) return;
 
     const tempoAteAviso = Math.max(0, CONFIG.tempoInatividadeMs - CONFIG.tempoAvisoMs);
     temporizadorInatividade = window.setTimeout(exibirAvisoInatividade, tempoAteAviso);
 }
 
 function exibirAvisoInatividade() {
+    if (reinicioAutomaticoPausado || !telaGaleriaAtiva() || videoAberto) return;
+    cancelarInatividade();
+    if (!elementos['modal-senha'].hidden) fecharSenhaMediacao();
     let segundosRestantes = Math.ceil(CONFIG.tempoAvisoMs / 1000);
     elementos['contador-inatividade'].textContent = segundosRestantes;
     abrirModal(elementos['modal-inatividade']);
+    elementos['btn-continuar'].focus();
 
     intervaloContagem = window.setInterval(() => {
         segundosRestantes -= 1;
@@ -380,6 +519,9 @@ function cancelarInatividade() {
 
 function reiniciarExperiencia() {
     cancelarInatividade();
+    reinicioAutomaticoPausado = false;
+    atualizarControleReinicio();
+    atualizarSenhaDigitada('');
     pararAudioAnimal();
 
     elementos['player-video'].pause();
@@ -387,7 +529,7 @@ function reiniciarExperiencia() {
     videoAberto = false;
     animalAberto = null;
 
-    [elementos['modal-animal'], elementos['modal-inatividade']].forEach((modal) => {
+    [elementos['modal-animal'], elementos['modal-senha'], elementos['modal-inatividade']].forEach((modal) => {
         modal.classList.remove('ativo');
         modal.hidden = true;
     });
