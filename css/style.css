@@ -503,6 +503,11 @@ body.video-ativo .rodape-versao {
     transition: transform 300ms ease;
 }
 
+#card-tamandua .imagem-card {
+    /* Prioriza a cabeça e o dorso no recorte horizontal do mosaico. */
+    object-position: center 20%;
+}
+
 .card:hover .imagem-card {
     transform: scale(1.035);
 }

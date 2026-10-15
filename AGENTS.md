@@ -48,6 +48,8 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 - Preservar a disposição atual do mosaico. Em telas acima de 1100px, os 18
   primeiros cards têm posições definidas por `nth-child`: a ordem do array
   determina a posição visual, independentemente de `classeTamanho`.
+- O card do tamanduá usa `object-position: center 20%` no CSS para preservar
+  cabeça e dorso no recorte horizontal, sem alterar a foto original.
 - Abrir um animal preenche o modal e toca seu som. Fechar interrompe o áudio.
   “Ouvir novamente” reproduz o áudio e reativa o som global se necessário.
 - Inatividade é monitorada apenas na galeria, por `pointerdown` e `keydown`.
