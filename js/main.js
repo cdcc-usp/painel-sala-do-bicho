@@ -58,7 +58,8 @@ function configurarEventos() {
 
 function atualizarEtapaDante() {
     const etapa = CONFIG.dante.etapas[estado.etapaDanteAtual];
-    elementos['rotulo-etapa'].textContent = etapa.rotulo;
+    elementos['rotulo-etapa'].textContent = etapa.rotulo || '';
+    elementos['rotulo-etapa'].hidden = !etapa.rotulo;
     elementos['fala-dante'].textContent = etapa.fala;
     elementos['complemento-dante'].textContent = etapa.complemento;
     elementos['btn-avancar'].textContent = etapa.botao;

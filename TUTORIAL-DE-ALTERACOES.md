@@ -18,6 +18,7 @@ Abra `js/config.js` e procure por `dante.etapas`. Cada item representa uma tela:
 
 É possível alterar os textos ou acrescentar novas etapas copiando esse formato.
 O indicador de progresso é criado automaticamente.
+O campo `rotulo` é opcional; sem ele, sua linha fica oculta e não reserva espaço.
 Na configuração atual, as duas primeiras falas vêm antes do vídeo. A terceira tem
 `aposVideo: true`: mantenha esse marcador em uma única etapa, a primeira após o
 vídeo. É preciso ter pelo menos uma fala antes dela. O botão da fala imediatamente
