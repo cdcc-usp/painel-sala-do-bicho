@@ -13,12 +13,18 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 - `js/dados.js`: array `animais`, contendo `id`, `nome`, `img`, `audio`,
   `cientifico`, `destaques`, `classeTamanho`, `descricao`, `fonte`, `creditoImagem`
   e `imgModal` opcional. Quebras `\n` na descrição viram parágrafos.
-- `js/main.js`: estado em memória, inicialização em `DOMContentLoaded`, eventos,
-  navegação, geração dos cards, modais, mídias e inatividade.
+- `js/main.js`: estado compartilhado em `estado`, mapeamento de IDs em `elementos`,
+  inicialização em `DOMContentLoaded`, eventos globais, navegação e reinício.
+- `js/galeria.js`: cards e conteúdo do modal de animal.
+- `js/midias.js`: imagens/substitutos, áudio, vídeo, erros e controle global de som.
+- `js/mediacao.js`: teclado/PIN, pausa e prazos de inatividade.
+- `js/modais.js`: ciclo de abertura/fechamento, cancelamento de fechamentos pendentes
+  e gerenciamento do foco; fundo e modais sobrepostos recebem `inert`.
 - `css/style.css`: variáveis de tema, CSS Grid, animações e media queries.
 - `assets/animais/<id>/`, `assets/dante/` e `assets/videos/`: mídias locais.
 - Scripts clássicos compartilham o escopo global: preservar a ordem
-  `config.js` → `dados.js` → `main.js`. Não há módulos ES, classes ou serviços.
+  `config.js` → `dados.js` → `modais.js` → `midias.js` → `galeria.js` →
+  `mediacao.js` → `main.js`. Não há módulos ES, classes ou serviços na aplicação.
 - Não há banco de dados, persistência de sessão ou chamadas a APIs externas.
   URLs de fontes são exibidas como texto, sem navegação externa.
 
@@ -61,8 +67,9 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   descrição e áudio ficam abaixo. A imagem tem largura de 100% e altura automática,
   sem faixa lateral, corte ou distorção. Em telas estreitas, o cabeçalho é vertical.
   Fonte e crédito da imagem ficam juntos no rodapé do conteúdo. `creditoImagem`
-  está vazio nos 18 registros para preenchimento posterior e só aparece quando
-  informado; creditar a foto exibida no modal (`imgModal`, quando existir).
+  só aparece quando informado; creditar a foto exibida no modal (`imgModal`, quando
+  existir). O gato-mourisco contém `teste` na fonte e no crédito; os outros 17
+  créditos estão vazios. Não preencher por suposição.
 - Inatividade é monitorada apenas na galeria, por `pointerdown` e `keydown`.
   Reinício após 120000ms sem interação; aviso nos últimos 15000ms (começa em
   105000ms). Vídeo e apresentação não têm reinício por inatividade.
@@ -77,8 +84,8 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   restaurando o som conforme a configuração. O aviso de inatividade fecha o
   teclado se ele estiver aberto; abrir o teclado não desativa a inatividade.
 - A composição atual do catálogo segue o mosaico fornecido pelo usuário.
-  Vídeo, mídias faltantes e créditos ainda serão definidos
-  ou fornecidos pelo usuário; não preencher por suposição.
+  A seleção final das mídias e os créditos dependem do usuário;
+  não preencher por suposição.
 
 ## Convenções e cuidados
 
@@ -87,14 +94,16 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   no JavaScript, IDs/classes com hífens, strings geralmente com aspas simples.
 - Usar IDs de animais únicos, minúsculos, sem espaços ou acentos.
 - Preservar `addEventListener`, `textContent` e criação de elementos para os
-  textos dinâmicos. IDs do HTML devem acompanhar `mapearElementos()` e eventos.
+  textos dinâmicos. `mapearElementos()` coleta automaticamente os IDs estáticos
+  do HTML; os eventos devem usar esses mesmos IDs.
 - Preservar os estados CSS `ativa`, `ativo`, `hidden`, `oculto` e `modal-aberto`.
   O fechamento de modal usa 220ms no JS, correspondente à transição CSS.
 - Manter caminhos relativos e mídias locais: deve funcionar offline e ao abrir
   `index.html` diretamente. Preservar substitutos de imagens e mensagens de erro.
 - Conferir ordem, quantidade e posicionamento dos cards ao alterar o catálogo.
-  Nas telas menores, `.card:nth-child(n)` tem maior especificidade que as classes
-  de tamanho e atualmente anula seus spans; considerar isso ao modificar o CSS.
+  Nas telas menores, os cards têm tamanho uniforme. `classeTamanho` permanece no
+  formato dos dados, mas não controla os layouts atuais. As regras de spans que
+  eram anuladas por `.card:nth-child(n)` foram removidas.
 - Preservar alterações locais preexistentes e limitar mudanças ao pedido atual.
 
 ## Execução e validação
@@ -105,8 +114,18 @@ Abrir `index.html` em um navegador ou executar, na raiz:
 python3 -m http.server 8080 --bind 127.0.0.1
 ```
 
-Acessar `http://127.0.0.1:8080`. Não há comandos de build, lint, testes
-automatizados ou CI configurados. Validar manualmente os fluxos afetados:
+Acessar `http://127.0.0.1:8080`. Não há build, lint ou CI configurados.
+A regressão automatizada usa Python 3 e Firefox, sem pacotes adicionais:
+
+```bash
+python3 testes/executar.py
+python3 testes/executar.py --largura 3840 --altura 2160
+python3 testes/executar.py --largura 1024 --altura 768
+python3 testes/executar.py --largura 390 --altura 844
+```
+
+Por padrão abre `file://`; `--url http://127.0.0.1:8080` verifica um servidor local.
+Relógio e reprodução de mídia são simulados na regressão. Validar manualmente os fluxos afetados:
 apresentação, vídeo/setas, galeria, modais, áudio/repetição/mute, botão Início,
 inatividade e erros de mídia. Conferir console, funcionamento offline, layout
 4K horizontal, resoluções menores e touchscreen real quando disponível.
@@ -124,13 +143,11 @@ inatividade e erros de mídia. Conferir console, funcionamento offline, layout
 - Os destaques novos usam Grupo, Alimentação e Periodicidade; campos vazios
   no documento são omitidos. Múltiplas fontes ficam no campo `fonte`, separadas
   por ` | `. Não completar ou revisar conteúdo científico por suposição.
-- Pastas com `.gitkeep` estão preparadas para imagem e áudio de tamanduá,
-  jaguatirica, raposa-do-campo, anta e jacaré. O vídeo local está em
+- Todas as imagens e áudios referenciados atualmente existem. O vídeo local está em
   `assets/videos/fauna.mp4`; não há mais capa de vídeo na galeria.
 - Há mídias não referenciadas, inclusive de ema, tico-tico e urutu. Não removê-las
   automaticamente. `tico-tico/imagem.jpg` contém uma imagem WebP.
-- O modal de senha contém o foco e o devolve ao controle ao fechar. Os demais
-  modais têm atributos ARIA, mas não gerenciamento de foco completo.
-- `README.md`, `TUTORIAL-DE-ALTERACOES.md` e `assets/LEIA-ME.txt` têm divergências
-  em relação ao código. `CHANGELOG.md` é citado, mas não existe. Conferir o código
-  antes de seguir exemplos e atualizar documentação quando pertinente ao pedido.
+- Os três modais contêm o foco e o devolvem à origem ao fechar. O aviso de
+  inatividade pode sobrepor o animal, preservando seu conteúdo ao continuar.
+- `README.md`, `TUTORIAL-DE-ALTERACOES.md` e `assets/LEIA-ME.txt` descrevem a
+  organização atual. Não existe `CHANGELOG.md`; o histórico está no Git.

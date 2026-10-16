@@ -18,9 +18,11 @@ Abra `js/config.js` e procure por `dante.etapas`. Cada item representa uma tela:
 
 É possível alterar os textos ou acrescentar novas etapas copiando esse formato.
 O indicador de progresso é criado automaticamente.
-As duas primeiras falas vêm antes do vídeo. A terceira tem `aposVideo: true`:
-esse campo marca a primeira fala após o vídeo e deve ser mantido nela.
-O botão da segunda fala abre o vídeo; o da última abre a galeria.
+Na configuração atual, as duas primeiras falas vêm antes do vídeo. A terceira tem
+`aposVideo: true`: mantenha esse marcador em uma única etapa, a primeira após o
+vídeo. É preciso ter pelo menos uma fala antes dela. O botão da fala imediatamente
+anterior abre o vídeo; o da última abre a galeria. Ao adicionar etapas, mantenha
+essa ordem e confira o fluxo completo.
 
 ## 2. Adicionar a imagem do Dante
 
@@ -51,9 +53,11 @@ Os valores estão em milissegundos:
 - `120000` = 2 minutos até o reinício;
 - `15000` = aviso nos últimos 15 segundos (aparece após 1 minuto e 45 segundos).
 
-O temporizador é renovado a cada toque ou tecla. Ele fica pausado enquanto o
-vídeo está aberto. Ao reiniciar, a aplicação fecha os modais, para as mídias,
-retorna à primeira fala do Dante e restaura o estado inicial do som.
+O temporizador funciona somente na galeria e é renovado a cada `pointerdown` ou
+`keydown`, inclusive dentro dos modais de animal e PIN. Quando o aviso aparece,
+o botão “Continuar explorando” ou Escape inicia um novo prazo. Apresentação e
+vídeo não têm reinício por inatividade. Ao reiniciar, a aplicação fecha os modais,
+para as mídias, retorna à primeira fala do Dante e restaura o estado inicial do som.
 
 Na galeria, o botão “Pausar reinício” permite que o mediador mantenha a experiência
 aberta durante uma atividade. Digite o PIN de quatro dígitos usando o teclado
@@ -95,10 +99,11 @@ Abra `js/dados.js`. Cada animal possui este formato:
 {
     id: 'nome-sem-acentos',
     nome: 'Nome Popular',
-    img: 'assets/nome-sem-acentos/imagem.jpg',
-    audio: 'assets/nome-sem-acentos/audio.mp3',
+    img: 'assets/animais/nome-sem-acentos/imagem.jpg',
+    // imgModal: 'assets/animais/nome-sem-acentos/imagem-modal.jpg', // opcional
+    audio: 'assets/animais/nome-sem-acentos/audio.mp3',
     cientifico: 'Nome científico',
-    destaques: ['Curiosidade 1', 'Curiosidade 2'],
+    destaques: ['Grupo: Mamífero', 'Alimentação: Onívoro'],
     classeTamanho: '',
     descricao: 'Primeiro parágrafo.\nSegundo parágrafo.',
     fonte: 'Endereço da fonte consultada',
@@ -106,8 +111,12 @@ Abra `js/dados.js`. Cada animal possui este formato:
 }
 ```
 
-Crie a pasta do animal dentro de `assets`, coloque `imagem.jpg` e `audio.mp3`
+Crie a pasta do animal dentro de `assets/animais`, coloque a imagem e o áudio
 nela e confira se os caminhos estão iguais aos registrados em `dados.js`.
+Use o nome e a extensão reais do arquivo; há imagens JPG e PNG no catálogo.
+`imgModal` é opcional: sem ele, o modal usa `img`. Quebras `\n` em `descricao`
+viram parágrafos. Omita destaques sem informação; não complete dados científicos
+por suposição. Múltiplas fontes podem ficar em `fonte`, separadas por ` | `.
 
 As fontes são apresentadas somente como texto. Isso evita que o visitante abra
 um navegador externo e saia do quiosque.
@@ -123,27 +132,39 @@ a foto ao lado do nome e destaques, e o texto fica abaixo. A foto usa sua propor
 natural, sem faixas laterais. Em telas estreitas, o cabeçalho fica vertical.
 O conteúdo tem rolagem interna quando ultrapassa a altura disponível.
 
-### Tamanhos possíveis dos cards
+### Ordem e posicionamento dos cards
 
-- `classeTamanho: ''`: card comum;
-- `classeTamanho: 'tamanho-largo'`: ocupa duas colunas;
-- `classeTamanho: 'tamanho-alto'`: ocupa duas linhas;
-- `classeTamanho: 'tamanho-gigante'`: ocupa duas colunas e duas linhas.
+Acima de 1100px, os 18 primeiros cards têm posições explícitas definidas pelos
+seletores `.card:nth-child(...)` em `css/style.css`. A ordem do array `animais`
+determina qual animal ocupa cada espaço. O mosaico usa seis colunas e seis linhas.
+O recorte específico do tamanduá fica em `#card-tamandua .imagem-card`.
+
+Até 1100px, os cards têm tamanhos uniformes, com três colunas; em telas menores,
+passam a duas colunas e a galeria permite rolagem. `classeTamanho` continua aceito
+e é copiado para a classe do card, mas não determina o tamanho em nenhum dos
+layouts atuais. As regras antigas de tamanho eram anuladas por `nth-child` e
+foram retiradas; o campo foi mantido para preservar o formato do catálogo.
 
 ## 6. Adicionar um animal
 
 1. Copie um objeto completo dentro da lista `animais`.
 2. Altere todos os seus dados.
 3. Escolha um `id` único, sem espaços ou acentos.
-4. Crie a pasta da mídia em `assets`.
+4. Crie a pasta da mídia em `assets/animais`.
 5. Recarregue a página. O card será criado automaticamente.
 
-Não é necessário alterar `index.html` nem `main.js`.
+O card é criado sem alterar HTML ou JavaScript de comportamento. Entretanto,
+adicionar além dos 18 animais exige planejar o espaço no mosaico e ajustar o CSS
+para a tela horizontal; não basta acrescentar o registro. Confira o posicionamento
+de todos os cards nas resoluções grandes e pequenas.
 
 ## 7. Remover um animal
 
 Apague somente o objeto correspondente em `js/dados.js`. Confira as vírgulas:
 todos os objetos, exceto o último, devem terminar com vírgula.
+Como a posição depende da ordem, remover ou reordenar registros também exige
+conferir o mosaico e ajustar seus seletores quando necessário. Preserve as mídias
+até confirmar que podem ser removidas.
 
 ## 8. Controle de som
 
@@ -170,24 +191,53 @@ Use, por exemplo:
 - `1.1.0` para uma funcionalidade nova;
 - `2.0.0` para uma mudança incompatível ou reformulação ampla.
 
-Registre a alteração também em `CHANGELOG.md`.
+Descreva a mudança no commit do Git. Atualmente não existe `CHANGELOG.md`.
 
 ## 10. Como a aplicação funciona internamente
 
 `index.html` possui três telas: apresentação, vídeo e galeria. Somente uma
 recebe a classe CSS `ativa` por vez.
 
-`main.js` mantém o estado atual da apresentação, cria os cards a partir da lista
-de animais e centraliza o controle das mídias. Os eventos são cadastrados com
-`addEventListener`, sem código JavaScript espalhado pelo HTML.
+Comece por `iniciarAplicacao()` em `js/main.js`. Ela mapeia os elementos com ID,
+cadastra os eventos e prepara a interface. O objeto `estado` reúne somente os
+valores compartilhados entre funcionalidades. Não há persistência entre recargas.
+
+- `main.js`: inicialização, eventos globais, etapas do Dante, `mudarTela()` e
+  `reiniciarExperiencia()`.
+- `galeria.js`: `gerarCards()`, `abrirAnimal()` e `fecharAnimal()`.
+- `midias.js`: preparação das imagens, áudio, vídeo, mensagens de falha e mute.
+- `mediacao.js`: teclado/PIN, pausa, aviso e prazos de reinício automático.
+- `modais.js`: animações, cancelamento de fechamentos pendentes e foco.
+
+São scripts clássicos. Preserve a ordem do HTML: `config.js` → `dados.js` →
+`modais.js` → `midias.js` → `galeria.js` → `mediacao.js` → `main.js`.
+As funções dos arquivos de comportamento só acessam `estado` e `elementos`
+depois da inicialização. Não adicione `async` aos scripts nem os converta
+individualmente em módulos, pois isso muda o escopo e a execução por `file://`.
+
+Os eventos usam `addEventListener`; textos dinâmicos usam `textContent` e criação
+de elementos. Para um novo controle, adicione um ID ao HTML e registre seu evento
+no arquivo responsável. `mapearElementos()` coleta os IDs automaticamente.
 
 Os modais utilizam o atributo `hidden` quando fechados e a classe `ativo` durante
 a animação de abertura. O vídeo usa um player com controles em sua própria tela.
+O fechamento demora 220ms, em acordo com a transição CSS. Reabrir cancela esse
+fechamento. O foco fica no modal superior e volta ao controle de origem ao fechar;
+o fundo recebe `inert` enquanto houver um modal aberto. O aviso pode aparecer
+acima do animal; continuar preserva as informações abertas. O aviso fecha e limpa
+o teclado de PIN quando ele está aberto.
+
 Em telas acima de 1100px, a galeria usa seis linhas flexíveis, com margem acima
 para os controles e nas laterais para as setas. O vídeo centralizado preenche
 sua área sem distorção. Setas grandes ficam no centro vertical das bordas.
 Título não reserva espaço no mosaico; rodapé aparece na apresentação. Em telas
 menores, a galeria possui rolagem. Os espaçamentos estão em variáveis CSS em `:root`.
+
+Para adicionar uma funcionalidade, escolha o arquivo pela responsabilidade,
+crie funções pequenas e conecte seus eventos na inicialização. Evite duplicar
+estado derivável da tela atual. Acrescente uma verificação de comportamento em
+`testes/regressao.js` quando a mudança afetar os fluxos principais. Consulte os
+comandos de execução e limitações dos testes no README.
 
 ## 11. Instalar no Windows 11 em modo quiosque
 
@@ -215,4 +265,5 @@ local restrita, inicialização automática e recuperação após queda de energ
 - [ ] A página foi testada sem internet.
 - [ ] O reinício por inatividade foi testado.
 - [ ] Senha incorreta, pausa, reativação e retorno ao Início foram testados.
-- [ ] A versão foi atualizada e registrada no changelog.
+- [ ] A regressão passou (`python3 testes/executar.py`); a reprodução real foi conferida manualmente.
+- [ ] A versão foi atualizada quando pertinente e a mudança foi registrada no Git.

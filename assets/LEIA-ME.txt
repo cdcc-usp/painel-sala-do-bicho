@@ -1,4 +1,7 @@
-MÍDIAS NECESSÁRIAS
+MÍDIAS LOCAIS DO PAINEL
+
+Os caminhos usados pela aplicação estão em js/config.js e js/dados.js.
+Todos os arquivos atualmente referenciados existem no repositório.
 
 Dante:
   assets/dante/dante.png
@@ -7,21 +10,24 @@ Vídeo:
   assets/videos/fauna.mp4
 
 Animais:
-  Para cada item de js/dados.js, crie a pasta indicada nos campos "img" e
-  "audio". Exemplo:
+  assets/animais/<id>/
+
+  Cada registro de js/dados.js informa os nomes e extensões de imagem e áudio.
+  Não presuma que todas as imagens são JPG. Exemplo:
 
   assets/animais/lobo-guara/imagem.jpg
   assets/animais/lobo-guara/audio.mp3
 
-Pastas preparadas para mídias ainda não adicionadas:
-  assets/animais/tamandua/
-  assets/animais/jaguatirica/
-  assets/animais/raposa-do-campo/
-  assets/animais/anta/
-  assets/animais/jacare/
+  imgModal, quando preenchido, seleciona a foto do modal. Caso contrário,
+  o modal utiliza a mesma foto do card. creditoImagem deve creditar a foto
+  exibida no modal. Não invente créditos ou licenças.
 
-  Em cada pasta, adicione imagem.jpg e audio.mp3, conforme js/dados.js.
-  Os arquivos .gitkeep apenas preservam as pastas vazias no Git.
+Ao substituir um arquivo, mantenha o caminho ou atualize a configuração/catálogo.
+Confira a reprodução real no navegador do painel e sem conexão com a internet.
+A aplicação mostra substitutos de imagens e mensagens quando uma mídia falha.
 
-A aplicação mostra imagens substitutas quando fotografias não existem. Áudios e
-vídeo, porém, precisam ser adicionados para a experiência final.
+Há arquivos originais, alternativos, metadados .comments e mídias de animais
+fora do catálogo (ema, tico-tico e urutu). Foram preservados; não os remova
+sem conferir seu uso e a intenção dos responsáveis pelo conteúdo.
+
+Consulte TUTORIAL-DE-ALTERACOES.md para adicionar animais e alterar mídias.
