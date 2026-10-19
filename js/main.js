@@ -9,6 +9,7 @@ const estado = {
     reinicioAutomaticoPausado: false
 };
 const elementos = {};
+const etapasDante = CONFIG.dante.etapas.filter((etapa) => CONFIG.video.ativo || !etapa.somenteComVideo);
 
 document.addEventListener('DOMContentLoaded', iniciarAplicacao);
 
@@ -36,8 +37,8 @@ function mapearElementos() {
 function configurarEventos() {
     elementos['btn-avancar'].addEventListener('click', avancarApresentacao);
     elementos['btn-inicio'].addEventListener('click', reiniciarExperiencia);
-    elementos['seta-avancar'].addEventListener('click', mostrarDanteAposVideo);
-    elementos['seta-voltar'].addEventListener('click', mostrarDanteAposVideo);
+    elementos['seta-avancar'].addEventListener('click', mostrarOrientacoesDante);
+    elementos['seta-voltar'].addEventListener('click', mostrarOrientacoesDante);
     elementos['seta-voltar-video'].addEventListener('click', () => mudarTela('video'));
 
     document.addEventListener('pointerdown', registrarAtividade, { passive: true });
@@ -57,20 +58,21 @@ function configurarEventos() {
 }
 
 function atualizarEtapaDante() {
-    const etapa = CONFIG.dante.etapas[estado.etapaDanteAtual];
+    const etapa = etapasDante[estado.etapaDanteAtual];
     elementos['rotulo-etapa'].textContent = etapa.rotulo || '';
     elementos['rotulo-etapa'].hidden = !etapa.rotulo;
     elementos['fala-dante'].textContent = etapa.fala;
     elementos['complemento-dante'].textContent = etapa.complemento;
     elementos['btn-avancar'].textContent = etapa.botao;
-    elementos['seta-voltar-video'].hidden = !etapa.aposVideo;
+    elementos['btn-inicio'].classList.toggle('oculto', estado.etapaDanteAtual === 0);
+    elementos['seta-voltar-video'].hidden = !CONFIG.video.ativo || !etapa.aposVideo;
 
     elementos['indicador-etapas'].replaceChildren();
-    CONFIG.dante.etapas.forEach((_, indice) => {
+    etapasDante.forEach((_, indice) => {
         const ponto = document.createElement('span');
         const atual = indice === estado.etapaDanteAtual;
         ponto.className = atual ? 'ponto ativo' : 'ponto';
-        ponto.setAttribute('aria-label', `Etapa ${indice + 1} de ${CONFIG.dante.etapas.length}`);
+        ponto.setAttribute('aria-label', `Etapa ${indice + 1} de ${etapasDante.length}`);
         if (atual) ponto.setAttribute('aria-current', 'step');
         elementos['indicador-etapas'].appendChild(ponto);
     });
@@ -81,8 +83,8 @@ function atualizarEtapaDante() {
 }
 
 function avancarApresentacao() {
-    const proximaEtapa = CONFIG.dante.etapas[estado.etapaDanteAtual + 1];
-    if (proximaEtapa?.aposVideo) {
+    const proximaEtapa = etapasDante[estado.etapaDanteAtual + 1];
+    if (CONFIG.video.ativo && proximaEtapa?.aposVideo) {
         mudarTela('video');
     } else if (proximaEtapa) {
         estado.etapaDanteAtual += 1;
@@ -92,13 +94,14 @@ function avancarApresentacao() {
     }
 }
 
-function mostrarDanteAposVideo() {
-    estado.etapaDanteAtual = CONFIG.dante.etapas.findIndex((etapa) => etapa.aposVideo);
+function mostrarOrientacoesDante() {
+    estado.etapaDanteAtual = etapasDante.findIndex((etapa) => etapa.aposVideo);
     atualizarEtapaDante();
     mudarTela('dante');
 }
 
 function mudarTela(nome) {
+    if (nome === 'video' && !CONFIG.video.ativo) return;
     cancelarInatividade();
     pararVideo();
     pararAudioAnimal();

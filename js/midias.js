@@ -19,10 +19,11 @@ function prepararMidias() {
     const video = elementos['player-video'];
     video.addEventListener('ended', () => {
         // Pausar mantém a tela; somente o término da reprodução avança.
-        if (estado.telaAtual === 'video') mostrarDanteAposVideo();
+        if (estado.telaAtual === 'video') mostrarOrientacoesDante();
     });
     video.addEventListener('error', mostrarErroVideo);
-    video.src = CONFIG.video.arquivo;
+    elementos['tela-video'].hidden = !CONFIG.video.ativo;
+    if (CONFIG.video.ativo) video.src = CONFIG.video.arquivo;
     elementos['btn-som'].addEventListener('click', alternarSom);
     elementos['btn-repetir-som'].addEventListener('click', repetirSomAnimal);
 }

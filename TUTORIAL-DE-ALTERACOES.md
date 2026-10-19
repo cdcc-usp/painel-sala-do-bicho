@@ -19,11 +19,12 @@ Abra `js/config.js` e procure por `dante.etapas`. Cada item representa uma tela:
 É possível alterar os textos ou acrescentar novas etapas copiando esse formato.
 O indicador de progresso é criado automaticamente.
 O campo `rotulo` é opcional; sem ele, sua linha fica oculta e não reserva espaço.
-Na configuração atual, as duas primeiras falas vêm antes do vídeo. A terceira tem
-`aposVideo: true`: mantenha esse marcador em uma única etapa, a primeira após o
-vídeo. É preciso ter pelo menos uma fala antes dela. O botão da fala imediatamente
-anterior abre o vídeo; o da última abre a galeria. Ao adicionar etapas, mantenha
-essa ordem e confira o fluxo completo.
+No lançamento sem vídeo, aparecem apenas duas falas: boas-vindas e convite para
+conhecer os animais. O botão da segunda fala abre diretamente a galeria.
+A fala intermediária permanece no array com `somenteComVideo: true` e só aparece
+quando `CONFIG.video.ativo` for `true`. Os indicadores mostram somente as falas
+ativas. A fala final mantém `aposVideo: true`: esse marcador também identifica
+a mensagem para a qual a seta da galeria volta. Preserve-o em uma única etapa.
 
 ## 2. Adicionar a imagem do Dante
 
@@ -68,11 +69,23 @@ reinício. É possível mostrar/ocultar o PIN, apagar dígitos, limpar ou cancel
 O PIN é configurado em `CONFIG.senhaMediacao`, em `js/config.js`. Use uma string
 com quatro dígitos. É um controle
 local da interface, sem autenticação remota. A pausa não é gravada: continua ao
-rever o vídeo, mas termina ao voltar ao Início ou recarregar a página. Clique em
+voltar à mensagem do Dante e reabrir a galeria, mas termina ao voltar ao Início ou
+recarregar a página. Se o vídeo estiver ativo, revê-lo também preserva a pausa. Clique em
 “Reinício pausado · Reativar” para restaurar imediatamente o prazo completo de
 inatividade. Esse retorno ao modo automático não pede senha.
 
-## 4. Alterar o vídeo
+## 4. Reativar ou alterar o vídeo
+
+O lançamento atual usa `CONFIG.video.ativo: false`. Nesse modo, o vídeo não é
+carregado nem exibido, a fala com `somenteComVideo: true` fica fora do fluxo e a
+seta da galeria volta diretamente ao convite para conhecer os animais.
+
+Quando o vídeo final estiver pronto:
+
+1. Coloque o arquivo no caminho configurado abaixo, ou atualize `video.arquivo`.
+2. Altere `ativo: false` para `ativo: true` dentro de `video` em `js/config.js`.
+3. Recarregue a página. A fala intermediária e o vídeo voltam ao fluxo juntos.
+4. Execute a regressão e confira reprodução real, setas e botão Início.
 
 Coloque o vídeo neste caminho:
 
@@ -83,7 +96,7 @@ assets/videos/fauna.mp4
 Para maior compatibilidade, use MP4 com vídeo H.264 e áudio AAC. Se o nome
 for diferente, altere `video.arquivo` em `js/config.js`.
 
-O vídeo vem depois das duas primeiras falas do Dante. Ao terminar, abre
+Com o vídeo ativo, ele vem depois das duas primeiras falas do Dante. Ao terminar, abre
 automaticamente a terceira fala, que orienta a tocar nos animais. Enquanto
 estiver pausado, permanece na tela do vídeo. A seta permite avançar manualmente
 para a mesma fala. O botão dela abre a galeria; a seta dela permite rever o vídeo.
@@ -201,8 +214,10 @@ Descreva a mudança no commit do Git. Atualmente não existe `CHANGELOG.md`.
 
 ## 10. Como a aplicação funciona internamente
 
-`index.html` possui três telas: apresentação, vídeo e galeria. Somente uma
-recebe a classe CSS `ativa` por vez.
+`index.html` possui três telas: apresentação, vídeo e galeria. O vídeo fica oculto
+e sem fonte carregada enquanto `CONFIG.video.ativo` for `false`. Somente uma tela
+recebe a classe CSS `ativa` por vez. `etapasDante`, em `main.js`, contém apenas as
+falas que participam do percurso atual, filtradas a partir da configuração.
 
 Comece por `iniciarAplicacao()` em `js/main.js`. Ela mapeia os elementos com ID,
 cadastra os eventos e prepara a interface. O objeto `estado` reúne somente os
@@ -264,7 +279,8 @@ local restrita, inicialização automática e recuperação após queda de energ
 - [ ] Dante definitivo foi adicionado.
 - [ ] Todas as imagens aparecem.
 - [ ] Todos os sons funcionam e têm volume semelhante.
-- [ ] O vídeo é local e abre a terceira fala do Dante ao terminar; o botão dela abre a galeria.
+- [ ] Sem vídeo: boas-vindas → convite → galeria; a seta volta ao convite e Início às boas-vindas.
+- [ ] Quando reativado: o vídeo é local e abre a terceira fala do Dante ao terminar; o botão dela abre a galeria.
 - [ ] Textos e nomes científicos foram revisados por especialista.
 - [ ] Fontes e licenças das mídias foram registradas.
 - [ ] Botões foram testados no touchscreen real.

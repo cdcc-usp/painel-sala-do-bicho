@@ -35,6 +35,7 @@ const tecla = (key, opcoes = {}) => document.dispatchEvent(new KeyboardEvent('ke
     key, bubbles: true, cancelable: true, ...opcoes
 }));
 const tela = (nome) => el(`tela-${nome}`).classList.contains('ativa');
+const comVideo = CONFIG.video.ativo;
 
 function carregarMidia(caminho, tipo) {
     return new Promise((resolver, rejeitar) => {
@@ -55,12 +56,14 @@ function carregarMidia(caminho, tipo) {
 }
 
 function abrirGaleria() {
-    // Percorre o fluxo real, incluindo a passagem pelo vídeo.
+    // Percorre o fluxo real conforme a configuração de lançamento.
     reiniciarExperiencia();
     clicar('btn-avancar');
     clicar('btn-avancar');
-    clicar('seta-avancar');
-    clicar('btn-avancar');
+    if (comVideo) {
+        clicar('seta-avancar');
+        clicar('btn-avancar');
+    }
 }
 
 // Relógio controlado: os prazos de 105/120 segundos são exercitados sem espera real.
@@ -106,12 +109,12 @@ HTMLMediaElement.prototype.play = function () {
 HTMLMediaElement.prototype.pause = function () { pausas.push(this); };
 
 async function executarTestes() {
-    await testar('As 39 mídias locais carregam imagens ou metadados reais no navegador', async () => {
+    await testar('Mídias ativas carregam imagens ou metadados reais no navegador', async () => {
         const imagens = new Set([CONFIG.dante.imagem, ...animais.flatMap((animal) => [animal.img, animal.imgModal].filter(Boolean))]);
         await Promise.all([
             ...[...imagens].map((caminho) => carregarMidia(caminho, 'img')),
             ...animais.map((animal) => carregarMidia(animal.audio, 'audio')),
-            carregarMidia(CONFIG.video.arquivo, 'video')
+            ...(comVideo ? [carregarMidia(CONFIG.video.arquivo, 'video')] : [])
         ]);
     });
     await testar('Catálogo: 18 cards na ordem original e IDs únicos', () => {
@@ -119,7 +122,7 @@ async function executarTestes() {
         conferir(ids.join(',') === 'card-gato-mourisco,card-gafanhoto,card-cascavel,card-tamandua,card-lobo-guara,card-saua,card-sapo-cururu,card-jaguatirica,card-seriema,card-tatu-galinha,card-raposa-do-campo,card-anta,card-coruja,card-bugio,card-onca-pintada,card-pica-pau,card-jacare,card-onca-parda', 'Ordem ou quantidade alterada.');
         conferir(new Set(ids).size === ids.length, 'Há IDs repetidos.');
     });
-    await testar('Apresentação → vídeo; pausa mantém a tela; ended abre as orientações', () => {
+    if (comVideo) await testar('Apresentação → vídeo; pausa mantém a tela; ended abre as orientações', () => {
         conferir(tela('dante'), 'A aplicação não inicia no Dante.');
         clicar('btn-avancar');
         clicar('btn-avancar');
@@ -129,15 +132,43 @@ async function executarTestes() {
         el('player-video').dispatchEvent(new Event('ended'));
         conferir(tela('dante') && !el('seta-voltar-video').hidden, 'Fim do vídeo não abre as orientações.');
     });
-    await testar('Setas permitem rever o vídeo e voltar da galeria às orientações', () => {
+    if (!comVideo) await testar('Boas-vindas → convite → galeria, com somente duas falas', () => {
+        conferir(tela('dante') && el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, 'Não iniciou nas boas-vindas.');
+        conferir(el('indicador-etapas').children.length === 2, 'O progresso ainda inclui a etapa intermediária.');
+        conferir(el('btn-inicio').classList.contains('oculto'), 'Início deve ficar oculto na primeira fala.');
         clicar('btn-avancar');
-        conferir(tela('galeria'), 'As orientações não abrem a galeria.');
+        conferir(tela('dante') && el('btn-avancar').textContent === 'Conhecer os animais', 'O convite ainda direciona para o vídeo.');
+        conferir(el('seta-voltar-video').hidden, 'Há uma seta para o vídeo desativado.');
+        conferir(!el('btn-inicio').classList.contains('oculto'), 'Início não apareceu no convite.');
+        clicar('btn-inicio');
+        conferir(el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, 'Início não voltou do convite às boas-vindas.');
+        clicar('btn-avancar');
+        clicar('btn-avancar');
+        conferir(tela('galeria'), 'O convite não abriu a galeria diretamente.');
+        conferir(!reproducoes.includes(el('player-video')), 'O vídeo foi reproduzido no novo fluxo.');
+    });
+    if (!comVideo) await testar('Vídeo desativado não carrega e não pode ser aberto pelas setas', () => {
+        abrirGaleria();
+        conferir(el('tela-video').hidden && !el('player-video').hasAttribute('src'), 'O vídeo desativado ainda foi preparado para reprodução.');
+        mudarTela('video');
+        conferir(tela('galeria'), 'A navegação abriu o vídeo desativado.');
         clicar('seta-voltar');
         clicar('seta-voltar-video');
-        conferir(tela('video') && el('player-video').currentTime === 0, 'Não reiniciou o vídeo.');
-        clicar('seta-avancar');
+        conferir(tela('dante'), 'A seta oculta abriu o vídeo desativado.');
+        el('player-video').dispatchEvent(new Event('ended'));
+        conferir(tela('dante') && el('btn-avancar').textContent === 'Conhecer os animais', 'Um evento do vídeo alterou o convite.');
+    });
+    await testar('Seta da galeria volta à mensagem do Dante e permite reabrir os animais', () => {
+        abrirGaleria();
+        clicar('seta-voltar');
+        conferir(tela('dante') && el('btn-avancar').textContent === 'Conhecer os animais', 'A seta não voltou à mensagem correta.');
+        if (comVideo) {
+            clicar('seta-voltar-video');
+            conferir(tela('video') && el('player-video').currentTime === 0, 'Não reiniciou o vídeo.');
+            clicar('seta-avancar');
+        }
         clicar('btn-avancar');
-        conferir(tela('galeria'), 'A seta do vídeo não volta ao fluxo.');
+        conferir(tela('galeria'), 'Não conseguiu reabrir a galeria.');
     });
     await testar('Animal mostra conteúdo, parágrafos, referências e toca áudio', () => {
         clicar('card-gato-mourisco');
@@ -164,14 +195,16 @@ async function executarTestes() {
         clicar('btn-fechar-animal');
         avancarTempo(220);
     });
-    await testar('Erros de áudio e vídeo mostram mensagens', async () => {
+    await testar('Erros de mídia mostram mensagens', async () => {
         clicar('card-anta');
         reproducoes.at(-1).dispatchEvent(new Event('error'));
         conferir(el('modal-status-som').textContent === 'Áudio ainda não adicionado', 'Falta mensagem de áudio.');
         clicar('btn-fechar-animal');
         avancarTempo(220);
-        el('player-video').dispatchEvent(new Event('error'));
-        conferir(!el('erro-video').hidden, 'Falta mensagem de vídeo.');
+        if (comVideo) {
+            el('player-video').dispatchEvent(new Event('error'));
+            conferir(!el('erro-video').hidden, 'Falta mensagem de vídeo.');
+        }
         await Promise.resolve();
     });
     await testar('Inatividade só funciona na galeria: aviso em 105s e reinício em 120s', async () => {
@@ -188,9 +221,13 @@ async function executarTestes() {
         avancarTempo(240000);
         conferir(tela('dante') && el('modal-inatividade').hidden, 'Há inatividade na apresentação.');
         clicar('btn-avancar');
-        clicar('btn-avancar');
         avancarTempo(240000);
-        conferir(tela('video') && el('modal-inatividade').hidden, 'Há inatividade no vídeo.');
+        conferir(tela('dante') && el('modal-inatividade').hidden, 'Há inatividade na segunda fala do Dante.');
+        if (comVideo) {
+            clicar('btn-avancar');
+            avancarTempo(240000);
+            conferir(tela('video') && el('modal-inatividade').hidden, 'Há inatividade no vídeo.');
+        }
     });
     await testar('Toque e tecla renovam o prazo; continuar fecha o aviso', async () => {
         abrirGaleria();
@@ -230,16 +267,21 @@ async function executarTestes() {
         avancarTempo(220);
         conferir(el('modal-senha').hidden && document.activeElement === el('btn-reinicio'), 'Cancelar não devolveu o foco.');
     });
-    await testar('PIN correto pausa a sessão, inclusive ao rever o vídeo; reativar dá prazo completo', async () => {
+    await testar('PIN correto pausa a sessão, inclusive ao navegar; reativar dá prazo completo', async () => {
         clicar('btn-reinicio');
         for (const digito of CONFIG.senhaMediacao) el('teclado-senha').querySelector(`[data-caractere="${digito}"]`).click();
         clicar('btn-confirmar-senha');
         avancarTempo(220);
         avancarTempo(240000);
         conferir(tela('galeria') && el('modal-inatividade').hidden, 'A pausa não suspendeu a inatividade.');
-        clicar('seta-voltar'); clicar('seta-voltar-video'); clicar('seta-avancar'); clicar('btn-avancar');
+        clicar('seta-voltar');
+        if (comVideo) {
+            clicar('seta-voltar-video');
+            clicar('seta-avancar');
+        }
+        clicar('btn-avancar');
         avancarTempo(240000);
-        conferir(el('modal-inatividade').hidden, 'Rever vídeo perdeu a pausa.');
+        conferir(tela('galeria') && el('modal-inatividade').hidden, 'Navegar perdeu a pausa.');
         clicar('btn-reinicio');
         avancarTempo(104999);
         conferir(el('modal-inatividade').hidden, 'Reativar não deu prazo completo.');
@@ -259,6 +301,8 @@ async function executarTestes() {
     await testar('Início limpa modais e PIN, restaura som e reinício automático', () => {
         abrirGaleria(); clicar('btn-som'); clicar('btn-reinicio'); tecla('1'); clicar('btn-inicio');
         conferir(tela('dante') && el('senha-mediacao').value === '', 'Início não limpou a sessão.');
+        conferir(el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, 'Início não restaurou as boas-vindas.');
+        conferir(el('indicador-etapas').firstElementChild.getAttribute('aria-current') === 'step', 'Início não restaurou o progresso.');
         conferir([...document.querySelectorAll('.modal-overlay')].every((modal) => modal.hidden), 'Algum modal ficou aberto.');
         conferir(!el('player-video').muted && el('btn-reinicio').getAttribute('aria-pressed') === 'false', 'Som ou reinício não restaurado.');
     });
@@ -317,7 +361,7 @@ async function executarTestes() {
         await Promise.resolve();
         conferir(el('modal-status-som').textContent === status, 'Áudio antigo sobrescreveu o status do novo.');
     });
-    await testar('Rejeição de um play anterior não mostra erro ao rever o vídeo', async () => {
+    if (comVideo) await testar('Rejeição de um play anterior não mostra erro ao rever o vídeo', async () => {
         reiniciarExperiencia(); clicar('btn-avancar');
         let rejeitar;
         proximaReproducao = () => new Promise((resolver, recusar) => { rejeitar = recusar; });
@@ -326,7 +370,7 @@ async function executarTestes() {
         await Promise.resolve();
         conferir(tela('video') && el('erro-video').hidden, 'Tentativa anterior mostrou erro no vídeo novo.');
     });
-    await testar('Erro real de play do vídeo continua visível', async () => {
+    if (comVideo) await testar('Erro real de play do vídeo continua visível', async () => {
         clicar('seta-avancar');
         proximaReproducao = () => Promise.reject(new DOMException('Teste', 'NotAllowedError'));
         clicar('seta-voltar-video');
@@ -363,6 +407,7 @@ async function executarTestes() {
             conferir(caixas.every((r) => Math.abs(r.width - caixas[0].width) < 1 && Math.abs(r.height - caixas[0].height) < 1), 'Cards deixaram de ser uniformes.');
         }
         conferir(getComputedStyle(el('card-tamandua').querySelector('img')).objectPosition === '50% 20%', 'Recorte do tamanduá foi alterado.');
+        if (!comVideo) conferir(!reproducoes.includes(el('player-video')), 'Algum fluxo reproduziu o vídeo desativado.');
     });
     concluir({ testes, erros });
 }

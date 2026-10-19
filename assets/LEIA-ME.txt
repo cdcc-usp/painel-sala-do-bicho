@@ -6,7 +6,7 @@ Todos os arquivos atualmente referenciados existem no repositório.
 Dante:
   assets/dante/dante.png
 
-Vídeo:
+Vídeo (preservado para uso futuro; CONFIG.video.ativo está false no lançamento):
   assets/videos/fauna.mp4
 
 Animais:

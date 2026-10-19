@@ -58,10 +58,14 @@ def capturar(navegador, destino):
     })
     cenas = {
         'dante': '',
+        'convite': 'mostrarOrientacoesDante();',
         'galeria': "mudarTela('galeria');",
         'animal': "abrirAnimal('coruja');",
-        'video': "reiniciarExperiencia(); mudarTela('video');",
     }
+    if navegador.comando('WebDriver:ExecuteScript', {
+        'script': "return !document.getElementById('tela-video').hidden;", 'args': [],
+    }):
+        cenas['video'] = "reiniciarExperiencia(); mudarTela('video');"
     medidas = {}
     for nome, acao in cenas.items():
         medidas[nome] = navegador.comando('WebDriver:ExecuteAsyncScript', {
@@ -189,7 +193,7 @@ if __name__ == '__main__':
     argumentos.add_argument('--firefox', default=shutil.which('firefox'), help='Caminho do Firefox.')
     argumentos.add_argument('--largura', type=int, default=1920)
     argumentos.add_argument('--altura', type=int, default=1080)
-    argumentos.add_argument('--capturas', help='Pasta opcional para imagens e medidas das quatro telas.')
+    argumentos.add_argument('--capturas', help='Pasta opcional para imagens e medidas das telas ativas.')
     opcoes = argumentos.parse_args()
     if not opcoes.firefox:
         argumentos.error('Instale o Firefox ou informe seu caminho com --firefox.')

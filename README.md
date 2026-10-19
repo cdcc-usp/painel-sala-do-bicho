@@ -6,12 +6,17 @@ A versão exibida vem de `CONFIG.versao`, em `js/config.js`.
 
 O visitante segue este percurso:
 
-**Dante se apresenta → convite → vídeo → orientações do Dante → galeria.**
+**Boas-vindas do Dante → convite para conhecer os animais da região → galeria.**
 
-A galeria contém 18 animais com foto, informações e som. As setas permitem voltar
-às orientações e rever o vídeo. Início restaura a experiência completa.
+A galeria contém 18 animais com foto, informações e som. A seta volta à mensagem
+de convite do Dante. Início restaura as boas-vindas e o progresso da apresentação.
 Após dois minutos sem toque ou tecla na galeria, o painel reinicia; o aviso aparece
 nos últimos 15 segundos. O mediador pode pausar esse reinício usando um PIN local.
+
+O vídeo e a fala intermediária estão desativados para o lançamento. Para restaurar
+o percurso completo, altere `CONFIG.video.ativo` para `true` em `js/config.js` e
+recarregue a página. A etapa com `somenteComVideo: true` volta automaticamente;
+o código e o arquivo de vídeo foram preservados. Consulte a seção 4 do tutorial.
 
 ## Executar
 
@@ -80,13 +85,14 @@ Use `--firefox /caminho/do/firefox` se o executável não estiver no PATH.
 A saída informa a área útil real; o Firefox pode limitar a largura mínima da janela.
 
 A regressão verifica o carregamento real das imagens e dos metadados de áudio e
-vídeo, navegação, catálogo e mosaico, modais, foco, PIN, controle de som, mensagens
+vídeo (quando ativo), navegação, catálogo e mosaico, modais, foco, PIN, controle de som, mensagens
 de erro e os prazos de 105/120 segundos. O relógio e a reprodução
 de mídia são simulados para tornar os testes rápidos e independentes de codecs e
 autoplay. Eles não verificam a qualidade ou a audibilidade das gravações.
 
 Antes de instalar no painel, confira manualmente imagem e som de cada animal,
-reprodução real do vídeo, mute/repetição, inatividade e funcionamento sem internet.
+mute/repetição, inatividade e funcionamento sem internet. Quando reativar o vídeo,
+confira também sua reprodução real e a navegação do percurso completo.
 Valide também 4K horizontal, resoluções menores e toque no equipamento real.
 
 ## Começar a manutenção

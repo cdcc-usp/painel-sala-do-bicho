@@ -9,7 +9,8 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   ou etapa de compilação.
 - `index.html`: telas Dante, vídeo e galeria; controles globais e modais.
 - `js/config.js`: `CONFIG`, com falas do Dante, caminhos das mídias, versão,
-  parâmetros de som e tempos em milissegundos. `Object.freeze` é superficial.
+  parâmetros de som e tempos em milissegundos. `video.ativo` está `false` para o
+  lançamento sem vídeo. `Object.freeze` é superficial.
 - `js/dados.js`: array `animais`, contendo `id`, `nome`, `img`, `audio`,
   `cientifico`, `destaques`, `classeTamanho`, `descricao`, `fonte`, `creditoImagem`
   e `imgModal` opcional. Quebras `\n` na descrição viram parágrafos.
@@ -32,11 +33,18 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 
 - Painel final: tela 4K horizontal; navegador ainda sem escolha específica.
   Usado em mediações espontâneas e agendadas do CDCC.
-- Fluxo: Dante se apresenta → Dante convida → vídeo → Dante orienta a tocar nos
-  animais → galeria. `aposVideo: true` marca a primeira fala após o vídeo em
-  `CONFIG.dante.etapas`. O fim do vídeo e sua seta de avanço abrem essa fala.
-  A seta da galeria volta às orientações; a seta nessa fala volta ao vídeo,
-  reiniciando a reprodução. Início restaura a primeira fala e o fluxo completo.
+- Fluxo atual: boas-vindas do Dante → convite para conhecer os animais da região →
+  galeria. A etapa intermediária tem `somenteComVideo: true` e fica fora do fluxo
+  enquanto `CONFIG.video.ativo` for `false`. `etapasDante`, em `main.js`, contém
+  apenas as falas ativas e determina o progresso. O vídeo fica oculto, sem carregar
+  sua fonte ou reproduzir. A seta da galeria volta ao convite, marcado com
+  `aposVideo: true`; a seta para rever o vídeo fica oculta. Início restaura as
+  boas-vindas, o progresso e o estado da sessão.
+- Para retomar o vídeo e a etapa intermediária, basta configurar `video.ativo: true`
+  e recarregar. O percurso volta a ser: boas-vindas → fala intermediária → vídeo →
+  orientações → galeria. O fim do vídeo e sua seta de avanço abrem a fala marcada
+  com `aposVideo: true`; a seta nessa fala reinicia o vídeo. A implementação e a
+  mídia foram preservadas para essa retomada.
 - A apresentação dimensiona Dante, balão, textos, botão e progresso conforme a
   janela, sem os antigos limites de 1320px/740px. O balão tem proporção próxima
   de um quadrado e largura limitada pela altura da janela. Botão e indicadores
@@ -79,7 +87,8 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   O PIN tem quatro dígitos e está em `CONFIG.senhaMediacao`;
   o teclado físico também funciona. O controle é local, sem autenticação remota.
   Apenas a senha correta pausa os temporizadores. A pausa dura na sessão atual,
-  inclusive ao rever o vídeo; reativar pelo botão inicia um prazo completo.
+  inclusive ao voltar ao convite e reabrir a galeria (ou rever o vídeo, quando
+  ativo); reativar pelo botão inicia um prazo completo.
   Voltar ao Início ou recarregar a página restaura o reinício automático.
 - Reiniciar fecha modais, limpa a senha digitada, para mídias e volta ao Dante,
   restaurando o som conforme a configuração. O aviso de inatividade fecha o
@@ -148,7 +157,7 @@ inatividade e erros de mídia. Conferir console, funcionamento offline, layout
   Múltiplas fontes ficam no campo `fonte`, separadas por ` | `.
   Não completar ou revisar conteúdo científico por suposição.
 - Todas as imagens e áudios referenciados atualmente existem. O vídeo local está em
-  `assets/videos/fauna.mp4`; não há mais capa de vídeo na galeria.
+  `assets/videos/fauna.mp4`, preservado mas desativado; não há capa de vídeo na galeria.
 - Há mídias não referenciadas, inclusive de ema, tico-tico e urutu. Não removê-las
   automaticamente. `tico-tico/imagem.jpg` contém uma imagem WebP.
 - Os três modais contêm o foco e o devolvem à origem ao fechar. O aviso de

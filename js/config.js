@@ -11,6 +11,8 @@ const CONFIG = Object.freeze({
     restaurarSomAoReiniciar: true,
 
     video: {
+        // Ative quando o vídeo final estiver pronto; restaura também a etapa intermediária.
+        ativo: false,
         arquivo: 'assets/videos/fauna.mp4'
     },
 
@@ -23,6 +25,7 @@ const CONFIG = Object.freeze({
                 botao: 'Prazer, Dante!'
             },
             {
+                somenteComVideo: true,
                 fala: 'Vamos conhecer os animais que vivem em nossa região?',
                 complemento: 'Toque nas imagens, observe os detalhes e descubra quem vive por aqui.',
                 botao: 'Assistir ao Vídeo'
