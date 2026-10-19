@@ -64,6 +64,20 @@ function abrirGaleria() {
         clicar('seta-avancar');
         clicar('btn-avancar');
     }
+    concluirTutorial();
+}
+
+function concluirTutorial() {
+    clicar(`card-${CONFIG.tutorial.animalId}`);
+    clicar('btn-fechar-animal');
+    avancarTempo(220);
+    document.dispatchEvent(new Event('pointerdown'));
+}
+
+function abrirPassoInterativo() {
+    reiniciarExperiencia();
+    mostrarOrientacoesDante();
+    clicar('btn-avancar');
 }
 
 // Relógio controlado: os prazos de 105/120 segundos são exercitados sem espera real.
@@ -132,9 +146,12 @@ async function executarTestes() {
         el('player-video').dispatchEvent(new Event('ended'));
         conferir(tela('dante') && !el('seta-voltar-video').hidden, 'Fim do vídeo não abre as orientações.');
     });
-    if (!comVideo) await testar('Boas-vindas → convite → galeria, com somente duas falas', () => {
+    if (!comVideo) await testar('Boas-vindas → convite → tutorial, preservando as falas atuais', () => {
         conferir(tela('dante') && el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, 'Não iniciou nas boas-vindas.');
-        conferir(el('indicador-etapas').children.length === 2, 'O progresso ainda inclui a etapa intermediária.');
+        conferir(el('indicador-etapas').children.length === 4, 'O progresso não contém as quatro falas ativas.');
+        conferir(el('tela-galeria').classList.contains('fundo-tutorial') && el('tela-galeria').inert, 'A galeria não está visível e bloqueada sob o tutorial.');
+        clicar('card-gato-mourisco');
+        conferir(el('modal-animal').hidden, 'Um card abriu antes da etapa interativa.');
         conferir(el('btn-inicio').classList.contains('oculto'), 'Início deve ficar oculto na primeira fala.');
         clicar('btn-avancar');
         conferir(tela('dante') && el('btn-avancar').textContent === 'Conhecer os animais', 'O convite ainda direciona para o vídeo.');
@@ -144,8 +161,125 @@ async function executarTestes() {
         conferir(el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, 'Início não voltou do convite às boas-vindas.');
         clicar('btn-avancar');
         clicar('btn-avancar');
-        conferir(tela('galeria'), 'O convite não abriu a galeria diretamente.');
+        conferir(tela('dante') && el('fala-dante').textContent === CONFIG.dante.etapas.find((etapa) => etapa.interativa).fala, 'O convite não abriu a etapa interativa.');
+        conferir(el('btn-avancar').hidden, 'A etapa interativa ainda oferece um botão para pular.');
+        clicar('btn-avancar');
+        conferir(tela('dante'), 'Foi possível pular o toque no animal.');
+        concluirTutorial();
+        conferir(tela('galeria'), 'O toque guiado não liberou a galeria.');
         conferir(!reproducoes.includes(el('player-video')), 'O vídeo foi reproduzido no novo fluxo.');
+    });
+    await testar('Spotlight permite somente o card iluminado e mantém fala e controles dentro da janela', async () => {
+        abrirPassoInterativo();
+        await esperarQuadro();
+        await esperarQuadro();
+        const alvo = el(`card-${CONFIG.tutorial.animalId}`);
+        conferir(alvo.classList.contains('alvo-tutorial') && !alvo.inert && !el('tela-galeria').inert, 'O card não foi liberado.');
+        conferir([...el('grid-animais').children].every((card) => card === alvo || card.inert), 'Outro card está interativo.');
+        const r = alvo.getBoundingClientRect();
+        const atingido = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+        conferir(alvo.contains(atingido), 'A fala ou a camada escura está bloqueando o toque no card.');
+        for (const id of ['balao-dante', 'indicador-etapas']) {
+            const caixa = el(id).getBoundingClientRect();
+            conferir(caixa.left >= 0 && caixa.right <= innerWidth && caixa.top >= 0 && caixa.bottom <= innerHeight, `${id} saiu da janela.`);
+        }
+        clicar('card-anta');
+        conferir(el('modal-animal').hidden, 'Um card sem destaque abriu durante o tutorial.');
+        conferir(document.activeElement === alvo, 'O card iluminado não recebeu foco.');
+        tecla('Tab');
+        conferir(document.activeElement === el('btn-inicio'), 'Tab escapou do tutorial.');
+        tecla('Tab', { shiftKey: true });
+        conferir(document.activeElement === alvo, 'Shift+Tab não voltou ao card iluminado.');
+    });
+    await testar('Espera de 8s pulsa o destaque; Início cancela o lembrete e restaura a ajuda', () => {
+        abrirPassoInterativo();
+        const alvo = el(`card-${CONFIG.tutorial.animalId}`);
+        avancarTempo(CONFIG.tutorial.tempoDestaqueMs - 1);
+        conferir(!alvo.classList.contains('aguardando-toque'), 'O destaque começou a piscar antes do prazo.');
+        avancarTempo(1);
+        conferir(alvo.classList.contains('aguardando-toque'), 'O destaque não pulsa após a espera.');
+        clicar('btn-inicio');
+        avancarTempo(CONFIG.tutorial.tempoDestaqueMs * 2);
+        conferir(!document.querySelector('.alvo-tutorial, .aguardando-toque'), 'Início deixou um destaque ou lembrete pendente.');
+        conferir(tela('dante') && el('tela-galeria').inert && el('progresso-tutorial').textContent.startsWith('1 /'), 'Início não restaurou a ajuda.');
+    });
+    await testar('Toque no card conclui o tutorial, abre conteúdo e áudio e libera os outros animais', async () => {
+        abrirPassoInterativo();
+        const alvo = el(`card-${CONFIG.tutorial.animalId}`);
+        alvo.click();
+        conferir(tela('galeria') && !document.body.classList.contains('tutorial-ativo'), 'O tutorial não terminou.');
+        conferir(!el('modal-animal').hidden && reproducoes.at(-1).src.endsWith(`/${CONFIG.tutorial.animalId}/audio.mp3`), 'O primeiro animal não abriu com som.');
+        conferir(!el('guia-fechar-animal').hidden && el('btn-fechar-animal').classList.contains('alvo-fechar-tutorial'), 'Dante não orientou a fechar pelo X.');
+        conferir(el('complemento-guia-animal').textContent === CONFIG.dante.etapas.find((etapa) => etapa.aoAbrirAnimal).complemento, 'A última fala não veio da configuração.');
+        conferir(el('progresso-guia-animal').textContent === `${etapasDante.length} / ${etapasDante.length}`, 'O progresso não chegou à última etapa.');
+        conferir(document.activeElement === el('btn-fechar-animal') && el('app').inert, 'O X não recebeu foco ou o fundo continuou interativo.');
+        conferir([...el('grid-animais').children].every((card) => !card.inert) && !el('tela-galeria').inert, 'A galeria permaneceu bloqueada.');
+        await esperarQuadro();
+        // A janela anima por 220ms; mede a área de toque no estado final.
+        await new Promise((resolver) => setTimeoutOriginal(resolver, 250));
+        const guia = el('guia-fechar-animal').getBoundingClientRect();
+        const painel = el('modal-animal').querySelector('.modal-animal-content');
+        const caixaPainel = painel.getBoundingClientRect();
+        const elementoBalao = el('fala-guia-animal').closest('.balao-dante');
+        const balao = elementoBalao.getBoundingClientRect();
+        const fechar = el('btn-fechar-animal').getBoundingClientRect();
+        conferir(!painel.contains(el('guia-fechar-animal')), 'Dante continua dentro do painel de descrição.');
+        conferir(elementoBalao.contains(document.elementFromPoint(balao.x + balao.width / 2, balao.y + balao.height / 2)), 'A orientação não está à frente da janela do animal.');
+        ocultarGuiaFecharAnimal();
+        const caixaSemGuia = painel.getBoundingClientRect();
+        conferir(['x', 'y', 'width', 'height'].every((medida) => Math.abs(caixaPainel[medida] - caixaSemGuia[medida]) < 1), 'Dante alterou o tamanho ou a posição do painel de informações.');
+        mostrarGuiaFecharAnimal();
+        conferir(guia.left >= 0 && guia.right <= innerWidth && guia.top >= 0 && guia.bottom <= innerHeight, 'A orientação saiu da janela.');
+        conferir(el('btn-fechar-animal').contains(document.elementFromPoint(fechar.x + fechar.width / 2, fechar.y + fechar.height / 2)), 'Dante está cobrindo o X.');
+        clicar('btn-fechar-animal');
+        avancarTempo(220);
+        conferir(el('guia-fechar-animal').hidden && !el('btn-fechar-animal').classList.contains('alvo-fechar-tutorial'), 'A orientação do X permaneceu após fechar.');
+        conferir(document.activeElement === alvo, 'Fechar não devolveu o foco ao card.');
+        conferir(!document.querySelector('.alvo-tutorial, .aguardando-toque'), 'O destaque do tutorial permaneceu após fechar o animal.');
+        // Aguarda também a transição normal de hover/foco antes de medir a cor.
+        await new Promise((resolver) => setTimeoutOriginal(resolver, 250));
+        const estilo = getComputedStyle(alvo);
+        const amarelo = 'rgb(240, 199, 94)';
+        conferir(estilo.borderColor !== amarelo && estilo.outlineColor !== amarelo, 'O amarelo reapareceu no card após o X.');
+        clicar('card-anta');
+        conferir(el('modal-titulo').textContent === 'Anta', 'O segundo animal não abriu.');
+        conferir(el('guia-fechar-animal').hidden, 'A orientação apareceu novamente ao explorar outro animal.');
+        clicar('btn-fechar-animal');
+        avancarTempo(220);
+        conferir(!document.querySelector('.alvo-tutorial, .aguardando-toque'), 'Um destaque permaneceu após a conclusão.');
+    });
+    await testar('Inatividade preserva a orientação ao continuar e a limpa ao reiniciar', async () => {
+        abrirPassoInterativo();
+        clicar(`card-${CONFIG.tutorial.animalId}`);
+        avancarTempo(105000);
+        await esperarQuadro();
+        conferir(!el('modal-inatividade').hidden && el('modal-animal').inert, 'O aviso não ficou acima da última orientação.');
+        clicar('btn-continuar');
+        avancarTempo(220);
+        conferir(!el('guia-fechar-animal').hidden && !el('modal-animal').inert, 'Continuar perdeu a orientação.');
+        avancarTempo(120000);
+        conferir(tela('dante') && el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, 'O reinício não voltou às boas-vindas.');
+        conferir(el('guia-fechar-animal').hidden && !el('btn-fechar-animal').hasAttribute('aria-describedby'), 'O reinício deixou a orientação do X ativa.');
+        abrirPassoInterativo();
+        clicar(`card-${CONFIG.tutorial.animalId}`);
+        conferir(!el('guia-fechar-animal').hidden, 'A orientação não reapareceu na nova experiência.');
+        reiniciarExperiencia();
+        conferir(el('guia-fechar-animal').hidden, 'Início não limpou a orientação.');
+    });
+    await testar('Tutorial exige tocar no animal; a inatividade começa somente após a conclusão', () => {
+        abrirPassoInterativo();
+        avancarTempo(240000);
+        conferir(tela('dante') && el('modal-inatividade').hidden, 'A inatividade interrompeu o tutorial.');
+        clicar('btn-avancar');
+        avancarApresentacao();
+        conferir(tela('dante') && el('btn-avancar').hidden, 'Foi possível pular a etapa interativa.');
+        concluirTutorial();
+        conferir(tela('galeria') && el('modal-animal').hidden, 'O toque e o X não liberaram a galeria.');
+        avancarTempo(104999);
+        conferir(el('modal-inatividade').hidden && !document.querySelector('.aguardando-toque'), 'Um prazo antigo permaneceu após concluir a ajuda.');
+        avancarTempo(1);
+        conferir(!el('modal-inatividade').hidden, 'Concluir o tutorial não iniciou a inatividade da galeria.');
+        reiniciarExperiencia();
     });
     if (!comVideo) await testar('Vídeo desativado não carrega e não pode ser aberto pelas setas', () => {
         abrirGaleria();
@@ -168,6 +302,7 @@ async function executarTestes() {
             clicar('seta-avancar');
         }
         clicar('btn-avancar');
+        concluirTutorial();
         conferir(tela('galeria'), 'Não conseguiu reabrir a galeria.');
     });
     await testar('Animal mostra conteúdo, parágrafos, referências e toca áudio', () => {
@@ -229,6 +364,31 @@ async function executarTestes() {
             conferir(tela('video') && el('modal-inatividade').hidden, 'Há inatividade no vídeo.');
         }
     });
+    await testar('Voltar ao navegador preserva o prazo e reinicia nas boas-vindas do CDCC', () => {
+        abrirGaleria();
+        avancarTempo(104000);
+        window.dispatchEvent(new Event('focus'));
+        document.dispatchEvent(new Event('visibilitychange'));
+        avancarTempo(1000);
+        conferir(!el('modal-inatividade').hidden, 'Voltar à janela renovou indevidamente o prazo.');
+        avancarTempo(15000);
+        conferir(tela('dante') && el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, 'O prazo não restaurou a apresentação do CDCC.');
+        conferir(!el('btn-avancar').hidden && el('progresso-tutorial').textContent.startsWith('1 /'), 'A primeira etapa não foi restaurada.');
+        conferir(el('tela-galeria').inert && !document.querySelector('.alvo-tutorial, .aguardando-toque'), 'O tutorial não voltou ao estado inicial.');
+    });
+    await testar('Prazo vencido com callbacks suspensos reinicia ao voltar ou tocar no painel', () => {
+        for (const evento of ['focus', 'visibilitychange', 'pointerdown']) {
+            abrirGaleria();
+            if (evento === 'focus') clicar('card-bugio');
+            if (evento === 'visibilitychange') { clicar('btn-reinicio'); tecla('1'); }
+            // Simula o relógio avançando enquanto o navegador suspende os callbacks.
+            agora += CONFIG.tempoInatividadeMs + 1;
+            (evento === 'focus' ? window : document).dispatchEvent(new Event(evento));
+            conferir(tela('dante') && el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, `${evento} descartou o prazo vencido.`);
+            conferir([...document.querySelectorAll('.modal-overlay')].every((modal) => modal.hidden), 'O reinício deixou um modal aberto.');
+            conferir(el('senha-mediacao').value === '' && !el('app').inert, 'O reinício não limpou o PIN ou liberou a apresentação.');
+        }
+    });
     await testar('Toque e tecla renovam o prazo; continuar fecha o aviso', async () => {
         abrirGaleria();
         avancarTempo(100000);
@@ -273,6 +433,8 @@ async function executarTestes() {
         clicar('btn-confirmar-senha');
         avancarTempo(220);
         avancarTempo(240000);
+        window.dispatchEvent(new Event('focus'));
+        document.dispatchEvent(new Event('visibilitychange'));
         conferir(tela('galeria') && el('modal-inatividade').hidden, 'A pausa não suspendeu a inatividade.');
         clicar('seta-voltar');
         if (comVideo) {
@@ -280,6 +442,7 @@ async function executarTestes() {
             clicar('seta-avancar');
         }
         clicar('btn-avancar');
+        concluirTutorial();
         avancarTempo(240000);
         conferir(tela('galeria') && el('modal-inatividade').hidden, 'Navegar perdeu a pausa.');
         clicar('btn-reinicio');

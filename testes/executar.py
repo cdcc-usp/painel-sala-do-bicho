@@ -59,7 +59,9 @@ def capturar(navegador, destino):
     cenas = {
         'dante': '',
         'convite': 'mostrarOrientacoesDante();',
-        'galeria': "mudarTela('galeria');",
+        'tutorial': 'mostrarOrientacoesDante(); avancarApresentacao();',
+        'tutorial-fechar': "document.querySelector('.alvo-tutorial').click();",
+        'galeria': "fecharAnimal(); mudarTela('galeria');",
         'animal': "abrirAnimal('coruja');",
     }
     if navegador.comando('WebDriver:ExecuteScript', {

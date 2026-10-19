@@ -45,6 +45,7 @@ function configurarEventos() {
     document.addEventListener('keydown', (evento) => {
         registrarAtividade();
         if (conterFocoModal(evento)) return;
+        if (conterFocoTutorial(evento)) return;
         if (!elementos['modal-senha'].hidden && elementos['modal-inatividade'].hidden) {
             tratarTeclaSenha(evento);
         } else if (evento.key === 'Escape') {
@@ -53,8 +54,9 @@ function configurarEventos() {
     });
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) pausarTodasAsMidias();
-        else registrarAtividade();
+        else verificarInatividade();
     });
+    window.addEventListener('focus', verificarInatividade);
 }
 
 function atualizarEtapaDante() {
@@ -63,9 +65,11 @@ function atualizarEtapaDante() {
     elementos['rotulo-etapa'].hidden = !etapa.rotulo;
     elementos['fala-dante'].textContent = etapa.fala;
     elementos['complemento-dante'].textContent = etapa.complemento;
-    elementos['btn-avancar'].textContent = etapa.botao;
+    elementos['btn-avancar'].textContent = etapa.botao || '';
+    elementos['btn-avancar'].hidden = Boolean(etapa.interativa);
     elementos['btn-inicio'].classList.toggle('oculto', estado.etapaDanteAtual === 0);
     elementos['seta-voltar-video'].hidden = !CONFIG.video.ativo || !etapa.aposVideo;
+    elementos['progresso-tutorial'].textContent = `${estado.etapaDanteAtual + 1} / ${etapasDante.length}`;
 
     elementos['indicador-etapas'].replaceChildren();
     etapasDante.forEach((_, indice) => {
@@ -80,9 +84,11 @@ function atualizarEtapaDante() {
     const balao = elementos['balao-dante'];
     balao.classList.remove('animar-entrada');
     requestAnimationFrame(() => balao.classList.add('animar-entrada'));
+    atualizarTutorialDante();
 }
 
 function avancarApresentacao() {
+    if (etapasDante[estado.etapaDanteAtual].interativa) return;
     const proximaEtapa = etapasDante[estado.etapaDanteAtual + 1];
     if (CONFIG.video.ativo && proximaEtapa?.aposVideo) {
         mudarTela('video');
@@ -115,6 +121,7 @@ function mudarTela(nome) {
     elementos['btn-reinicio'].classList.toggle('oculto', nome !== 'galeria');
     elementos['btn-inicio'].classList.toggle('oculto', nome === 'dante' && estado.etapaDanteAtual === 0);
     window.scrollTo({ top: 0, behavior: 'auto' });
+    atualizarTutorialDante();
 
     if (nome === 'video') iniciarVideo();
     if (nome === 'galeria') agendarInatividade();
@@ -132,6 +139,7 @@ function reiniciarExperiencia() {
     estado.etapaDanteAtual = 0;
     atualizarControleReinicio();
     limparSenhaMediacao();
+    ocultarGuiaFecharAnimal();
     fecharTodosOsModais();
 
     if (CONFIG.restaurarSomAoReiniciar) {

@@ -6,12 +6,25 @@ A versão exibida vem de `CONFIG.versao`, em `js/config.js`.
 
 O visitante segue este percurso:
 
-**Boas-vindas do Dante → convite para conhecer os animais da região → galeria.**
+**Boas-vindas do Dante → convite → toque guiado em um animal → orientação sobre o X → exploração livre.**
+
+Dante fala sobre o mosaico, com o fundo escurecido e visível. A etapa de toque
+ilumina o card do gato-mourisco; após 8 segundos de espera, o contorno pulsa.
+É preciso tocar nele para abrir o animal com seu som. Nessa primeira janela,
+Dante aparece sobreposto à frente do painel de informações, no mesmo estilo das etapas anteriores,
+e orienta a fechar pelo X destacado e escolher outros animais. A fala fica
+em `CONFIG.dante.etapas`, marcada com `aoAbrirAnimal: true`.
+Ao fechar pelo X, a orientação termina e a galeria fica livre, sem o destaque
+amarelo do tutorial. As próximas janelas abrem normalmente, sem repetir a ajuda.
+O efeito respeita a preferência por movimento reduzido.
 
 A galeria contém 18 animais com foto, informações e som. A seta volta à mensagem
 de convite do Dante. Início restaura as boas-vindas e o progresso da apresentação.
 Após dois minutos sem toque ou tecla na galeria, o painel reinicia; o aviso aparece
 nos últimos 15 segundos. O mediador pode pausar esse reinício usando um PIN local.
+Voltar à aba ou à janela não renova o prazo. Se o navegador suspender os
+temporizadores, ao retomar o painel ele confere o horário e restaura as boas-vindas
+quando os dois minutos já passaram.
 
 O vídeo e a fala intermediária estão desativados para o lançamento. Para restaurar
 o percurso completo, altere `CONFIG.video.ativo` para `true` em `js/config.js` e
@@ -44,6 +57,7 @@ O navegador definitivo do painel ainda precisa ser escolhido e validado.
 | `js/midias.js` | Imagens e substitutos, áudio, vídeo e controle global de som |
 | `js/mediacao.js` | PIN, teclado numérico, pausa e prazos de inatividade |
 | `js/modais.js` | Abertura, fechamento, animação e foco dos modais |
+| `js/tutorial.js` | Sobreposição do Dante, spotlight, lembrete e foco do tutorial |
 | `css/style.css` | Tema, layout, mosaico, animações e adaptações de tela |
 | `assets/` | Fotografias, áudios, Dante e vídeo locais |
 | `testes/` | Regressão executada no Firefox com Python, sem pacotes adicionais |
@@ -85,7 +99,7 @@ Use `--firefox /caminho/do/firefox` se o executável não estiver no PATH.
 A saída informa a área útil real; o Firefox pode limitar a largura mínima da janela.
 
 A regressão verifica o carregamento real das imagens e dos metadados de áudio e
-vídeo (quando ativo), navegação, catálogo e mosaico, modais, foco, PIN, controle de som, mensagens
+vídeo (quando ativo), tutorial e lembrete, navegação, catálogo e mosaico, modais, foco, PIN, controle de som, mensagens
 de erro e os prazos de 105/120 segundos. O relógio e a reprodução
 de mídia são simulados para tornar os testes rápidos e independentes de codecs e
 autoplay. Eles não verificam a qualidade ou a audibilidade das gravações.

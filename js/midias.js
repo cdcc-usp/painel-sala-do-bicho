@@ -5,16 +5,8 @@ let tentativaVideo = 0;
 const errosDeImagem = new WeakMap();
 
 function prepararMidias() {
-    const dante = elementos['imagem-dante'];
-    const atualizarDante = () => {
-        const carregou = dante.complete && dante.naturalWidth > 0;
-        dante.hidden = !carregou;
-        elementos['dante-substituto'].hidden = carregou;
-    };
-    dante.addEventListener('load', atualizarDante);
-    dante.addEventListener('error', atualizarDante);
-    dante.src = CONFIG.dante.imagem;
-    atualizarDante();
+    prepararImagemDante(elementos['imagem-dante'], elementos['dante-substituto']);
+    prepararImagemDante(elementos['imagem-dante-animal'], elementos['dante-substituto-animal']);
 
     const video = elementos['player-video'];
     video.addEventListener('ended', () => {
@@ -26,6 +18,18 @@ function prepararMidias() {
     if (CONFIG.video.ativo) video.src = CONFIG.video.arquivo;
     elementos['btn-som'].addEventListener('click', alternarSom);
     elementos['btn-repetir-som'].addEventListener('click', repetirSomAnimal);
+}
+
+function prepararImagemDante(imagem, substituto) {
+    const atualizar = () => {
+        const carregou = imagem.complete && imagem.naturalWidth > 0;
+        imagem.hidden = !carregou;
+        substituto.hidden = carregou;
+    };
+    imagem.addEventListener('load', atualizar);
+    imagem.addEventListener('error', atualizar);
+    imagem.src = CONFIG.dante.imagem;
+    atualizar();
 }
 
 function iniciarVideo() {

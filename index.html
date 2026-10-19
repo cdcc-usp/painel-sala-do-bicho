@@ -40,7 +40,11 @@
                     </div>
 
                     <div class="apresentacao-dante">
-                        <article id="balao-dante" class="balao-dante">
+                        <article id="balao-dante" class="balao-dante" aria-live="polite">
+                            <div class="cabecalho-tutorial">
+                                <span class="selo-guia"><span aria-hidden="true">✦</span> Dante, seu guia</span>
+                                <span id="progresso-tutorial" class="progresso-tutorial" aria-hidden="true"></span>
+                            </div>
                             <p id="rotulo-etapa" class="rotulo-etapa"></p>
                             <h1 id="fala-dante"></h1>
                             <p id="complemento-dante" class="complemento-dante"></p>
@@ -115,6 +119,20 @@
                 </div>
             </div>
         </article>
+        <div id="guia-fechar-animal" class="cenario-dante guia-fechar-animal" hidden>
+            <div class="personagem-dante" aria-hidden="true">
+                <img id="imagem-dante-animal" alt="">
+                <span id="dante-substituto-animal" class="dante-substituto" hidden>🐺</span>
+            </div>
+            <div class="balao-dante balao-guia-animal" aria-live="polite">
+                <div class="cabecalho-tutorial">
+                    <span class="selo-guia"><span aria-hidden="true">✦</span> Dante, seu guia</span>
+                    <span id="progresso-guia-animal" class="progresso-tutorial" aria-hidden="true"></span>
+                </div>
+                <h2 id="fala-guia-animal"></h2>
+                <p id="complemento-guia-animal" class="complemento-dante"></p>
+            </div>
+        </div>
     </div>
 
     <div id="modal-senha" class="modal-overlay modal-senha" role="dialog" aria-modal="true" aria-labelledby="titulo-senha" aria-describedby="descricao-senha" hidden>
@@ -154,6 +172,7 @@
     <script src="js/midias.js"></script>
     <script src="js/galeria.js"></script>
     <script src="js/mediacao.js"></script>
+    <script src="js/tutorial.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
