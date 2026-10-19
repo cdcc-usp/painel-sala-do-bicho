@@ -18,19 +18,19 @@ const CONFIG = Object.freeze({
         imagem: 'assets/dante/dante.png',
         etapas: [
             {
-                fala: 'Olá! Eu sou o Dante, o mascote do CDCC.',
+                fala: 'Olá! Eu sou o Dante, mascote do CDCC.',
                 complemento: 'Vou acompanhar você ao longo dessa jornada.',
                 botao: 'Prazer, Dante!'
             },
             {
-                fala: 'Quero convidar você para conhecer os animais que vivem em nossa região.',
-                complemento: 'Você poderá conhecer curiosidades e ouvir os sons de cada um deles.',
+                fala: 'Vamos conhecer os animais que vivem em nossa região?',
+                complemento: 'Toque nas imagens, observe os detalhes e descubra quem vive por aqui.',
                 botao: 'Assistir ao Vídeo'
             },
             {
                 aposVideo: true,
-                fala: 'Você conhece alguns desses animais?',
-                complemento: 'Toque nas imagens, observe os detalhes e descubra quem vive por aqui!',
+                fala: 'Vamos conhecer os animais que vivem em nossa região?',
+                complemento: 'Na próxima tela, toque nas imagens para ouvir os sons dos animais e descubra quem vive por aqui.',
                 botao: 'Conhecer os animais'
             }
         ]

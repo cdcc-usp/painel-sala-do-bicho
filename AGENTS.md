@@ -68,8 +68,9 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   sem faixa lateral, corte ou distorção. Em telas estreitas, o cabeçalho é vertical.
   Fonte e crédito da imagem ficam juntos no rodapé do conteúdo. `creditoImagem`
   só aparece quando informado; creditar a foto exibida no modal (`imgModal`, quando
-  existir). O gato-mourisco contém `teste` na fonte e no crédito; os outros 17
-  créditos estão vazios. Não preencher por suposição.
+  existir). O gato-mourisco contém `teste` no crédito; os outros 17 créditos estão
+  vazios. A fonte do gato-mourisco foi substituída por referência do ICMBio.
+  Não preencher créditos por suposição.
 - Inatividade é monitorada apenas na galeria, por `pointerdown` e `keydown`.
   Reinício após 120000ms sem interação; aviso nos últimos 15000ms (começa em
   105000ms). Vídeo e apresentação não têm reinício por inatividade.
@@ -140,9 +141,12 @@ inatividade e erros de mídia. Conferir console, funcionamento offline, layout
   o jacaré agora é Jacaré-de-Papo-Amarelo (`Caiman latirostris`). A jaguatirica
   mantém o texto anterior, pois não constava no documento. Urutu, ema, tico-tico
   e rã-touro ficam para depois, conforme confirmado pelo usuário.
-- Os destaques novos usam Grupo, Alimentação e Periodicidade; campos vazios
-  no documento são omitidos. Múltiplas fontes ficam no campo `fonte`, separadas
-  por ` | `. Não completar ou revisar conteúdo científico por suposição.
+- Todos os animais têm três destaques, nesta ordem: `🐾 Grupo`, `🍽️ Alimentação`
+  e `🕒 Hábito`. Grupo usa mamífero, ave, réptil, anfíbio ou inseto; alimentação
+  fica no feminino e hábito indica o período de atividade. Os destaques foram
+  padronizados e completados com referências; as descrições foram preservadas.
+  Múltiplas fontes ficam no campo `fonte`, separadas por ` | `.
+  Não completar ou revisar conteúdo científico por suposição.
 - Todas as imagens e áudios referenciados atualmente existem. O vídeo local está em
   `assets/videos/fauna.mp4`; não há mais capa de vídeo na galeria.
 - Há mídias não referenciadas, inclusive de ema, tico-tico e urutu. Não removê-las

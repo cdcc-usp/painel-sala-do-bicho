@@ -104,7 +104,7 @@ Abra `js/dados.js`. Cada animal possui este formato:
     // imgModal: 'assets/animais/nome-sem-acentos/imagem-modal.jpg', // opcional
     audio: 'assets/animais/nome-sem-acentos/audio.mp3',
     cientifico: 'Nome científico',
-    destaques: ['Grupo: Mamífero', 'Alimentação: Onívoro'],
+    destaques: ['🐾 Grupo: Mamífero', '🍽️ Alimentação: Onívora', '🕒 Hábito: Noturno'],
     classeTamanho: '',
     descricao: 'Primeiro parágrafo.\nSegundo parágrafo.',
     fonte: 'Endereço da fonte consultada',
@@ -116,8 +116,13 @@ Crie a pasta do animal dentro de `assets/animais`, coloque a imagem e o áudio
 nela e confira se os caminhos estão iguais aos registrados em `dados.js`.
 Use o nome e a extensão reais do arquivo; há imagens JPG e PNG no catálogo.
 `imgModal` é opcional: sem ele, o modal usa `img`. Quebras `\n` em `descricao`
-viram parágrafos. Omita destaques sem informação; não complete dados científicos
-por suposição. Múltiplas fontes podem ficar em `fonte`, separadas por ` | `.
+viram parágrafos. Mantenha exatamente três destaques, nesta ordem e com os mesmos
+emojis: `🐾 Grupo`, `🍽️ Alimentação` e `🕒 Hábito`. Use grupos no mesmo nível:
+mamífero, ave, réptil, anfíbio ou inseto. A alimentação concorda com o rótulo
+(carnívora, herbívora etc.); hábito indica o período de atividade (diurno,
+noturno, crepuscular ou uma combinação). Consulte fontes antes de preencher ou
+alterar esses dados; não complete por suposição. Múltiplas fontes podem ficar
+em `fonte`, separadas por ` | `.
 
 As fontes são apresentadas somente como texto. Isso evita que o visitante abra
 um navegador externo e saia do quiosque.

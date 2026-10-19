@@ -112,9 +112,11 @@ Existem também imagens e sons de animais fora do catálogo e originais não usa
 esses arquivos foram preservados.
 
 Fontes, créditos, licenças e conteúdo científico ainda precisam de revisão humana.
-O gato-mourisco possui `teste` em `fonte` e `creditoImagem`; os demais créditos
-estão vazios. Esses dados foram mantidos para não inventar atribuições ou conteúdo.
-A jaguatirica mantém o texto anterior ao documento dos demais animais.
+O gato-mourisco possui `teste` em `creditoImagem`; os demais créditos estão vazios.
+Não invente atribuições. A fonte do gato-mourisco foi substituída por referência do
+ICMBio. Todos os animais têm os destaques `🐾 Grupo`, `🍽️ Alimentação` e `🕒 Hábito`,
+com referências para os dados completados ou corrigidos. As descrições foram
+preservadas; a jaguatirica mantém a descrição anterior ao documento dos demais animais.
 
 O histórico de alterações está no Git (`git log`). Não há arquivo de changelog,
 build, lint ou CI configurados.
