@@ -8,18 +8,22 @@ O visitante segue este percurso:
 
 **Boas-vindas do Dante → convite → toque guiado em um animal → orientação sobre o X → exploração livre.**
 
-Dante fala sobre o mosaico, com o fundo escurecido e visível. A etapa de toque
+Dante fala sobre o mosaico, com o fundo escurecido e visível. Toque em qualquer
+lugar para avançar as falas, conforme a indicação com seta abaixo do balão.
+Não há botões de conversa; Enter e Espaço também permitem avançar.
+A etapa de toque
 ilumina o card do gato-mourisco; após 8 segundos de espera, o contorno pulsa.
 É preciso tocar nele para abrir o animal com seu som. Nessa primeira janela,
 Dante aparece sobreposto à frente do painel de informações, no mesmo estilo das etapas anteriores,
 e orienta a fechar pelo X destacado e escolher outros animais. A fala fica
 em `CONFIG.dante.etapas`, marcada com `aoAbrirAnimal: true`.
-Ao fechar pelo X, a orientação termina e a galeria fica livre, sem o destaque
+Um toque na orientação final dispensa a fala, mantendo a ficha do animal aberta;
+o X fecha a ficha. Ao fechar pelo X, a orientação termina e a galeria fica livre, sem o destaque
 amarelo do tutorial. As próximas janelas abrem normalmente, sem repetir a ajuda.
 O efeito respeita a preferência por movimento reduzido.
 
-A galeria contém 18 animais com foto, informações e som. A seta volta à mensagem
-de convite do Dante. Início restaura as boas-vindas e o progresso da apresentação.
+A galeria contém 18 animais com foto, informações e som. O botão Início restaura
+as boas-vindas e o progresso da apresentação; a galeria não tem seta de retorno.
 Após dois minutos sem toque ou tecla na galeria, o painel reinicia; o aviso aparece
 nos últimos 15 segundos. O mediador pode pausar esse reinício usando um PIN local.
 Voltar à aba ou à janela não renova o prazo. Se o navegador suspender os

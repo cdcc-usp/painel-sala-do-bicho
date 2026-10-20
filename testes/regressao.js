@@ -31,6 +31,7 @@ async function testar(nome, verificar) {
 
 const el = (id) => document.getElementById(id);
 const clicar = (id) => el(id).click();
+const tocarTela = () => clicar('tela-dante');
 const tecla = (key, opcoes = {}) => document.dispatchEvent(new KeyboardEvent('keydown', {
     key, bubbles: true, cancelable: true, ...opcoes
 }));
@@ -58,11 +59,11 @@ function carregarMidia(caminho, tipo) {
 function abrirGaleria() {
     // Percorre o fluxo real conforme a configuração de lançamento.
     reiniciarExperiencia();
-    clicar('btn-avancar');
-    clicar('btn-avancar');
+    tocarTela();
+    tocarTela();
     if (comVideo) {
         clicar('seta-avancar');
-        clicar('btn-avancar');
+        tocarTela();
     }
     concluirTutorial();
 }
@@ -77,7 +78,7 @@ function concluirTutorial() {
 function abrirPassoInterativo() {
     reiniciarExperiencia();
     mostrarOrientacoesDante();
-    clicar('btn-avancar');
+    tocarTela();
 }
 
 // Relógio controlado: os prazos de 105/120 segundos são exercitados sem espera real.
@@ -138,8 +139,8 @@ async function executarTestes() {
     });
     if (comVideo) await testar('Apresentação → vídeo; pausa mantém a tela; ended abre as orientações', () => {
         conferir(tela('dante'), 'A aplicação não inicia no Dante.');
-        clicar('btn-avancar');
-        clicar('btn-avancar');
+        tocarTela();
+        tocarTela();
         conferir(tela('video'), 'O convite não abre o vídeo.');
         el('player-video').dispatchEvent(new Event('pause'));
         conferir(tela('video'), 'Pausar avançou a tela.');
@@ -153,21 +154,68 @@ async function executarTestes() {
         clicar('card-gato-mourisco');
         conferir(el('modal-animal').hidden, 'Um card abriu antes da etapa interativa.');
         conferir(el('btn-inicio').classList.contains('oculto'), 'Início deve ficar oculto na primeira fala.');
-        clicar('btn-avancar');
-        conferir(tela('dante') && el('btn-avancar').textContent === 'Conhecer os animais', 'O convite ainda direciona para o vídeo.');
+        tocarTela();
+        conferir(tela('dante') && etapasDante[estado.etapaDanteAtual].aposVideo, 'O primeiro toque não abriu o convite.');
+        conferir(!el('btn-avancar') && !el('aviso-avancar-dante').hidden, 'O botão de conversa não foi substituído pela indicação de toque.');
         conferir(el('seta-voltar-video').hidden, 'Há uma seta para o vídeo desativado.');
         conferir(!el('btn-inicio').classList.contains('oculto'), 'Início não apareceu no convite.');
         clicar('btn-inicio');
         conferir(el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, 'Início não voltou do convite às boas-vindas.');
-        clicar('btn-avancar');
-        clicar('btn-avancar');
+        tocarTela();
+        tocarTela();
         conferir(tela('dante') && el('fala-dante').textContent === CONFIG.dante.etapas.find((etapa) => etapa.interativa).fala, 'O convite não abriu a etapa interativa.');
-        conferir(el('btn-avancar').hidden, 'A etapa interativa ainda oferece um botão para pular.');
-        clicar('btn-avancar');
+        conferir(el('aviso-avancar-dante').hidden, 'A etapa obrigatória ainda oferece avanço livre.');
+        tocarTela();
         conferir(tela('dante'), 'Foi possível pular o toque no animal.');
         concluirTutorial();
         conferir(tela('galeria'), 'O toque guiado não liberou a galeria.');
         conferir(!reproducoes.includes(el('player-video')), 'O vídeo foi reproduzido no novo fluxo.');
+    });
+    await testar('Toques na fala, no aviso e no fundo avançam; controles e card obrigatório são preservados', () => {
+        reiniciarExperiencia();
+        clicar('btn-som');
+        conferir(estado.etapaDanteAtual === 0 && !estado.somAtivo, 'Mutar avançou a conversa.');
+        clicar('fala-dante');
+        conferir(estado.etapaDanteAtual === 1, 'Tocar na fala não avançou uma única etapa.');
+        clicar('btn-som');
+        conferir(estado.etapaDanteAtual === 1 && estado.somAtivo, 'Desmutar avançou a conversa.');
+        clicar('btn-inicio');
+        conferir(estado.etapaDanteAtual === 0, 'Início avançou após reiniciar.');
+        clicar('imagem-dante');
+        conferir(estado.etapaDanteAtual === 1, 'Tocar no Dante não avançou.');
+        clicar('aviso-avancar-dante');
+        if (comVideo) {
+            conferir(tela('video'), 'O toque não abriu o vídeo.');
+            clicar('seta-avancar');
+            conferir(etapasDante[estado.etapaDanteAtual].aposVideo, 'A seta do vídeo avançou duas etapas.');
+            tocarTela();
+        }
+        const etapaObrigatoria = estado.etapaDanteAtual;
+        for (const id of ['tela-dante', 'fala-dante', 'imagem-dante', 'balao-dante', 'card-anta']) clicar(id);
+        conferir(tela('dante') && estado.etapaDanteAtual === etapaObrigatoria && el('modal-animal').hidden,
+            'Tocar fora do gato-mourisco pulou a etapa obrigatória.');
+        concluirTutorial();
+    });
+    await testar('Enter e Espaço avançam as falas sem repetir nem pular o toque obrigatório', () => {
+        reiniciarExperiencia();
+        const enviar = (key, repeat = false) => el('tela-dante').dispatchEvent(new KeyboardEvent('keydown', {
+            key, repeat, bubbles: true, cancelable: true
+        }));
+        enviar('Enter');
+        conferir(estado.etapaDanteAtual === 1, 'Enter não avançou.');
+        enviar('Enter', true);
+        conferir(estado.etapaDanteAtual === 1, 'Segurar Enter pulou uma etapa.');
+        enviar(' ');
+        if (comVideo) {
+            conferir(tela('video'), 'Espaço não abriu o vídeo.');
+            clicar('seta-avancar');
+            enviar('Enter');
+        }
+        const etapaObrigatoria = estado.etapaDanteAtual;
+        enviar('Enter'); enviar(' ');
+        conferir(tela('dante') && estado.etapaDanteAtual === etapaObrigatoria && el('modal-animal').hidden,
+            'O teclado pulou o card obrigatório.');
+        reiniciarExperiencia();
     });
     await testar('Spotlight permite somente o card iluminado e mantém fala e controles dentro da janela', async () => {
         abrirPassoInterativo();
@@ -195,7 +243,7 @@ async function executarTestes() {
         reiniciarExperiencia();
         for (const etapa of ['boas-vindas', 'convite', 'toque guiado']) {
             await esperarQuadro();
-            for (const id of ['btn-inicio', 'btn-som', 'btn-avancar', 'seta-voltar-video']) {
+            for (const id of ['btn-inicio', 'btn-som', 'aviso-avancar-dante', 'seta-voltar-video']) {
                 const controle = el(id);
                 const caixa = controle.getBoundingClientRect();
                 if (!caixa.width || !caixa.height) continue;
@@ -205,7 +253,7 @@ async function executarTestes() {
                 conferir(!controle.closest('[inert]'), `${id} está bloqueado em ${etapa}.`);
             }
             if (etapa === 'boas-vindas') mostrarOrientacoesDante();
-            else if (etapa === 'convite') clicar('btn-avancar');
+            else if (etapa === 'convite') tocarTela();
         }
         reiniciarExperiencia();
     });
@@ -284,13 +332,31 @@ async function executarTestes() {
         reiniciarExperiencia();
         conferir(el('guia-fechar-animal').hidden, 'Início não limpou a orientação.');
     });
+    await testar('A orientação final pode ser dispensada por toque sem fechar a ficha do animal', () => {
+        abrirPassoInterativo();
+        clicar(`card-${CONFIG.tutorial.animalId}`);
+        conferir(!el('guia-fechar-animal').hidden, 'O toque do card dispensou a orientação na mesma ação.');
+        clicar('fala-guia-animal');
+        conferir(el('guia-fechar-animal').hidden && !el('modal-animal').hidden && estado.animalAberto.id === CONFIG.tutorial.animalId,
+            'Tocar na orientação não a dispensou ou fechou a ficha.');
+        conferir(!el('btn-fechar-animal').hasAttribute('aria-describedby'), 'A orientação dispensada ficou associada ao X.');
+        clicar('btn-fechar-animal');
+        avancarTempo(220);
+        abrirPassoInterativo();
+        clicar(`card-${CONFIG.tutorial.animalId}`);
+        clicar('modal-animal');
+        conferir(el('guia-fechar-animal').hidden && !el('modal-animal').hidden, 'Tocar no fundo fechou a ficha antes de dispensar a orientação.');
+        clicar('modal-animal');
+        avancarTempo(220);
+        conferir(el('modal-animal').hidden, 'O fundo não voltou a fechar a ficha após a orientação.');
+    });
     await testar('Tutorial exige tocar no animal; a inatividade começa somente após a conclusão', () => {
         abrirPassoInterativo();
         avancarTempo(240000);
         conferir(tela('dante') && el('modal-inatividade').hidden, 'A inatividade interrompeu o tutorial.');
-        clicar('btn-avancar');
+        tocarTela();
         avancarApresentacao();
-        conferir(tela('dante') && el('btn-avancar').hidden, 'Foi possível pular a etapa interativa.');
+        conferir(tela('dante') && el('aviso-avancar-dante').hidden, 'Foi possível pular a etapa interativa.');
         concluirTutorial();
         conferir(tela('galeria') && el('modal-animal').hidden, 'O toque e o X não liberaram a galeria.');
         avancarTempo(104999);
@@ -299,28 +365,24 @@ async function executarTestes() {
         conferir(!el('modal-inatividade').hidden, 'Concluir o tutorial não iniciou a inatividade da galeria.');
         reiniciarExperiencia();
     });
-    if (!comVideo) await testar('Vídeo desativado não carrega e não pode ser aberto pelas setas', () => {
+    if (!comVideo) await testar('Vídeo desativado não carrega e não pode ser aberto', () => {
         abrirGaleria();
         conferir(el('tela-video').hidden && !el('player-video').hasAttribute('src'), 'O vídeo desativado ainda foi preparado para reprodução.');
         mudarTela('video');
         conferir(tela('galeria'), 'A navegação abriu o vídeo desativado.');
-        clicar('seta-voltar');
+        reiniciarExperiencia();
+        tocarTela();
         clicar('seta-voltar-video');
         conferir(tela('dante'), 'A seta oculta abriu o vídeo desativado.');
         el('player-video').dispatchEvent(new Event('ended'));
-        conferir(tela('dante') && el('btn-avancar').textContent === 'Conhecer os animais', 'Um evento do vídeo alterou o convite.');
+        conferir(tela('dante') && etapasDante[estado.etapaDanteAtual].aposVideo, 'Um evento do vídeo alterou o convite.');
     });
-    await testar('Seta da galeria volta à mensagem do Dante e permite reabrir os animais', () => {
+    await testar('Galeria não tem seta de retorno; Início restaura as boas-vindas', () => {
         abrirGaleria();
-        clicar('seta-voltar');
-        conferir(tela('dante') && el('btn-avancar').textContent === 'Conhecer os animais', 'A seta não voltou à mensagem correta.');
-        if (comVideo) {
-            clicar('seta-voltar-video');
-            conferir(tela('video') && el('player-video').currentTime === 0, 'Não reiniciou o vídeo.');
-            clicar('seta-avancar');
-        }
-        clicar('btn-avancar');
-        concluirTutorial();
+        conferir(!el('seta-voltar'), 'A seta redundante da galeria permanece.');
+        clicar('btn-inicio');
+        conferir(tela('dante') && estado.etapaDanteAtual === 0, 'Início não voltou às boas-vindas.');
+        abrirGaleria();
         conferir(tela('galeria'), 'Não conseguiu reabrir a galeria.');
     });
     await testar('Animal mostra conteúdo, parágrafos, referências e toca áudio', () => {
@@ -410,11 +472,11 @@ async function executarTestes() {
         conferir(tela('dante') && el('modal-inatividade').hidden, 'Não reiniciou em 120s.');
         avancarTempo(240000);
         conferir(tela('dante') && el('modal-inatividade').hidden, 'Há inatividade na apresentação.');
-        clicar('btn-avancar');
+        tocarTela();
         avancarTempo(240000);
         conferir(tela('dante') && el('modal-inatividade').hidden, 'Há inatividade na segunda fala do Dante.');
         if (comVideo) {
-            clicar('btn-avancar');
+            tocarTela();
             avancarTempo(240000);
             conferir(tela('video') && el('modal-inatividade').hidden, 'Há inatividade no vídeo.');
         }
@@ -428,7 +490,7 @@ async function executarTestes() {
         conferir(!el('modal-inatividade').hidden, 'Voltar à janela renovou indevidamente o prazo.');
         avancarTempo(15000);
         conferir(tela('dante') && el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, 'O prazo não restaurou a apresentação do CDCC.');
-        conferir(!el('btn-avancar').hidden && el('progresso-tutorial').textContent.startsWith('1 /'), 'A primeira etapa não foi restaurada.');
+        conferir(!el('aviso-avancar-dante').hidden && el('progresso-tutorial').textContent.startsWith('1 /'), 'A primeira etapa não foi restaurada.');
         conferir(el('tela-galeria').inert && !document.querySelector('.alvo-tutorial, .aguardando-toque'), 'O tutorial não voltou ao estado inicial.');
     });
     await testar('Prazo vencido com callbacks suspensos reinicia ao voltar ou tocar no painel', () => {
@@ -496,7 +558,7 @@ async function executarTestes() {
         clicar('btn-fechar-senha');
         avancarTempo(220);
     });
-    await testar('PIN correto pausa a sessão, inclusive ao navegar; reativar dá prazo completo', async () => {
+    await testar('PIN correto pausa a sessão ao explorar; reativar dá prazo completo', async () => {
         clicar('btn-reinicio');
         for (const digito of CONFIG.senhaMediacao) el('teclado-senha').querySelector(`[data-caractere="${digito}"]`).click();
         clicar('btn-confirmar-senha');
@@ -505,15 +567,11 @@ async function executarTestes() {
         window.dispatchEvent(new Event('focus'));
         document.dispatchEvent(new Event('visibilitychange'));
         conferir(tela('galeria') && el('modal-inatividade').hidden, 'A pausa não suspendeu a inatividade.');
-        clicar('seta-voltar');
-        if (comVideo) {
-            clicar('seta-voltar-video');
-            clicar('seta-avancar');
-        }
-        clicar('btn-avancar');
-        concluirTutorial();
+        clicar('card-anta');
+        clicar('btn-fechar-animal');
+        avancarTempo(220);
         avancarTempo(240000);
-        conferir(tela('galeria') && el('modal-inatividade').hidden, 'Navegar perdeu a pausa.');
+        conferir(tela('galeria') && el('modal-inatividade').hidden, 'Explorar os animais perdeu a pausa.');
         clicar('btn-reinicio');
         avancarTempo(104999);
         conferir(el('modal-inatividade').hidden, 'Reativar não deu prazo completo.');
@@ -594,10 +652,10 @@ async function executarTestes() {
         conferir(el('modal-status-som').textContent === status, 'Áudio antigo sobrescreveu o status do novo.');
     });
     if (comVideo) await testar('Rejeição de um play anterior não mostra erro ao rever o vídeo', async () => {
-        reiniciarExperiencia(); clicar('btn-avancar');
+        reiniciarExperiencia(); tocarTela();
         let rejeitar;
         proximaReproducao = () => new Promise((resolver, recusar) => { rejeitar = recusar; });
-        clicar('btn-avancar'); clicar('seta-avancar'); clicar('seta-voltar-video');
+        tocarTela(); clicar('seta-avancar'); clicar('seta-voltar-video');
         rejeitar(new DOMException('Tentativa anterior', 'NotAllowedError'));
         await Promise.resolve();
         conferir(tela('video') && el('erro-video').hidden, 'Tentativa anterior mostrou erro no vídeo novo.');

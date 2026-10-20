@@ -3,6 +3,24 @@
 let temporizadorDestaque = null;
 let cardTutorial = null;
 
+function tratarToqueTutorial(evento) {
+    if (!elementos['modal-inatividade'].hidden || !elementos['modal-senha'].hidden) return;
+    if (!elementos['guia-fechar-animal'].hidden && elementos['modal-animal'].contains(evento.target)) {
+        ocultarGuiaFecharAnimal();
+        return;
+    }
+    // Os controles globais e o card obrigatório mantêm suas próprias ações.
+    if (!elementos['tela-dante'].contains(evento.target) || evento.target.closest('button, input, a')) return;
+    avancarApresentacao();
+}
+
+function tratarTeclaTutorial(evento) {
+    if (evento.target !== elementos['tela-dante'] || !['Enter', ' '].includes(evento.key)) return false;
+    evento.preventDefault();
+    if (!evento.repeat) avancarApresentacao();
+    return true;
+}
+
 function atualizarTutorialDante() {
     limparDestaqueTutorial();
     const ativo = estado.telaAtual === 'dante';
@@ -13,7 +31,6 @@ function atualizarTutorialDante() {
     document.body.classList.toggle('tutorial-ativo', ativo);
     galeria.classList.toggle('fundo-tutorial', ativo);
     galeria.inert = ativo && !interativo;
-    elementos['seta-voltar'].hidden = ativo;
     elementos['tela-dante'].classList.toggle('tutorial-interativo', Boolean(interativo));
 
     if (interativo) {
@@ -31,7 +48,7 @@ function atualizarTutorialDante() {
             }, CONFIG.tutorial.tempoDestaqueMs);
         }
     } else if (ativo) {
-        elementos['btn-avancar'].focus({ preventScroll: true });
+        elementos['tela-dante'].focus({ preventScroll: true });
     }
 }
 
@@ -67,9 +84,9 @@ function ocultarGuiaFecharAnimal() {
 function conterFocoTutorial(evento) {
     if (evento.key !== 'Tab' || estado.telaAtual !== 'dante') return false;
     const controles = [
-        elementos['btn-inicio'], elementos['btn-som'], elementos['seta-voltar-video'],
-        elementos['btn-avancar'], cardTutorial
-    ].filter((elemento) => elemento && elemento.getClientRects().length);
+        elementos['btn-inicio'], elementos['btn-som'], elementos['tela-dante'],
+        elementos['seta-voltar-video'], cardTutorial
+    ].filter((elemento) => elemento && elemento.tabIndex >= 0 && elemento.getClientRects().length);
     const primeiro = controles[0];
     const ultimo = controles.at(-1);
     if (!controles.includes(document.activeElement)) {

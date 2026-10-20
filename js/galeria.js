@@ -3,7 +3,7 @@
 function configurarGaleria() {
     elementos['btn-fechar-animal'].addEventListener('click', fecharAnimal);
     elementos['modal-animal'].addEventListener('click', (evento) => {
-        if (evento.target === elementos['modal-animal']) fecharAnimal();
+        if (evento.target === elementos['modal-animal'] && elementos['guia-fechar-animal'].hidden) fecharAnimal();
     });
     gerarCards();
 }

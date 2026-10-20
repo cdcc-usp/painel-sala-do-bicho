@@ -139,6 +139,15 @@ button:focus-visible {
     backdrop-filter: none;
 }
 
+.tela-dante:focus {
+    outline: none;
+}
+
+.tela-dante:focus-visible .aviso-avancar-dante {
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+}
+
 .cenario-dante {
     position: fixed;
     bottom: clamp(24px, 4vh, 88px);
@@ -266,12 +275,31 @@ button:focus-visible {
     gap: clamp(14px, 1.4vh, 32px);
 }
 
-.controles-dante .botao-principal {
-    min-height: clamp(60px, 5.5vh, 120px);
-    margin-top: 0;
-    padding: clamp(14px, 1.2vh, 30px) clamp(24px, 2vw, 76px);
-    border-radius: clamp(18px, 1.2vw, 46px);
+.aviso-avancar-dante {
+    display: flex;
+    align-items: center;
+    gap: 0.7em;
+    color: var(--creme);
     font-size: clamp(1.125rem, 1.3vw, 3rem);
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.aviso-avancar-dante svg {
+    flex: 0 0 1.5em;
+    width: 1.5em;
+    height: 1.5em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.aviso-guia-animal {
+    margin-top: clamp(16px, 1.6vh, 36px);
+    color: var(--verde-800);
+    font-size: clamp(1rem, 1.1vw, 2.5rem);
 }
 
 .controles-dante .indicador-etapas {
@@ -1185,9 +1213,9 @@ body.tutorial-ativo .rodape-versao {
         justify-content: space-between;
     }
 
-    .controles-dante .botao-principal {
+    .controles-dante .aviso-avancar-dante {
         max-width: 78%;
-        padding: 14px 20px;
+        font-size: 1rem;
     }
 
     .grid-container {

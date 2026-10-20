@@ -27,7 +27,7 @@
         </header>
 
         <main>
-            <section id="tela-dante" class="tela tela-dante ativa" aria-labelledby="fala-dante">
+            <section id="tela-dante" class="tela tela-dante ativa" tabindex="0" aria-labelledby="fala-dante" aria-describedby="aviso-avancar-dante" aria-keyshortcuts="Enter Space">
                 <button id="seta-voltar-video" class="seta-voltar" type="button" aria-label="Voltar ao vídeo" hidden>
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <polyline points="16 4 8 12 16 20" />
@@ -50,7 +50,12 @@
                             <p id="complemento-dante" class="complemento-dante"></p>
                         </article>
                         <div class="controles-dante">
-                            <button id="btn-avancar" class="botao-principal" type="button"></button>
+                            <p id="aviso-avancar-dante" class="aviso-avancar-dante">
+                                <span>Toque em qualquer lugar para continuar</span>
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M4 12h16m-7-7 7 7-7 7" />
+                                </svg>
+                            </p>
                             <div id="indicador-etapas" class="indicador-etapas" aria-label="Progresso da apresentação"></div>
                         </div>
                     </div>
@@ -72,12 +77,6 @@
             </section>
 
             <section id="tela-galeria" class="tela tela-galeria" aria-labelledby="titulo-galeria">
-                <button id="seta-voltar" class="seta-voltar" type="button" aria-label="Voltar à mensagem do Dante">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <polyline points="16 4 8 12 16 20" />
-                    </svg>
-                </button>
-
                 <div class="cabecalho-galeria">
                     <h1 id="titulo-galeria">Animais da região</h1>
                     <p>Toque em um animal para conhecê-lo e ouvir seu som.</p>
@@ -133,6 +132,7 @@
                 </div>
                 <h2 id="fala-guia-animal"></h2>
                 <p id="complemento-guia-animal" class="complemento-dante"></p>
+                <p class="aviso-avancar-dante aviso-guia-animal">Toque na tela para continuar</p>
             </div>
         </div>
     </div>

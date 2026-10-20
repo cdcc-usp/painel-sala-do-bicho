@@ -55,16 +55,25 @@ def verificarInteracoes(navegador, recarregar):
     def focar(id):
         js('document.getElementById(arguments[0]).focus();', id)
 
+    def tocarTela(x=30, y=200):
+        navegador.comando('WebDriver:PerformActions', {'actions': [{
+            'type': 'pointer', 'id': 'toque-tutorial', 'parameters': {'pointerType': 'mouse'},
+            'actions': [
+                {'type': 'pointerMove', 'origin': 'viewport', 'x': x, 'y': y},
+                {'type': 'pointerDown', 'button': 0}, {'type': 'pointerUp', 'button': 0},
+            ],
+        }]})
+
     def fecharAnimal():
         clicar('#btn-fechar-animal')
         esperar("document.getElementById('modal-animal').hidden", 'Animal não fechou.')
 
     def abrirGaleria():
-        clicar('#btn-avancar')
-        clicar('#btn-avancar')
+        tocarTela()
+        tocarTela()
         if js('return CONFIG.video.ativo;'):
             clicar('#seta-avancar')
-            clicar('#btn-avancar')
+            tocarTela()
         clicar('.alvo-tutorial')
         esperar("getComputedStyle(document.getElementById('modal-animal')).opacity === '1'", 'Modal não abriu.')
         fecharAnimal()
@@ -103,14 +112,14 @@ def verificarInteracoes(navegador, recarregar):
         clicar('#btn-som')
         conferir(js('return !estado.somAtivo;'), 'Som não desligou nas boas-vindas.')
         clicar('#btn-som')
-        clicar('#btn-avancar')
+        tocarTela()
         clicar('#btn-inicio')
         conferir(js('return estado.etapaDanteAtual === 0 && estado.somAtivo;'), 'Início não restaurou a sessão.')
-        abrirGaleria()
-        clicar('#seta-voltar')
-        conferir(js("return estado.telaAtual === 'dante' && etapasDante[estado.etapaDanteAtual].aposVideo;"),
-                 'A seta não voltou ao convite.')
         if js('return CONFIG.video.ativo;'):
+            tocarTela()
+            tocarTela()
+            esperar("document.getElementById('player-video').currentTime > 0", 'O vídeo real não começou.')
+            clicar('#seta-avancar')
             clicar('#seta-voltar-video')
             esperar("document.getElementById('player-video').currentTime > 0", 'O vídeo real não começou.')
             clicar('#btn-som')
@@ -119,9 +128,36 @@ def verificarInteracoes(navegador, recarregar):
             js("document.getElementById('player-video').pause();")
             conferir(js("return estado.telaAtual === 'video';"), 'Pausar o vídeo avançou a tela.')
             clicar('#seta-avancar')
+            clicar('#btn-inicio')
+        abrirGaleria()
+        conferir(js("return !document.getElementById('seta-voltar');"), 'A galeria ainda tem seta de retorno.')
         clicar('#btn-inicio')
 
-    testar('Entrada real: Som, Início, tutorial e seta da galeria', controlesDante)
+    testar('Entrada real: Som, Início, toque no fundo e galeria sem seta de retorno', controlesDante)
+
+    def avancarTutorial():
+        clicar('#fala-dante')
+        conferir(js('return estado.etapaDanteAtual === 1;'), 'Tocar na fala não avançou uma única etapa.')
+        clicar('#btn-inicio')
+        tecla('\ue007')
+        conferir(js('return estado.etapaDanteAtual === 1;'), 'Enter não avançou a primeira fala.')
+        tecla('\ue00d')
+        if js('return CONFIG.video.ativo;'):
+            clicar('#seta-avancar')
+            clicar('#aviso-avancar-dante')
+        etapa = js('return estado.etapaDanteAtual;')
+        tocarTela()
+        clicar('#fala-dante')
+        conferir(js('return estado.etapaDanteAtual;') == etapa, 'Um toque fora do card pulou o gato-mourisco.')
+        clicar('.alvo-tutorial')
+        esperar("getComputedStyle(document.getElementById('modal-animal')).opacity === '1'", 'Animal guiado não abriu.')
+        conferir(js("return !document.getElementById('guia-fechar-animal').hidden;"), 'O toque do card dispensou a última fala.')
+        clicar('#fala-guia-animal')
+        conferir(js("return document.getElementById('guia-fechar-animal').hidden && !document.getElementById('modal-animal').hidden;"),
+                 'A última fala não foi dispensada por toque mantendo a ficha aberta.')
+        fecharAnimal()
+
+    testar('Entrada real: fala, teclado e orientação final avançam; gato-mourisco continua obrigatório', avancarTutorial)
 
     def catalogo():
         abrirGaleria()

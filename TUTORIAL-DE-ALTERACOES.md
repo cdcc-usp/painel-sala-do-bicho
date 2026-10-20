@@ -11,13 +11,15 @@ Abra `js/config.js` e procure por `dante.etapas`. Cada item representa uma fala:
 {
     rotulo: 'BOAS-VINDAS',
     fala: 'Texto principal do balão.',
-    complemento: 'Texto menor de apoio.',
-    botao: 'Texto do botão'
+    complemento: 'Texto menor de apoio.'
 }
 ```
 
 É possível alterar os textos ou acrescentar novas etapas copiando esse formato.
 O indicador de progresso é criado automaticamente.
+As falas avançam ao tocar em qualquer lugar da tela, com uma indicação de toque
+e seta abaixo do balão. Não há botões de conversa. Enter e Espaço também avançam;
+os controles Início e Som mantêm suas próprias ações.
 O campo `rotulo` é opcional; sem ele, sua linha fica oculta e não reserva espaço.
 No lançamento sem vídeo, aparecem as boas-vindas, o convite, o toque guiado e a
 orientação sobre o X. Dante fala sobre o mosaico escurecido nas três primeiras
@@ -26,13 +28,14 @@ sem botão para pular. Tocar nele abre o animal com som e a última fala do Dant
 marcada com `aoAbrirAnimal: true`, sobreposta à frente do painel de informações.
 Dante e o balão usam o mesmo estilo das etapas anteriores, sem alterar tamanho
 ou posição da janela do animal, mantendo o X livre. O X fica destacado
-com “Fechar e explorar”. Ao fechar, a orientação termina e não se repete nos
-demais animais. Início e reinício por inatividade restauram todo o tutorial.
+com “Fechar e explorar”. Um toque dispensa a orientação, mantendo a ficha aberta;
+o X fecha a ficha. A orientação não se repete nos demais animais. Início e reinício
+por inatividade restauram todo o tutorial.
 O destaque amarelo dos cards desaparece; o foco de teclado continua visível em branco.
 A fala intermediária permanece no array com `somenteComVideo: true` e só aparece
 quando `CONFIG.video.ativo` for `true`. Os indicadores mostram somente as falas
-ativas. O convite mantém `aposVideo: true`: esse marcador também identifica
-a mensagem para a qual a seta da galeria volta. Preserve-o em uma única etapa.
+ativas. O convite mantém `aposVideo: true`: esse marcador identifica a fala
+após o vídeo quando ele estiver ativo. Preserve-o em uma única etapa.
 
 O alvo e a demora até o contorno pulsar ficam em `CONFIG.tutorial`:
 
@@ -94,16 +97,15 @@ reinício. É possível mostrar/ocultar o PIN, apagar dígitos, limpar ou cancel
 O PIN é configurado em `CONFIG.senhaMediacao`, em `js/config.js`. Use uma string
 com quatro dígitos. É um controle
 local da interface, sem autenticação remota. A pausa não é gravada: continua ao
-voltar à mensagem do Dante e reabrir a galeria, mas termina ao voltar ao Início ou
-recarregar a página. Se o vídeo estiver ativo, revê-lo também preserva a pausa. Clique em
+abrir e fechar animais, mas termina ao voltar ao Início ou recarregar a página. Clique em
 “Reinício pausado · Reativar” para restaurar imediatamente o prazo completo de
 inatividade. Esse retorno ao modo automático não pede senha.
 
 ## 4. Reativar ou alterar o vídeo
 
 O lançamento atual usa `CONFIG.video.ativo: false`. Nesse modo, o vídeo não é
-carregado nem exibido, a fala com `somenteComVideo: true` fica fora do fluxo e a
-seta da galeria volta diretamente ao convite para conhecer os animais.
+carregado nem exibido e a fala com `somenteComVideo: true` fica fora do fluxo.
+O botão Início retorna às boas-vindas; a galeria não tem seta de retorno.
 
 Quando o vídeo final estiver pronto:
 
@@ -124,8 +126,7 @@ for diferente, altere `video.arquivo` em `js/config.js`.
 Com o vídeo ativo, ele vem depois das duas primeiras falas do Dante. Ao terminar, abre
 automaticamente a terceira fala, que orienta a tocar nos animais. Enquanto
 estiver pausado, permanece na tela do vídeo. A seta permite avançar manualmente
-para a mesma fala. O botão dela abre o toque guiado; a seta dela permite rever o vídeo.
-A seta da galeria volta às orientações do Dante.
+para a mesma fala. Um toque na tela abre o toque guiado; a seta dessa fala permite rever o vídeo.
 
 Todo o conteúdo deve ser local. Não use links do YouTube ou arquivos hospedados
 em sites externos, pois o painel precisa continuar funcionando sem internet.
@@ -278,7 +279,7 @@ acima do animal; continuar preserva as informações abertas. O aviso fecha e li
 o teclado de PIN quando ele está aberto.
 
 Em telas acima de 1100px, a galeria usa seis linhas flexíveis, com margem acima
-para os controles e nas laterais para as setas. O vídeo centralizado preenche
+para os controles e mantém as margens laterais do mosaico. O vídeo centralizado preenche
 sua área sem distorção. Setas grandes ficam no centro vertical das bordas.
 Título não reserva espaço no mosaico; rodapé fica oculto durante o tutorial. Em telas
 menores, a galeria possui rolagem. Os espaçamentos estão em variáveis CSS em `:root`.
@@ -308,10 +309,11 @@ local restrita, inicialização automática e recuperação após queda de energ
 - [ ] Dante definitivo foi adicionado.
 - [ ] Todas as imagens aparecem.
 - [ ] Todos os sons funcionam e têm volume semelhante.
-- [ ] Sem vídeo: boas-vindas → convite → toque guiado → orientação sobre o X → galeria; a seta volta ao convite e Início às boas-vindas.
+- [ ] Sem vídeo: boas-vindas → convite → toque guiado → orientação sobre o X → galeria; Início volta às boas-vindas e a galeria não tem seta de retorno.
+- [ ] As falas avançam por toque na tela, com indicação visual e sem botões de conversa; tocar nos controles globais não avança.
 - [ ] O toque no card iluminado é obrigatório e abre com som; o destaque pulsa após 8s e não reaparece ao fechar pelo X.
 - [ ] A primeira janela mostra Dante orientando sobre o X; fechar encerra a orientação, que não se repete nos demais animais.
-- [ ] Quando reativado: o vídeo é local e abre a terceira fala do Dante ao terminar; o botão dela abre o toque guiado.
+- [ ] Quando reativado: o vídeo é local e abre a terceira fala do Dante ao terminar; um toque na tela abre o toque guiado.
 - [ ] Textos e nomes científicos foram revisados por especialista.
 - [ ] Fontes e licenças das mídias foram registradas.
 - [ ] Botões foram testados no touchscreen real.
