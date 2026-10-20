@@ -191,6 +191,24 @@ async function executarTestes() {
         tecla('Tab', { shiftKey: true });
         conferir(document.activeElement === alvo, 'Shift+Tab não voltou ao card iluminado.');
     });
+    await testar('Início, som e avanço recebem toque durante as falas do Dante', async () => {
+        reiniciarExperiencia();
+        for (const etapa of ['boas-vindas', 'convite', 'toque guiado']) {
+            await esperarQuadro();
+            for (const id of ['btn-inicio', 'btn-som', 'btn-avancar', 'seta-voltar-video']) {
+                const controle = el(id);
+                const caixa = controle.getBoundingClientRect();
+                if (!caixa.width || !caixa.height) continue;
+                conferir(caixa.left >= 0 && caixa.top >= 0 && caixa.right <= innerWidth && caixa.bottom <= innerHeight, `${id} saiu da janela em ${etapa}.`);
+                const atingido = document.elementFromPoint(caixa.x + caixa.width / 2, caixa.y + caixa.height / 2);
+                conferir(controle.contains(atingido), `${id} está coberto por outra camada em ${etapa}.`);
+                conferir(!controle.closest('[inert]'), `${id} está bloqueado em ${etapa}.`);
+            }
+            if (etapa === 'boas-vindas') mostrarOrientacoesDante();
+            else if (etapa === 'convite') clicar('btn-avancar');
+        }
+        reiniciarExperiencia();
+    });
     await testar('Espera de 8s pulsa o destaque; Início cancela o lembrete e restaura a ajuda', () => {
         abrirPassoInterativo();
         const alvo = el(`card-${CONFIG.tutorial.animalId}`);
@@ -321,7 +339,44 @@ async function executarTestes() {
         conferir(el('modal-img').src.endsWith('/coruja/imagem-modal.png'), 'Foto alternativa ignorada.');
         conferir(el('modal-credito-imagem').hidden, 'Crédito vazio foi exibido.');
     });
+    await testar('X continua visível e recebe toque depois de rolar a descrição do animal', async () => {
+        abrirGaleria();
+        clicar('card-bugio');
+        const painel = el('modal-animal').querySelector('.modal-animal-content');
+        const limiteAnterior = painel.style.maxHeight;
+        try {
+            // Exercita a rolagem também em monitores nos quais o texto inteiro cabe.
+            painel.style.maxHeight = '240px';
+            await esperarQuadro();
+            await Promise.all(painel.getAnimations().map((animacao) => animacao.finished));
+            await esperarQuadro();
+            const antes = el('btn-fechar-animal').getBoundingClientRect();
+            const painelAntes = painel.getBoundingClientRect();
+            painel.scrollTop = painel.scrollHeight;
+            await esperarQuadro();
+            const depois = el('btn-fechar-animal').getBoundingClientRect();
+            const painelDepois = painel.getBoundingClientRect();
+            conferir(painel.scrollTop > 0, 'A descrição não foi rolada.');
+            conferir(Math.abs(depois.y - antes.y) < 1, `O X saiu do lugar ao rolar a descrição (${antes.y} → ${depois.y}).`);
+            conferir(['x', 'y', 'width', 'height'].every((medida) => Math.abs(painelAntes[medida] - painelDepois[medida]) < 1), 'Rolar alterou as dimensões ou a posição do painel.');
+            const atingido = document.elementFromPoint(depois.x + depois.width / 2, depois.y + depois.height / 2);
+            conferir(el('btn-fechar-animal').contains(atingido), 'O X ficou coberto depois de rolar a descrição.');
+            clicar('btn-fechar-animal');
+            avancarTempo(220);
+            clicar('card-gato-mourisco');
+            conferir(painel.scrollTop === 0, 'O próximo animal herdou a rolagem da descrição anterior.');
+            await el('modal-img').decode();
+            await esperarQuadro();
+            conferir(painel.scrollTop === 0, 'O carregamento da imagem deslocou a descrição do próximo animal.');
+        } finally {
+            painel.style.maxHeight = limiteAnterior;
+            clicar('btn-fechar-animal');
+            avancarTempo(220);
+        }
+    });
     await testar('Mute interrompe áudio; repetir reativa o som global', () => {
+        abrirGaleria();
+        clicar('card-coruja');
         clicar('btn-som');
         conferir(el('player-video').muted, 'Vídeo não foi silenciado.');
         conferir(!el('modal-status-som').classList.contains('tocando'), 'Indicador de áudio ainda ativo.');
@@ -426,6 +481,20 @@ async function executarTestes() {
         tecla('Escape');
         avancarTempo(220);
         conferir(el('modal-senha').hidden && document.activeElement === el('btn-reinicio'), 'Cancelar não devolveu o foco.');
+    });
+    await testar('PIN: Enter e Espaço preservam a ativação dos botões focados', () => {
+        clicar('btn-reinicio');
+        for (const digito of CONFIG.senhaMediacao) tecla(digito);
+        for (const botao of el('modal-senha').querySelectorAll('button')) {
+            for (const key of ['Enter', ' ']) {
+                const evento = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+                botao.dispatchEvent(evento);
+                conferir(!evento.defaultPrevented, `${botao.id || botao.textContent}: ${key} foi bloqueado.`);
+                conferir(!estado.reinicioAutomaticoPausado, 'Uma tecla no botão errado confirmou o PIN.');
+            }
+        }
+        clicar('btn-fechar-senha');
+        avancarTempo(220);
     });
     await testar('PIN correto pausa a sessão, inclusive ao navegar; reativar dá prazo completo', async () => {
         clicar('btn-reinicio');

@@ -5,11 +5,14 @@ import argparse
 import base64
 import json
 from pathlib import Path
+import re
 import shutil
 import socket
 import subprocess
 import tempfile
 import time
+
+from interacoes import verificarInteracoes
 
 
 class Navegador:
@@ -44,7 +47,57 @@ class Navegador:
         return resultado.get('value', resultado) if isinstance(resultado, dict) else resultado
 
 
-def capturar(navegador, destino):
+def carregarPagina(navegador, endereco, largura, altura):
+    navegador.comando('WebDriver:SwitchToFrame', {'id': None})
+    navegador.comando('WebDriver:Navigate', {'url': endereco})
+    tamanho = navegador.comando('WebDriver:ExecuteScript', {
+        'script': 'return [innerWidth, innerHeight];', 'args': [],
+    })
+    quadro = None
+    if tamanho != [largura, altura]:
+        # O Firefox limita a largura da janela. Um frame mantém a área útil exata,
+        # inclusive para eventos WebDriver, sem alterar o CSS da aplicação.
+        quadro = navegador.comando('WebDriver:ExecuteAsyncScript', {
+            'script': '''
+                const [endereco, largura, altura, concluir] = arguments;
+                const quadro = document.createElement('iframe');
+                quadro.style.cssText = `position:fixed;inset:0;border:0;width:${largura}px;height:${altura}px`;
+                quadro.onload = () => concluir(quadro);
+                quadro.src = endereco;
+                document.body.replaceChildren(quadro);
+            ''',
+            'args': [endereco, largura, altura],
+        })
+        navegador.comando('WebDriver:SwitchToFrame', {'id': quadro})
+        tamanho = navegador.comando('WebDriver:ExecuteScript', {
+            'script': 'return [innerWidth, innerHeight];', 'args': [],
+        })
+    if tamanho != [largura, altura]:
+        raise RuntimeError(f'Área útil incorreta: {tamanho}; esperado {[largura, altura]}.')
+    return quadro
+
+
+def prepararCopia(raiz, destino, comVideo=False, temposReaisCurtos=False):
+    (destino / 'js').mkdir(parents=True)
+    shutil.copyfile(raiz / 'index.html', destino / 'index.html')
+    for nome in ['css', 'assets']:
+        (destino / nome).symlink_to(raiz / nome)
+    for arquivo in (raiz / 'js').glob('*.js'):
+        copia = destino / 'js' / arquivo.name
+        if arquivo.name == 'config.js':
+            configuracao = arquivo.read_text()
+            if comVideo:
+                configuracao = configuracao.replace('ativo: false,', 'ativo: true,', 1)
+            if temposReaisCurtos:
+                for chave, valor in [('tempoInatividadeMs', 4000), ('tempoAvisoMs', 1500)]:
+                    configuracao = re.sub(rf'({chave}:\s*)\d+', rf'\g<1>{valor}', configuracao)
+            copia.write_text(configuracao)
+        else:
+            copia.symlink_to(arquivo)
+    return (destino / 'index.html').as_uri()
+
+
+def capturar(navegador, destino, quadro=None):
     destino.mkdir(parents=True, exist_ok=True)
     # Capturas mostram o estado final, sem depender do compositor do modo headless.
     # A navegação abaixo recarrega a página antes de executar a regressão.
@@ -94,7 +147,14 @@ def capturar(navegador, destino):
             modal = medidas[nome]['modais'][0]
             if modal['hidden'] or float(modal['opacidade']) < 1:
                 raise RuntimeError('O modal não ficou visível antes da captura.')
-        foto = navegador.comando('WebDriver:TakeScreenshot', {'full': False})
+        if quadro:
+            navegador.comando('WebDriver:SwitchToFrame', {'id': None})
+        parametros = {'full': False}
+        if quadro:
+            parametros['id'] = next(iter(quadro.values()))
+        foto = navegador.comando('WebDriver:TakeScreenshot', parametros)
+        if quadro:
+            navegador.comando('WebDriver:SwitchToFrame', {'id': quadro})
         (destino / f'{nome}.png').write_bytes(base64.b64decode(foto))
     (destino / 'medidas.json').write_text(json.dumps(medidas, indent=4))
 
@@ -152,14 +212,21 @@ def executar(opcoes):
                         'height': opcoes.altura + margens['altura'],
                     })
                     endereco = opcoes.url or (raiz / 'index.html').as_uri()
-                    navegador.comando('WebDriver:Navigate', {'url': endereco})
-                    tamanho = navegador.comando('WebDriver:ExecuteScript', {
-                        'script': 'return [innerWidth, innerHeight];', 'args': [],
-                    })
-                    print(f'Área útil da página: {tamanho[0]} × {tamanho[1]}', flush=True)
+                    if opcoes.com_video:
+                        endereco = prepararCopia(raiz, pasta / 'aplicacao', comVideo=True)
+                    enderecoRapido = prepararCopia(raiz, pasta / 'temporizadores',
+                                                  comVideo=opcoes.com_video, temposReaisCurtos=True) if opcoes.interacoes else None
+                    def recarregar(temporizadores=False):
+                        return carregarPagina(navegador, enderecoRapido if temporizadores else endereco,
+                                              opcoes.largura, opcoes.altura)
+                    quadro = recarregar()
+                    print(f'Área útil da página: {opcoes.largura} × {opcoes.altura}', flush=True)
                     if opcoes.capturas:
-                        capturar(navegador, Path(opcoes.capturas))
-                        navegador.comando('WebDriver:Navigate', {'url': endereco})
+                        capturar(navegador, Path(opcoes.capturas), quadro)
+                        recarregar()
+                    interacoes = verificarInteracoes(navegador, recarregar) if opcoes.interacoes else []
+                    if interacoes:
+                        recarregar()
                     resultado = navegador.comando('WebDriver:ExecuteAsyncScript', {
                         'script': '''
                             window.concluirTestes = arguments[arguments.length - 1];
@@ -170,7 +237,10 @@ def executar(opcoes):
                         'args': [(raiz / 'testes/regressao.js').read_text(encoding='utf-8')],
                         'sandbox': None,
                     })
+                    resultado['testes'] = interacoes + resultado['testes']
                     for teste in resultado['testes']:
+                        if teste in interacoes:
+                            continue
                         print(f'{"OK" if teste["ok"] else "FALHOU"}: {teste["nome"]}')
                         if not teste['ok']:
                             print(f'    {teste["erro"]}')
@@ -196,7 +266,11 @@ if __name__ == '__main__':
     argumentos.add_argument('--largura', type=int, default=1920)
     argumentos.add_argument('--altura', type=int, default=1080)
     argumentos.add_argument('--capturas', help='Pasta opcional para imagens e medidas das telas ativas.')
+    argumentos.add_argument('--interacoes', action='store_true', help='Inclui cliques, teclado, áudio e temporizadores reais.')
+    argumentos.add_argument('--com-video', action='store_true', help='Testa uma cópia temporária com o vídeo ativado (file://).')
     opcoes = argumentos.parse_args()
     if not opcoes.firefox:
         argumentos.error('Instale o Firefox ou informe seu caminho com --firefox.')
+    if opcoes.com_video and opcoes.url:
+        argumentos.error('--com-video usa uma cópia local; execute sem --url.')
     raise SystemExit(executar(opcoes))

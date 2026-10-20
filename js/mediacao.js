@@ -99,6 +99,8 @@ function confirmarSenhaMediacao(evento) {
 
 function tratarTeclaSenha(evento) {
     if (evento.ctrlKey || evento.altKey || evento.metaKey) return;
+    // Enter e Espaço devem ativar o botão focado pelo comportamento nativo.
+    if (evento.target.closest?.('button') && (evento.key === 'Enter' || evento.key === ' ')) return;
     if (evento.key === 'Escape') {
         evento.preventDefault();
         fecharSenhaMediacao();

@@ -72,10 +72,10 @@ function abrirAnimal(animalId) {
     elementos['modal-credito-imagem'].textContent = credito ? `Crédito da imagem: ${credito}` : '';
     elementos['modal-credito-imagem'].hidden = !credito;
     elementos['modal-referencias'].hidden = !fonte && !credito;
-    elementos['modal-animal'].querySelector('.modal-content').scrollTop = 0;
 
     if (aberturaGuiada) mostrarGuiaFecharAnimal();
     abrirModal(elementos['modal-animal'], elementos['btn-fechar-animal'], document.getElementById(`card-${animal.id}`));
+    elementos['modal-animal'].querySelector('.modal-content').scrollTop = 0;
     tocarSomAnimal(animal.audio);
 }
 

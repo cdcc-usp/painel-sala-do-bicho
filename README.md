@@ -96,11 +96,29 @@ python3 testes/executar.py --url http://127.0.0.1:8080
 
 Use `--firefox /caminho/do/firefox` se o executável não estiver no PATH.
 `--capturas /tmp/painel-capturas` salva imagens das telas e medidas dos cards.
-A saída informa a área útil real; o Firefox pode limitar a largura mínima da janela.
+A área útil é conferida antes dos testes. Quando o Firefox limita a largura
+mínima da janela, um frame mantém a resolução solicitada, inclusive em 390 px.
+
+Para incluir cliques e teclas enviados pelo navegador, reprodução real dos 18
+áudios e temporizadores reais:
+
+```bash
+python3 testes/executar.py --interacoes
+python3 testes/executar.py --largura 390 --altura 844 --interacoes
+python3 testes/executar.py --com-video --interacoes
+```
+
+`--com-video` usa uma cópia temporária com vídeo ativado, preservando a configuração
+de lançamento; não é combinado com `--url`. Nos dois cenários de temporizadores
+reais, outra cópia temporária reduz o prazo para 4 segundos, com aviso nos últimos
+1,5 segundo. Os prazos originais de 105/120 segundos continuam cobertos pela regressão
+com relógio simulado. As cópias são removidas ao terminar.
 
 A regressão verifica o carregamento real das imagens e dos metadados de áudio e
 vídeo (quando ativo), tutorial e lembrete, navegação, catálogo e mosaico, modais, foco, PIN, controle de som, mensagens
-de erro e os prazos de 105/120 segundos. O relógio e a reprodução
+de erro e os prazos de 105/120 segundos. Também confere o X após rolar a descrição,
+a abertura do próximo animal no topo e o teclado físico nos controles do PIN.
+Na execução básica, o relógio e a reprodução
 de mídia são simulados para tornar os testes rápidos e independentes de codecs e
 autoplay. Eles não verificam a qualidade ou a audibilidade das gravações.
 

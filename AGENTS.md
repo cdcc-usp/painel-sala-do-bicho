@@ -95,6 +95,8 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   interna quando necessário. O cabeçalho coloca foto ao lado de nome e destaques;
   descrição e áudio ficam abaixo. A imagem tem largura de 100% e altura automática,
   sem faixa lateral, corte ou distorção. Em telas estreitas, o cabeçalho é vertical.
+  O X fica em um contêiner sem altura com `position: sticky` e permanece acessível
+  ao rolar a descrição. A rolagem é zerada depois de abrir o modal, já visível.
   Fonte e crédito da imagem ficam juntos no rodapé do conteúdo. `creditoImagem`
   só aparece quando informado; creditar a foto exibida no modal (`imgModal`, quando
   existir). O gato-mourisco contém `teste` no crédito; os outros 17 créditos estão
@@ -156,6 +158,8 @@ python3 testes/executar.py
 python3 testes/executar.py --largura 3840 --altura 2160
 python3 testes/executar.py --largura 1024 --altura 768
 python3 testes/executar.py --largura 390 --altura 844
+python3 testes/executar.py --interacoes
+python3 testes/executar.py --com-video --interacoes
 ```
 
 Por padrão abre `file://`; `--url http://127.0.0.1:8080` verifica um servidor local.
@@ -163,6 +167,10 @@ Relógio e reprodução de mídia são simulados na regressão. Validar manualme
 apresentação, vídeo/setas, galeria, modais, áudio/repetição/mute, botão Início,
 inatividade e erros de mídia. Conferir console, funcionamento offline, layout
 4K horizontal, resoluções menores e touchscreen real quando disponível.
+`--interacoes` acrescenta cliques e teclas WebDriver, reprodução real dos 18 áudios
+e temporizadores reais com prazos menores em uma cópia temporária; `--com-video`
+ativa o vídeo apenas em uma cópia temporária, sem combinar com `--url`.
+O runner confere a área útil exata e usa um frame quando o Firefox limita a janela.
 
 ## Pendências identificadas
 
