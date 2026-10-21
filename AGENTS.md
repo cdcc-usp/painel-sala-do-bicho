@@ -60,12 +60,13 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   apenas o card iluminado é liberado. Tab fica nos controles e nesse card.
   As falas avançam por toque em qualquer lugar da tela, com exceção do card
   obrigatório. Início, Som e a seta do vídeo mantêm suas próprias ações.
-  Não há botões de conversa; `.aviso-avancar-dante` indica o toque com uma seta
-  e fica oculto na etapa obrigatória. Enter e Espaço também avançam, sem repetição
+  Não há botões de conversa; `.aviso-avancar-dante` mostra “Toque para seguir”,
+  centralizado na tela, com um ícone de mão e uma onda suave de toque.
+  A indicação fica oculta na etapa obrigatória. Enter e Espaço também avançam, sem repetição
   por tecla segurada. Balão, indicação e progresso dimensionam-se com a janela;
-  em telas estreitas, Dante aparece acima do balão. Indicação e indicadores ficam
-  em `.controles-dante`.
-  Movimento reduzido desativa a pulsação contínua.
+  em telas estreitas, Dante aparece acima do balão. A indicação é irmã de
+  `.cenario-dante`, fixa no centro da janela; os indicadores ficam em `.controles-dante`.
+  Movimento reduzido desativa a pulsação contínua e a onda da indicação de toque.
 - A última fala usa `aoAbrirAnimal: true` em `CONFIG.dante.etapas` e aparece
   somente ao abrir o animal pelo toque guiado. Dante e seu balão flutuam à frente do
   painel de descrição, usando `.cenario-dante`, `.personagem-dante` e `.balao-dante`,

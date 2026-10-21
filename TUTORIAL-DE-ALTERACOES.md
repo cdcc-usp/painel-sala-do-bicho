@@ -17,8 +17,9 @@ Abra `js/config.js` e procure por `dante.etapas`. Cada item representa uma fala:
 
 É possível alterar os textos ou acrescentar novas etapas copiando esse formato.
 O indicador de progresso é criado automaticamente.
-As falas avançam ao tocar em qualquer lugar da tela, com uma indicação de toque
-e seta abaixo do balão. Não há botões de conversa. Enter e Espaço também avançam;
+As falas avançam ao tocar em qualquer lugar da tela. A indicação “Toque para seguir”
+fica centralizada na tela, com uma mão e uma onda suave de toque, sem
+animação quando o sistema pede movimento reduzido. Não há botões de conversa. Enter e Espaço também avançam;
 os controles Início e Som mantêm suas próprias ações.
 O campo `rotulo` é opcional; sem ele, sua linha fica oculta e não reserva espaço.
 No lançamento sem vídeo, aparecem as boas-vindas, o convite, o toque guiado e a

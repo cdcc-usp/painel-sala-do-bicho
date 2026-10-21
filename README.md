@@ -9,7 +9,9 @@ O visitante segue este percurso:
 **Boas-vindas do Dante → convite → toque guiado em um animal → orientação sobre o X → exploração livre.**
 
 Dante fala sobre o mosaico, com o fundo escurecido e visível. Toque em qualquer
-lugar para avançar as falas, conforme a indicação com seta abaixo do balão.
+lugar para avançar as falas. A indicação “Toque para seguir” fica no centro
+da tela, com um ícone de mão e uma onda suave de toque. O movimento
+respeita a preferência do sistema por movimento reduzido.
 Não há botões de conversa; Enter e Espaço também permitem avançar.
 A etapa de toque
 ilumina o card do gato-mourisco; após 8 segundos de espera, o contorno pulsa.
