@@ -122,6 +122,7 @@ button:focus-visible {
     --altura-dante: 44vh;
     min-height: 0;
     pointer-events: none;
+    cursor: pointer;
 }
 
 .tela-dante::before {
@@ -132,6 +133,10 @@ button:focus-visible {
     background: rgba(3, 18, 15, 0.64);
     backdrop-filter: blur(1.5px);
     pointer-events: auto;
+}
+
+.tela-dante.tutorial-interativo {
+    cursor: default;
 }
 
 .tela-dante.tutorial-interativo::before {
@@ -157,11 +162,13 @@ button:focus-visible {
     display: grid;
     grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.35fr);
     align-items: end;
-    gap: clamp(24px, 2vw, 76px);
+    gap: clamp(8px, 0.5vw, 20px);
     transform: translateX(-50%);
 }
 
 .personagem-dante {
+    width: min(100%, calc(var(--altura-dante) * 0.78));
+    justify-self: end;
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -755,6 +762,7 @@ body.tutorial-ativo .rodape-versao {
 
 .balao-guia-animal {
     pointer-events: auto;
+    cursor: pointer;
 }
 
 .btn-fechar.alvo-fechar-tutorial {
