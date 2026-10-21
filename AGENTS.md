@@ -21,11 +21,12 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 - `js/mediacao.js`: teclado/PIN, pausa e prazos de inatividade.
 - `js/modais.js`: ciclo de abertura/fechamento, cancelamento de fechamentos pendentes
   e gerenciamento do foco; fundo e modais sobrepostos recebem `inert`.
+- `js/tutorial.js`: sobreposição do Dante, card iluminado, lembrete e foco da ajuda.
 - `css/style.css`: variáveis de tema, CSS Grid, animações e media queries.
 - `assets/animais/<id>/`, `assets/dante/` e `assets/videos/`: mídias locais.
 - Scripts clássicos compartilham o escopo global: preservar a ordem
   `config.js` → `dados.js` → `modais.js` → `midias.js` → `galeria.js` →
-  `mediacao.js` → `main.js`. Não há módulos ES, classes ou serviços na aplicação.
+  `mediacao.js` → `tutorial.js` → `main.js`. Não há módulos ES, classes ou serviços na aplicação.
 - Não há banco de dados, persistência de sessão ou chamadas a APIs externas.
   URLs de fontes são exibidas como texto, sem navegação externa.
 
@@ -34,27 +35,55 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 - Painel final: tela 4K horizontal; navegador ainda sem escolha específica.
   Usado em mediações espontâneas e agendadas do CDCC.
 - Fluxo atual: boas-vindas do Dante → convite para conhecer os animais da região →
-  galeria. A etapa intermediária tem `somenteComVideo: true` e fica fora do fluxo
+  toque guiado em um card → orientação sobre o X na primeira janela → galeria.
+  A etapa intermediária tem `somenteComVideo: true` e fica fora do fluxo
   enquanto `CONFIG.video.ativo` for `false`. `etapasDante`, em `main.js`, contém
   apenas as falas ativas e determina o progresso. O vídeo fica oculto, sem carregar
-  sua fonte ou reproduzir. A seta da galeria volta ao convite, marcado com
-  `aposVideo: true`; a seta para rever o vídeo fica oculta. Início restaura as
+  sua fonte ou reproduzir. A galeria não tem seta de retorno; o convite mantém
+  `aposVideo: true` para o percurso com vídeo. A seta para rever o vídeo fica oculta.
+  Início restaura as
   boas-vindas, o progresso e o estado da sessão.
 - Para retomar o vídeo e a etapa intermediária, basta configurar `video.ativo: true`
   e recarregar. O percurso volta a ser: boas-vindas → fala intermediária → vídeo →
-  orientações → galeria. O fim do vídeo e sua seta de avanço abrem a fala marcada
+  orientações → toque guiado → orientação sobre o X → galeria. O fim do vídeo e sua seta de avanço abrem a fala marcada
   com `aposVideo: true`; a seta nessa fala reinicia o vídeo. A implementação e a
   mídia foram preservadas para essa retomada.
-- A apresentação dimensiona Dante, balão, textos, botão e progresso conforme a
-  janela, sem os antigos limites de 1320px/740px. O balão tem proporção próxima
-  de um quadrado e largura limitada pela altura da janela. Botão e indicadores
-  ficam fora do balão, abaixo dele, em `.controles-dante`; `.apresentacao-dante`
-  agrupa fala e controles. Em telas estreitas, o layout é vertical.
+- Dante e seu balão aparecem sobre o mosaico escurecido, na parte inferior da
+  janela, como um tutorial de jogo. As falas existentes foram preservadas e a
+  etapa de toque tem `interativa: true`. `CONFIG.tutorial.animalId` define o card
+  iluminado (gato-mourisco); após `tempoDestaqueMs: 8000`, o contorno pulsa.
+  Tocar no card é obrigatório para abrir o animal com som;
+  não há botão para pular. Ao fechar pelo X, o amarelo não reaparece: hover e
+  foco comuns usam branco. Reiniciar cancela o lembrete e restaura as boas-vindas.
+  A galeria usa `fundo-tutorial` enquanto Dante está ativo; permanece sem a
+  classe `ativa`, sem inatividade e com `inert` até a etapa interativa, quando
+  apenas o card iluminado é liberado. Tab fica nos controles e nesse card.
+  As falas avançam por toque em qualquer lugar da tela, com exceção do card
+  obrigatório. Início, Som e a seta do vídeo mantêm suas próprias ações.
+  Não há botões de conversa; `.aviso-avancar-dante` indica o toque com uma seta
+  e fica oculto na etapa obrigatória. Enter e Espaço também avançam, sem repetição
+  por tecla segurada. Balão, indicação e progresso dimensionam-se com a janela;
+  em telas estreitas, Dante aparece acima do balão. Indicação e indicadores ficam
+  em `.controles-dante`.
+  Movimento reduzido desativa a pulsação contínua.
+- A última fala usa `aoAbrirAnimal: true` em `CONFIG.dante.etapas` e aparece
+  somente ao abrir o animal pelo toque guiado. Dante e seu balão flutuam à frente do
+  painel de descrição, usando `.cenario-dante`, `.personagem-dante` e `.balao-dante`,
+  no mesmo estilo das etapas anteriores. O guia é irmão de `.modal-animal-content`
+  dentro do overlay, com posição fixa e camada acima do conteúdo. A orientação
+  não altera dimensões, posição ou rolagem do painel e mantém o X livre. O X tem destaque
+  e o texto “Fechar e explorar”, recebe foco e descreve a orientação com
+  `aria-describedby`. Fechar remove a fala e o destaque; aberturas seguintes são
+  normais. Um toque na orientação também a dispensa sem fechar a ficha; o toque
+  usado para abrir o gato-mourisco não pode dispensá-la na mesma ação.
+  Início/inatividade limpam a orientação e a restauram na nova sessão.
+  O aviso de inatividade pode sobrepor essa etapa; continuar a preserva.
+  `prepararImagemDante()` prepara a imagem e o substituto nas duas apresentações.
 - O evento `ended` avança automaticamente; pausar o vídeo mantém sua tela.
   A galeria não possui seção de vídeo nem modal de vídeo residual.
 - Em telas acima de 1100px, o mosaico ocupa o espaço disponível, com seis linhas
-  flexíveis, margem superior para Início/Som e margens laterais para as setas.
-  Setas grandes ficam no centro vertical das bordas, com área de toque ampliada.
+  flexíveis, margem superior para Início/Som e margens laterais preservadas.
+  As setas do percurso com vídeo ficam no centro vertical das bordas, com área de toque ampliada.
   Usam SVGs simétricos centralizados nos círculos, com fundo branco e ícone verde escuro;
   evitar caracteres de fonte, cujo alinhamento visual varia entre navegadores.
   O vídeo centralizado preenche sua área, mantendo a proporção com `contain`.
@@ -74,6 +103,8 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   interna quando necessário. O cabeçalho coloca foto ao lado de nome e destaques;
   descrição e áudio ficam abaixo. A imagem tem largura de 100% e altura automática,
   sem faixa lateral, corte ou distorção. Em telas estreitas, o cabeçalho é vertical.
+  O X fica em um contêiner sem altura com `position: sticky` e permanece acessível
+  ao rolar a descrição. A rolagem é zerada depois de abrir o modal, já visível.
   Fonte e crédito da imagem ficam juntos no rodapé do conteúdo. `creditoImagem`
   só aparece quando informado; creditar a foto exibida no modal (`imgModal`, quando
   existir). O gato-mourisco contém `teste` no crédito; os outros 17 créditos estão
@@ -82,13 +113,15 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 - Inatividade é monitorada apenas na galeria, por `pointerdown` e `keydown`.
   Reinício após 120000ms sem interação; aviso nos últimos 15000ms (começa em
   105000ms). Vídeo e apresentação não têm reinício por inatividade.
+  Voltar à aba/janela não renova o prazo: `verificarInatividade()` confere o
+  horário ao retomar o foco/visibilidade e antes de registrar interação. Se os
+  callbacks ficaram suspensos e o prazo venceu, retorna às boas-vindas completas.
 - Na galeria, “Pausar reinício” abre um teclado numérico de três colunas com
   zero centralizado na última linha, sem depender do teclado do sistema.
   O PIN tem quatro dígitos e está em `CONFIG.senhaMediacao`;
   o teclado físico também funciona. O controle é local, sem autenticação remota.
   Apenas a senha correta pausa os temporizadores. A pausa dura na sessão atual,
-  inclusive ao voltar ao convite e reabrir a galeria (ou rever o vídeo, quando
-  ativo); reativar pelo botão inicia um prazo completo.
+  inclusive ao abrir e fechar animais; reativar pelo botão inicia um prazo completo.
   Voltar ao Início ou recarregar a página restaura o reinício automático.
 - Reiniciar fecha modais, limpa a senha digitada, para mídias e volta ao Dante,
   restaurando o som conforme a configuração. O aviso de inatividade fecha o
@@ -132,6 +165,8 @@ python3 testes/executar.py
 python3 testes/executar.py --largura 3840 --altura 2160
 python3 testes/executar.py --largura 1024 --altura 768
 python3 testes/executar.py --largura 390 --altura 844
+python3 testes/executar.py --interacoes
+python3 testes/executar.py --com-video --interacoes
 ```
 
 Por padrão abre `file://`; `--url http://127.0.0.1:8080` verifica um servidor local.
@@ -139,6 +174,10 @@ Relógio e reprodução de mídia são simulados na regressão. Validar manualme
 apresentação, vídeo/setas, galeria, modais, áudio/repetição/mute, botão Início,
 inatividade e erros de mídia. Conferir console, funcionamento offline, layout
 4K horizontal, resoluções menores e touchscreen real quando disponível.
+`--interacoes` acrescenta cliques e teclas WebDriver, reprodução real dos 18 áudios
+e temporizadores reais com prazos menores em uma cópia temporária; `--com-video`
+ativa o vídeo apenas em uma cópia temporária, sem combinar com `--url`.
+O runner confere a área útil exata e usa um frame quando o Firefox limita a janela.
 
 ## Pendências identificadas
 

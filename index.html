@@ -27,7 +27,7 @@
         </header>
 
         <main>
-            <section id="tela-dante" class="tela tela-dante ativa" aria-labelledby="fala-dante">
+            <section id="tela-dante" class="tela tela-dante ativa" tabindex="0" aria-labelledby="fala-dante" aria-describedby="aviso-avancar-dante" aria-keyshortcuts="Enter Space">
                 <button id="seta-voltar-video" class="seta-voltar" type="button" aria-label="Voltar ao vídeo" hidden>
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <polyline points="16 4 8 12 16 20" />
@@ -40,13 +40,22 @@
                     </div>
 
                     <div class="apresentacao-dante">
-                        <article id="balao-dante" class="balao-dante">
+                        <article id="balao-dante" class="balao-dante" aria-live="polite">
+                            <div class="cabecalho-tutorial">
+                                <span class="selo-guia"><span aria-hidden="true">✦</span> Dante, seu guia</span>
+                                <span id="progresso-tutorial" class="progresso-tutorial" aria-hidden="true"></span>
+                            </div>
                             <p id="rotulo-etapa" class="rotulo-etapa"></p>
                             <h1 id="fala-dante"></h1>
                             <p id="complemento-dante" class="complemento-dante"></p>
                         </article>
                         <div class="controles-dante">
-                            <button id="btn-avancar" class="botao-principal" type="button"></button>
+                            <p id="aviso-avancar-dante" class="aviso-avancar-dante">
+                                <span>Toque em qualquer lugar para continuar</span>
+                                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path d="M4 12h16m-7-7 7 7-7 7" />
+                                </svg>
+                            </p>
                             <div id="indicador-etapas" class="indicador-etapas" aria-label="Progresso da apresentação"></div>
                         </div>
                     </div>
@@ -68,12 +77,6 @@
             </section>
 
             <section id="tela-galeria" class="tela tela-galeria" aria-labelledby="titulo-galeria">
-                <button id="seta-voltar" class="seta-voltar" type="button" aria-label="Voltar à mensagem do Dante">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <polyline points="16 4 8 12 16 20" />
-                    </svg>
-                </button>
-
                 <div class="cabecalho-galeria">
                     <h1 id="titulo-galeria">Animais da região</h1>
                     <p>Toque em um animal para conhecê-lo e ouvir seu som.</p>
@@ -92,7 +95,9 @@
 
     <div id="modal-animal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-titulo" hidden>
         <article class="modal-content modal-animal-content">
-            <button id="btn-fechar-animal" class="btn-fechar" type="button" aria-label="Fechar informações do animal">×</button>
+            <div class="modal-fechar-fixo">
+                <button id="btn-fechar-animal" class="btn-fechar" type="button" aria-label="Fechar informações do animal">×</button>
+            </div>
             <div class="modal-cabecalho">
                 <div class="modal-hero">
                     <img id="modal-img" src="" alt="">
@@ -115,6 +120,21 @@
                 </div>
             </div>
         </article>
+        <div id="guia-fechar-animal" class="cenario-dante guia-fechar-animal" hidden>
+            <div class="personagem-dante" aria-hidden="true">
+                <img id="imagem-dante-animal" alt="">
+                <span id="dante-substituto-animal" class="dante-substituto" hidden>🐺</span>
+            </div>
+            <div class="balao-dante balao-guia-animal" aria-live="polite">
+                <div class="cabecalho-tutorial">
+                    <span class="selo-guia"><span aria-hidden="true">✦</span> Dante, seu guia</span>
+                    <span id="progresso-guia-animal" class="progresso-tutorial" aria-hidden="true"></span>
+                </div>
+                <h2 id="fala-guia-animal"></h2>
+                <p id="complemento-guia-animal" class="complemento-dante"></p>
+                <p class="aviso-avancar-dante aviso-guia-animal">Toque na tela para continuar</p>
+            </div>
+        </div>
     </div>
 
     <div id="modal-senha" class="modal-overlay modal-senha" role="dialog" aria-modal="true" aria-labelledby="titulo-senha" aria-describedby="descricao-senha" hidden>
@@ -154,6 +174,7 @@
     <script src="js/midias.js"></script>
     <script src="js/galeria.js"></script>
     <script src="js/mediacao.js"></script>
+    <script src="js/tutorial.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

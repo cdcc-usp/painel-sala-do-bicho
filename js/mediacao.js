@@ -99,6 +99,8 @@ function confirmarSenhaMediacao(evento) {
 
 function tratarTeclaSenha(evento) {
     if (evento.ctrlKey || evento.altKey || evento.metaKey) return;
+    // Enter e Espaço devem ativar o botão focado pelo comportamento nativo.
+    if (evento.target.closest?.('button') && (evento.key === 'Enter' || evento.key === ' ')) return;
     if (evento.key === 'Escape') {
         evento.preventDefault();
         fecharSenhaMediacao();
@@ -116,8 +118,21 @@ function tratarTeclaSenha(evento) {
 }
 
 function registrarAtividade() {
-    if (!elementos['modal-inatividade'].hidden) return;
+    if (verificarInatividade() || !elementos['modal-inatividade'].hidden) return;
     agendarInatividade();
+}
+
+function verificarInatividade() {
+    if (estado.telaAtual !== 'galeria' || estado.reinicioAutomaticoPausado || !prazoReinicio) return false;
+
+    // O navegador pode suspender callbacks em segundo plano; o prazo continua valendo.
+    const restante = prazoReinicio - Date.now();
+    if (restante <= 0) {
+        reiniciarExperiencia();
+        return true;
+    }
+    if (restante <= CONFIG.tempoAvisoMs) exibirAvisoInatividade();
+    return false;
 }
 
 function agendarInatividade() {
@@ -131,7 +146,8 @@ function agendarInatividade() {
 }
 
 function exibirAvisoInatividade() {
-    if (estado.telaAtual !== 'galeria' || estado.reinicioAutomaticoPausado) return;
+    if (estado.telaAtual !== 'galeria' || estado.reinicioAutomaticoPausado
+        || !elementos['modal-inatividade'].hidden) return;
     if (!elementos['modal-senha'].hidden) fecharSenhaMediacao();
     atualizarContagemInatividade();
     abrirModal(elementos['modal-inatividade'], elementos['btn-continuar']);

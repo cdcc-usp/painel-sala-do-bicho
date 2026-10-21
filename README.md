@@ -6,12 +6,29 @@ A versão exibida vem de `CONFIG.versao`, em `js/config.js`.
 
 O visitante segue este percurso:
 
-**Boas-vindas do Dante → convite para conhecer os animais da região → galeria.**
+**Boas-vindas do Dante → convite → toque guiado em um animal → orientação sobre o X → exploração livre.**
 
-A galeria contém 18 animais com foto, informações e som. A seta volta à mensagem
-de convite do Dante. Início restaura as boas-vindas e o progresso da apresentação.
+Dante fala sobre o mosaico, com o fundo escurecido e visível. Toque em qualquer
+lugar para avançar as falas, conforme a indicação com seta abaixo do balão.
+Não há botões de conversa; Enter e Espaço também permitem avançar.
+A etapa de toque
+ilumina o card do gato-mourisco; após 8 segundos de espera, o contorno pulsa.
+É preciso tocar nele para abrir o animal com seu som. Nessa primeira janela,
+Dante aparece sobreposto à frente do painel de informações, no mesmo estilo das etapas anteriores,
+e orienta a fechar pelo X destacado e escolher outros animais. A fala fica
+em `CONFIG.dante.etapas`, marcada com `aoAbrirAnimal: true`.
+Um toque na orientação final dispensa a fala, mantendo a ficha do animal aberta;
+o X fecha a ficha. Ao fechar pelo X, a orientação termina e a galeria fica livre, sem o destaque
+amarelo do tutorial. As próximas janelas abrem normalmente, sem repetir a ajuda.
+O efeito respeita a preferência por movimento reduzido.
+
+A galeria contém 18 animais com foto, informações e som. O botão Início restaura
+as boas-vindas e o progresso da apresentação; a galeria não tem seta de retorno.
 Após dois minutos sem toque ou tecla na galeria, o painel reinicia; o aviso aparece
 nos últimos 15 segundos. O mediador pode pausar esse reinício usando um PIN local.
+Voltar à aba ou à janela não renova o prazo. Se o navegador suspender os
+temporizadores, ao retomar o painel ele confere o horário e restaura as boas-vindas
+quando os dois minutos já passaram.
 
 O vídeo e a fala intermediária estão desativados para o lançamento. Para restaurar
 o percurso completo, altere `CONFIG.video.ativo` para `true` em `js/config.js` e
@@ -44,6 +61,7 @@ O navegador definitivo do painel ainda precisa ser escolhido e validado.
 | `js/midias.js` | Imagens e substitutos, áudio, vídeo e controle global de som |
 | `js/mediacao.js` | PIN, teclado numérico, pausa e prazos de inatividade |
 | `js/modais.js` | Abertura, fechamento, animação e foco dos modais |
+| `js/tutorial.js` | Sobreposição do Dante, spotlight, lembrete e foco do tutorial |
 | `css/style.css` | Tema, layout, mosaico, animações e adaptações de tela |
 | `assets/` | Fotografias, áudios, Dante e vídeo locais |
 | `testes/` | Regressão executada no Firefox com Python, sem pacotes adicionais |
@@ -82,11 +100,29 @@ python3 testes/executar.py --url http://127.0.0.1:8080
 
 Use `--firefox /caminho/do/firefox` se o executável não estiver no PATH.
 `--capturas /tmp/painel-capturas` salva imagens das telas e medidas dos cards.
-A saída informa a área útil real; o Firefox pode limitar a largura mínima da janela.
+A área útil é conferida antes dos testes. Quando o Firefox limita a largura
+mínima da janela, um frame mantém a resolução solicitada, inclusive em 390 px.
+
+Para incluir cliques e teclas enviados pelo navegador, reprodução real dos 18
+áudios e temporizadores reais:
+
+```bash
+python3 testes/executar.py --interacoes
+python3 testes/executar.py --largura 390 --altura 844 --interacoes
+python3 testes/executar.py --com-video --interacoes
+```
+
+`--com-video` usa uma cópia temporária com vídeo ativado, preservando a configuração
+de lançamento; não é combinado com `--url`. Nos dois cenários de temporizadores
+reais, outra cópia temporária reduz o prazo para 4 segundos, com aviso nos últimos
+1,5 segundo. Os prazos originais de 105/120 segundos continuam cobertos pela regressão
+com relógio simulado. As cópias são removidas ao terminar.
 
 A regressão verifica o carregamento real das imagens e dos metadados de áudio e
-vídeo (quando ativo), navegação, catálogo e mosaico, modais, foco, PIN, controle de som, mensagens
-de erro e os prazos de 105/120 segundos. O relógio e a reprodução
+vídeo (quando ativo), tutorial e lembrete, navegação, catálogo e mosaico, modais, foco, PIN, controle de som, mensagens
+de erro e os prazos de 105/120 segundos. Também confere o X após rolar a descrição,
+a abertura do próximo animal no topo e o teclado físico nos controles do PIN.
+Na execução básica, o relógio e a reprodução
 de mídia são simulados para tornar os testes rápidos e independentes de codecs e
 autoplay. Eles não verificam a qualidade ou a audibilidade das gravações.
 
