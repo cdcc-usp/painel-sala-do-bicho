@@ -112,8 +112,15 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   discreto, na vertical no canto inferior direito (`.credito-foto`, `aria-hidden`),
   e some se a foto falhar e virar substituto. No card, `.com-credito` afasta o nome
   do crédito. Creditar a foto exibida no modal (`imgModal`, quando existir); o card
-  usa o mesmo `creditoImagem`. Só a anta tem crédito (`© Fieker & Reis`), usado como exemplo
-  na regressão; os outros 17 e todas as fontes de som estão vazios. A fonte do gato-mourisco foi substituída por referência do ICMBio.
+  usa o mesmo `creditoImagem`. Créditos usam `© Nome`; obras com licença aberta
+  incluem licença e origem (jacaré: CC BY-SA 3.0, via Wikimedia Commons). Os 18 animais
+  têm crédito confirmado pelo usuário; a seriema credita J. C. Motta-Junior na foto
+  atual e a coruja segue os metadados `.comments` das originais.
+  Segundo C2PA, as imagens usadas de sauá, gafanhoto, pica-pau e coruja (card) foram
+  geradas por IA (`gpt-image`); as de cascavel e onça-parda parecem recriações das
+  originais. A decisão sobre manter essas imagens ou indicar IA no crédito está pendente. Os 18 animais
+  têm `fonteAudio` (links do YouTube ou “Criadouro de Fortaleza”), conforme documento
+  de referências de vocalização do usuário; links sem parâmetros de tempo. A fonte do gato-mourisco foi substituída por referência do ICMBio.
   Não preencher créditos por suposição.
 - Inatividade é monitorada na galeria e nas falas do Dante após as boas-vindas
   (`inatividadeMonitorada()`), por `pointerdown` e `keydown`. Reinício após

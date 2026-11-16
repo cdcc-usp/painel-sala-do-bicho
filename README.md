@@ -159,8 +159,9 @@ Existem também imagens e sons de animais fora do catálogo e originais não usa
 esses arquivos foram preservados.
 
 Fontes, créditos, licenças e conteúdo científico ainda precisam de revisão humana.
-Apenas a anta tem `creditoImagem` (`© Fieker & Reis`); os demais créditos e
-todas as fontes de som (`fonteAudio`) estão vazios. As pastas `.comments/` de algumas mídias
+Todos os animais têm `creditoImagem` e fonte do som (`fonteAudio`). Algumas
+imagens foram geradas ou recriadas por IA (ver AGENTS.md); a indicação disso no
+crédito ainda depende de decisão da equipe. As pastas `.comments/` de algumas mídias
 guardam metadados de autoria e devem ser consultadas ao preencher os créditos.
 Não invente atribuições. A fonte do gato-mourisco foi substituída por referência do
 ICMBio. Todos os animais têm os destaques `🐾 Grupo`, `🍽️ Alimentação` e `🕒 Hábito`,

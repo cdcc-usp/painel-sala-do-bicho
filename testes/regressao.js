@@ -400,8 +400,10 @@ async function executarTestes() {
         conferir(el('modal-texto').children.length === 3, 'Quebras de parágrafo perdidas.');
         conferir(!el('modal-fonte').hidden && el('modal-fonte').textContent.startsWith('Fonte das informações: '),
             'A fonte das informações não aparece.');
-        conferir(el('modal-fonte-audio').hidden && el('modal-credito-imagem').hidden && el('modal-credito-foto').hidden,
-            'Fonte do som ou crédito vazio foram exibidos.');
+        conferir(el('modal-fonte-audio').textContent === 'Fonte do som: https://www.youtube.com/watch?v=iBmmnGVO0bM',
+            'A fonte do som não aparece.');
+        conferir(el('modal-credito-imagem').textContent === 'Crédito da imagem: © Leandro Kenji Takao'
+            && !el('modal-credito-foto').hidden, 'O crédito do gato-mourisco não aparece.');
         conferir(reproducoes.at(-1).src.endsWith('/gato-mourisco/audio.mp3'), 'Áudio incorreto.');
         clicar('btn-fechar-animal');
         conferir(pausas.includes(reproducoes.at(-1)), 'Fechar não interrompeu o áudio.');
@@ -422,15 +424,10 @@ async function executarTestes() {
         conferir(caixaCard.height > caixaCard.width && areaCard.right - caixaCard.right < 20 && areaCard.bottom - caixaCard.bottom < 20
             && caixaCard.top >= areaCard.top, 'O crédito não está no canto inferior direito do card.');
         conferir(nomeCard.right <= caixaCard.left, 'O nome do animal avança sobre o crédito do card.');
-        anta.fonteAudio = 'Gravação de exemplo';
-        try {
-            clicar('card-anta');
-        } finally {
-            anta.fonteAudio = '';
-        }
+        clicar('card-anta');
         await esperarQuadro();
         conferir(el('modal-credito-imagem').textContent === 'Crédito da imagem: © Fieker & Reis', 'Crédito ausente do rodapé.');
-        conferir(el('modal-fonte-audio').textContent === 'Fonte do som: Gravação de exemplo', 'Fonte do som ausente.');
+        conferir(el('modal-fonte-audio').textContent === 'Fonte do som: https://www.youtube.com/watch?v=H7CkH0LMUAg', 'Fonte do som ausente.');
         const credito = el('modal-credito-foto');
         conferir(!credito.hidden && credito.textContent === '© Fieker & Reis' && credito.getAttribute('aria-hidden') === 'true',
             'Crédito ausente da foto ou lido em duplicidade.');
@@ -442,15 +439,26 @@ async function executarTestes() {
             && foto.bottom - caixa.bottom < 20 && caixa.top >= foto.top, 'O crédito não está no canto inferior direito da foto.');
         clicar('btn-fechar-animal');
         avancarTempo(220);
-        clicar('card-coruja');
-        conferir(el('modal-credito-foto').hidden && el('modal-fonte-audio').hidden, 'Dados da anta permaneceram no animal seguinte.');
+        // Todos os animais têm crédito e fonte do som; valores vazios temporários provam que as linhas somem.
+        const cascavel = animais.find((item) => item.id === 'cascavel');
+        const { fonteAudio: fonteAudioCascavel, creditoImagem: creditoCascavel } = cascavel;
+        cascavel.fonteAudio = '';
+        cascavel.creditoImagem = '';
+        try {
+            clicar('card-cascavel');
+        } finally {
+            cascavel.fonteAudio = fonteAudioCascavel;
+            cascavel.creditoImagem = creditoCascavel;
+        }
+        conferir(el('modal-credito-foto').hidden && el('modal-credito-imagem').hidden && el('modal-fonte-audio').hidden,
+            'Dados da anta permaneceram no animal seguinte ou campo vazio foi exibido.');
         clicar('btn-fechar-animal');
         avancarTempo(220);
     });
-    await testar('Foto alternativa e crédito vazio são respeitados', () => {
+    await testar('Foto alternativa do modal é usada e creditada', () => {
         clicar('card-coruja');
         conferir(el('modal-img').src.endsWith('/coruja/imagem-modal.png'), 'Foto alternativa ignorada.');
-        conferir(el('modal-credito-imagem').hidden, 'Crédito vazio foi exibido.');
+        conferir(el('modal-credito-foto').textContent === '© J. C. Motta-Junior', 'Crédito da foto alternativa ausente.');
     });
     await testar('X continua visível e recebe toque depois de rolar a descrição do animal', async () => {
         abrirGaleria();
