@@ -40,6 +40,9 @@ function configurarEventos() {
     elementos['seta-avancar'].addEventListener('click', mostrarOrientacoesDante);
     elementos['seta-voltar-video'].addEventListener('click', () => mudarTela('video'));
 
+    // Painel público: o toque longo não abre o menu do navegador nem arrasta imagens.
+    document.addEventListener('contextmenu', (evento) => evento.preventDefault());
+    document.addEventListener('dragstart', (evento) => evento.preventDefault());
     document.addEventListener('pointerdown', registrarAtividade, { passive: true });
     document.addEventListener('keydown', (evento) => {
         registrarAtividade();
@@ -97,6 +100,7 @@ function avancarApresentacao() {
     } else if (proximaEtapa) {
         estado.etapaDanteAtual += 1;
         atualizarEtapaDante();
+        agendarInatividade();
     } else {
         mudarTela('galeria');
     }
@@ -122,11 +126,12 @@ function mudarTela(nome) {
     document.body.classList.toggle('video-ativo', nome === 'video');
     elementos['btn-reinicio'].classList.toggle('oculto', nome !== 'galeria');
     elementos['btn-inicio'].classList.toggle('oculto', nome === 'dante' && estado.etapaDanteAtual === 0);
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    // 'auto' seguiria o scroll-behavior: smooth do CSS; a troca de tela é imediata.
+    window.scrollTo({ top: 0, behavior: 'instant' });
     atualizarTutorialDante();
 
     if (nome === 'video') iniciarVideo();
-    if (nome === 'galeria') agendarInatividade();
+    agendarInatividade();
 }
 
 function fecharModalAtivo() {

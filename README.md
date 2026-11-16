@@ -132,6 +132,9 @@ Antes de instalar no painel, confira manualmente imagem e som de cada animal,
 mute/repetição, inatividade e funcionamento sem internet. Quando reativar o vídeo,
 confira também sua reprodução real e a navegação do percurso completo.
 Valide também 4K horizontal, resoluções menores e toque no equipamento real.
+No painel, confira que pinça, toque duplo e toque longo não ampliam a página nem
+abrem menus. Os ícones usam emojis: fora do Windows, instale uma fonte de emoji
+(por exemplo, Noto Color Emoji).
 
 ## Começar a manutenção
 
@@ -156,7 +159,9 @@ Existem também imagens e sons de animais fora do catálogo e originais não usa
 esses arquivos foram preservados.
 
 Fontes, créditos, licenças e conteúdo científico ainda precisam de revisão humana.
-O gato-mourisco possui `teste` em `creditoImagem`; os demais créditos estão vazios.
+Apenas a anta tem `creditoImagem` (`© Fieker & Reis`); os demais créditos e
+todas as fontes de som (`fonteAudio`) estão vazios. As pastas `.comments/` de algumas mídias
+guardam metadados de autoria e devem ser consultadas ao preencher os créditos.
 Não invente atribuições. A fonte do gato-mourisco foi substituída por referência do
 ICMBio. Todos os animais têm os destaques `🐾 Grupo`, `🍽️ Alimentação` e `🕒 Hábito`,
 com referências para os dados completados ou corrigidos. As descrições foram

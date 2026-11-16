@@ -64,7 +64,7 @@
                 </div>
             </section>
 
-            <section id="tela-video" class="tela tela-video" aria-label="Ecrã do vídeo principal" hidden>
+            <section id="tela-video" class="tela tela-video" aria-label="Tela do vídeo principal" hidden>
                 <button id="seta-avancar" class="seta-avancar" type="button" aria-label="Continuar para as orientações do Dante">
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <polyline points="8 4 16 12 8 20" />
@@ -73,7 +73,7 @@
                 <div class="conteudo-video">
                     <video id="player-video" controls playsinline preload="metadata"></video>
                     <p id="erro-video" class="media-erro" hidden>
-                        O vídeo ainda não foi adicionado. Consulte o tutorial do projeto.
+                        Não foi possível reproduzir o vídeo.
                     </p>
                 </div>
             </section>
@@ -103,6 +103,7 @@
             <div class="modal-cabecalho">
                 <div class="modal-hero">
                     <img id="modal-img" src="" alt="">
+                    <span id="modal-credito-foto" class="credito-foto" aria-hidden="true" hidden></span>
                 </div>
                 <div class="modal-resumo">
                     <h2 id="modal-titulo" class="modal-titulo"></h2>
@@ -118,6 +119,7 @@
                 <div id="modal-texto" class="modal-texto"></div>
                 <div id="modal-referencias" class="modal-referencias" hidden>
                     <p id="modal-fonte" class="modal-fonte" hidden></p>
+                    <p id="modal-fonte-audio" class="modal-fonte" hidden></p>
                     <p id="modal-credito-imagem" class="modal-credito-imagem" hidden></p>
                 </div>
             </div>

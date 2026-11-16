@@ -67,9 +67,9 @@ function tocarSomAnimal(caminho) {
         if (audioAtual === audio) atualizarStatusSom(texto, false);
     };
     audio.addEventListener('ended', () => mostrarStatus('Som finalizado'));
-    audio.addEventListener('error', () => mostrarStatus('Áudio ainda não adicionado'));
+    audio.addEventListener('error', () => mostrarStatus('Som indisponível'));
     audio.play().catch(() => mostrarStatus(audio.error
-        ? 'Áudio ainda não adicionado'
+        ? 'Som indisponível'
         : 'Toque em “Ouvir novamente”'));
 }
 
@@ -116,10 +116,13 @@ function pausarTodasAsMidias() {
     if (estado.animalAberto) atualizarStatusSom('Som interrompido', false);
 }
 
-function prepararImagemAnimal(imagem, caminho, nome) {
+function prepararImagemAnimal(imagem, caminho, nome, aoFalhar) {
     // O modal reutiliza a mesma imagem; substitui também o ouvinte do animal anterior.
     imagem.removeEventListener('error', errosDeImagem.get(imagem));
-    const mostrarSubstituta = () => { imagem.src = criarImagemSubstituta(nome); };
+    const mostrarSubstituta = () => {
+        imagem.src = criarImagemSubstituta(nome);
+        aoFalhar?.();
+    };
     errosDeImagem.set(imagem, mostrarSubstituta);
     imagem.addEventListener('error', mostrarSubstituta, { once: true });
     imagem.src = caminho;

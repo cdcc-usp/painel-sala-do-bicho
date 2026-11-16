@@ -20,7 +20,8 @@ Animais:
 
   imgModal, quando preenchido, seleciona a foto do modal. Caso contrário,
   o modal utiliza a mesma foto do card. creditoImagem deve creditar a foto
-  exibida no modal. Não invente créditos ou licenças.
+  exibida no modal (aparece no rodapé e sobre as fotos do card e do modal). fonteAudio informa a
+  origem da gravação do som. Não invente créditos ou licenças.
 
 Ao substituir um arquivo, mantenha o caminho ou atualize a configuração/catálogo.
 Confira a reprodução real no navegador do painel e sem conexão com a internet.

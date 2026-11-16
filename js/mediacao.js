@@ -122,8 +122,15 @@ function registrarAtividade() {
     agendarInatividade();
 }
 
+// A galeria e as falas após as boas-vindas reiniciam; boas-vindas e vídeo não.
+function inatividadeMonitorada() {
+    if (estado.reinicioAutomaticoPausado) return false;
+    return estado.telaAtual === 'galeria'
+        || (estado.telaAtual === 'dante' && estado.etapaDanteAtual > 0);
+}
+
 function verificarInatividade() {
-    if (estado.telaAtual !== 'galeria' || estado.reinicioAutomaticoPausado || !prazoReinicio) return false;
+    if (!inatividadeMonitorada() || !prazoReinicio) return false;
 
     // O navegador pode suspender callbacks em segundo plano; o prazo continua valendo.
     const restante = prazoReinicio - Date.now();
@@ -137,7 +144,7 @@ function verificarInatividade() {
 
 function agendarInatividade() {
     cancelarInatividade();
-    if (estado.telaAtual !== 'galeria' || estado.reinicioAutomaticoPausado) return;
+    if (!inatividadeMonitorada()) return;
 
     prazoReinicio = Date.now() + CONFIG.tempoInatividadeMs;
     const tempoAteAviso = Math.max(0, CONFIG.tempoInatividadeMs - CONFIG.tempoAvisoMs);
@@ -146,8 +153,7 @@ function agendarInatividade() {
 }
 
 function exibirAvisoInatividade() {
-    if (estado.telaAtual !== 'galeria' || estado.reinicioAutomaticoPausado
-        || !elementos['modal-inatividade'].hidden) return;
+    if (!inatividadeMonitorada() || !elementos['modal-inatividade'].hidden) return;
     if (!elementos['modal-senha'].hidden) fecharSenhaMediacao();
     atualizarContagemInatividade();
     abrirModal(elementos['modal-inatividade'], elementos['btn-continuar']);

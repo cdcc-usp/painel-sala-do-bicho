@@ -21,13 +21,26 @@ function gerarCards() {
         imagem.className = 'imagem-card';
         imagem.alt = animal.nome;
         imagem.loading = 'lazy';
-        prepararImagemAnimal(imagem, animal.img, animal.nome);
 
         const nome = document.createElement('span');
         nome.className = 'nome-animal';
         nome.textContent = animal.nome;
 
         card.append(imagem, nome);
+        const credito = (animal.creditoImagem || '').trim();
+        if (credito) {
+            const creditoFoto = document.createElement('span');
+            creditoFoto.className = 'credito-foto';
+            creditoFoto.setAttribute('aria-hidden', 'true');
+            creditoFoto.textContent = credito;
+            card.classList.add('com-credito');
+            card.appendChild(creditoFoto);
+        }
+        // Um substituto não leva o crédito da foto original.
+        prepararImagemAnimal(imagem, animal.img, animal.nome, () => {
+            card.querySelector('.credito-foto')?.remove();
+            card.classList.remove('com-credito');
+        });
         card.addEventListener('click', () => abrirAnimal(animal.id));
         fragmento.appendChild(card);
     });
@@ -45,7 +58,13 @@ function abrirAnimal(animalId) {
     ocultarGuiaFecharAnimal();
 
     estado.animalAberto = animal;
-    prepararImagemAnimal(elementos['modal-img'], animal.imgModal || animal.img, animal.nome);
+    const credito = (animal.creditoImagem || '').trim();
+    // O crédito sobre a foto é discreto e some se a foto for trocada pelo substituto.
+    elementos['modal-credito-foto'].textContent = credito;
+    elementos['modal-credito-foto'].hidden = !credito;
+    prepararImagemAnimal(elementos['modal-img'], animal.imgModal || animal.img, animal.nome, () => {
+        elementos['modal-credito-foto'].hidden = true;
+    });
     elementos['modal-img'].alt = animal.nome;
     elementos['modal-titulo'].textContent = animal.nome;
     elementos['modal-cientifico'].textContent = animal.cientifico;
@@ -66,12 +85,14 @@ function abrirAnimal(animalId) {
     });
 
     const fonte = (animal.fonte || '').trim();
-    const credito = (animal.creditoImagem || '').trim();
-    elementos['modal-fonte'].textContent = fonte ? `Fonte consultada: ${fonte}` : '';
+    const fonteAudio = (animal.fonteAudio || '').trim();
+    elementos['modal-fonte'].textContent = fonte ? `Fonte das informações: ${fonte}` : '';
     elementos['modal-fonte'].hidden = !fonte;
+    elementos['modal-fonte-audio'].textContent = fonteAudio ? `Fonte do som: ${fonteAudio}` : '';
+    elementos['modal-fonte-audio'].hidden = !fonteAudio;
     elementos['modal-credito-imagem'].textContent = credito ? `Crédito da imagem: ${credito}` : '';
     elementos['modal-credito-imagem'].hidden = !credito;
-    elementos['modal-referencias'].hidden = !fonte && !credito;
+    elementos['modal-referencias'].hidden = !fonte && !fonteAudio && !credito;
 
     if (aberturaGuiada) mostrarGuiaFecharAnimal();
     abrirModal(elementos['modal-animal'], elementos['btn-fechar-animal'], document.getElementById(`card-${animal.id}`));

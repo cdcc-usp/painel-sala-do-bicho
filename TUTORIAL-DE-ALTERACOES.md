@@ -81,10 +81,11 @@ Os valores estão em milissegundos:
 - `120000` = 2 minutos até o reinício;
 - `15000` = aviso nos últimos 15 segundos (aparece após 1 minuto e 45 segundos).
 
-O temporizador funciona somente na galeria e é renovado a cada `pointerdown` ou
-`keydown`, inclusive dentro dos modais de animal e PIN. Quando o aviso aparece,
-o botão “Continuar explorando” ou Escape inicia um novo prazo. Apresentação e
-vídeo não têm reinício por inatividade. Ao reiniciar, a aplicação fecha os modais,
+O temporizador funciona na galeria e nas falas do Dante após as boas-vindas,
+inclusive no toque guiado. Ele é renovado a cada `pointerdown` ou `keydown`,
+inclusive dentro dos modais de animal e PIN. Quando o aviso aparece, o botão
+“Continuar explorando” ou Escape inicia um novo prazo e mantém a fala atual.
+As boas-vindas e o vídeo não têm reinício por inatividade. Ao reiniciar, a aplicação fecha os modais,
 para as mídias, retorna à primeira fala do Dante e restaura o estado inicial do som.
 Voltar à aba ou recuperar o foco da janela apenas confere o prazo existente,
 sem renová-lo. Se os callbacks ficaram suspensos em segundo plano e o prazo
@@ -147,7 +148,8 @@ Abra `js/dados.js`. Cada animal possui este formato:
     destaques: ['🐾 Grupo: Mamífero', '🍽️ Alimentação: Onívora', '🕒 Hábito: Noturno'],
     classeTamanho: '',
     descricao: 'Primeiro parágrafo.\nSegundo parágrafo.',
-    fonte: 'Endereço da fonte consultada',
+    fonte: 'Endereço da fonte das informações',
+    fonteAudio: 'Origem da gravação do som',
     creditoImagem: ''
 }
 ```
@@ -167,9 +169,17 @@ em `fonte`, separadas por ` | `.
 As fontes são apresentadas somente como texto. Isso evita que o visitante abra
 um navegador externo e saia do quiosque.
 
+Preencha `fonteAudio` com a origem da gravação (acervo, autor e/ou licença).
+Ela aparece como “Fonte do som”, abaixo de “Fonte das informações”.
+
 Preencha `creditoImagem` com o nome do fotógrafo, instituição e/ou licença da
-foto, conforme as informações da mídia. Esse crédito aparece junto da fonte
-no painel de informações do animal. Se ficar vazio, a linha não é exibida.
+foto, conforme as informações da mídia, por exemplo `'© Fieker & Reis'`. Esse
+crédito aparece no rodapé do painel de informações e também sobre a foto do card
+e do painel, de forma discreta, na vertical no canto inferior direito. Quando
+`imgModal` for uma foto de outro autor, o card exibirá o mesmo crédito; nesse
+caso, use a mesma foto nos dois ou informe ambos os autores. Prefira textos curtos:
+créditos longos ocupam mais de uma coluna sobre a foto. Campos vazios não são
+exibidos.
 Quando houver `imgModal`, informe o crédito dessa foto. Não invente atribuições.
 
 O painel de informações usa a variável CSS `--escala-animal`, baseada na altura
@@ -245,8 +255,8 @@ Descreva a mudança no commit do Git. Atualmente não existe `CHANGELOG.md`.
 e sem fonte carregada enquanto `CONFIG.video.ativo` for `false`. Somente uma tela
 recebe a classe CSS `ativa` por vez. `etapasDante`, em `main.js`, contém apenas as
 falas que participam do percurso atual, filtradas a partir da configuração.
-Durante o tutorial, a classe `fundo-tutorial` mostra a galeria sob o Dante sem
-ativar a inatividade. `inert` bloqueia o mosaico nas falas e os cards sem destaque
+Durante o tutorial, a classe `fundo-tutorial` mostra a galeria sob o Dante; a
+inatividade vale a partir da segunda fala (`inatividadeMonitorada()`). `inert` bloqueia o mosaico nas falas e os cards sem destaque
 na etapa interativa. Ao concluir, a galeria passa a ser a tela ativa.
 
 Comece por `iniciarAplicacao()` em `js/main.js`. Ela mapeia os elementos com ID,
@@ -301,6 +311,10 @@ comandos de execução e limitações dos testes no README.
 5. Desative suspensão de tela, notificações e atualizações automáticas durante o
    horário da exposição, conforme as regras de administração da instituição.
 6. Reinicie o computador e teste tudo sem conexão com a internet.
+7. Confira no touchscreen que pinça, toque duplo, toque longo e deslizar para os
+   lados não ampliam a página, não abrem menus e não voltam a navegação. A página
+   já bloqueia esses gestos; se o navegador escolhido ainda permitir algum, use as
+   opções de quiosque dele.
 
 Em instalações permanentes, peça ao responsável de TI para configurar uma conta
 local restrita, inicialização automática e recuperação após queda de energia.

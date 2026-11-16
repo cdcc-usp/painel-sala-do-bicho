@@ -350,10 +350,18 @@ async function executarTestes() {
         avancarTempo(220);
         conferir(el('modal-animal').hidden, 'O fundo não voltou a fechar a ficha após a orientação.');
     });
-    await testar('Tutorial exige tocar no animal; a inatividade começa somente após a conclusão', () => {
+    await testar('Tutorial exige tocar no animal; inatividade na etapa avisa e pode ser continuada', async () => {
         abrirPassoInterativo();
-        avancarTempo(240000);
-        conferir(tela('dante') && el('modal-inatividade').hidden, 'A inatividade interrompeu o tutorial.');
+        const etapaInterativa = estado.etapaDanteAtual;
+        avancarTempo(104999);
+        conferir(el('modal-inatividade').hidden, 'Aviso adiantado na etapa interativa.');
+        avancarTempo(1);
+        await esperarQuadro();
+        conferir(!el('modal-inatividade').hidden && tela('dante'), 'A etapa interativa não avisou a inatividade.');
+        clicar('btn-continuar');
+        avancarTempo(220);
+        conferir(el('modal-inatividade').hidden && estado.etapaDanteAtual === etapaInterativa
+            && el(`card-${CONFIG.tutorial.animalId}`).classList.contains('alvo-tutorial'), 'Continuar perdeu a etapa interativa.');
         tocarTela();
         avancarApresentacao();
         conferir(tela('dante') && el('aviso-avancar-dante').hidden, 'Foi possível pular a etapa interativa.');
@@ -390,10 +398,53 @@ async function executarTestes() {
         conferir(!el('modal-animal').hidden, 'Modal não abriu.');
         conferir(el('modal-titulo').textContent === 'Gato-Mourisco', 'Título incorreto.');
         conferir(el('modal-texto').children.length === 3, 'Quebras de parágrafo perdidas.');
-        conferir(!el('modal-fonte').hidden && !el('modal-credito-imagem').hidden, 'Referências preenchidas não aparecem.');
+        conferir(!el('modal-fonte').hidden && el('modal-fonte').textContent.startsWith('Fonte das informações: '),
+            'A fonte das informações não aparece.');
+        conferir(el('modal-fonte-audio').hidden && el('modal-credito-imagem').hidden && el('modal-credito-foto').hidden,
+            'Fonte do som ou crédito vazio foram exibidos.');
         conferir(reproducoes.at(-1).src.endsWith('/gato-mourisco/audio.mp3'), 'Áudio incorreto.');
         clicar('btn-fechar-animal');
         conferir(pausas.includes(reproducoes.at(-1)), 'Fechar não interrompeu o áudio.');
+        avancarTempo(220);
+    });
+    await testar('Crédito aparece no rodapé e discretamente no canto da foto; fonte do som é opcional', async () => {
+        const anta = animais.find((item) => item.id === 'anta');
+        conferir(anta.creditoImagem === '© Fieker & Reis', 'Crédito da anta alterado.');
+        const cardAnta = el('card-anta');
+        const creditoCard = cardAnta.querySelector('.credito-foto');
+        conferir(creditoCard?.textContent === '© Fieker & Reis' && creditoCard.getAttribute('aria-hidden') === 'true',
+            'Crédito ausente do card ou lido em duplicidade.');
+        conferir(document.querySelectorAll('.card .credito-foto').length
+            === animais.filter((item) => (item.creditoImagem || '').trim()).length, 'Card sem crédito exibiu crédito.');
+        const areaCard = cardAnta.getBoundingClientRect();
+        const caixaCard = creditoCard.getBoundingClientRect();
+        const nomeCard = cardAnta.querySelector('.nome-animal').getBoundingClientRect();
+        conferir(caixaCard.height > caixaCard.width && areaCard.right - caixaCard.right < 20 && areaCard.bottom - caixaCard.bottom < 20
+            && caixaCard.top >= areaCard.top, 'O crédito não está no canto inferior direito do card.');
+        conferir(nomeCard.right <= caixaCard.left, 'O nome do animal avança sobre o crédito do card.');
+        anta.fonteAudio = 'Gravação de exemplo';
+        try {
+            clicar('card-anta');
+        } finally {
+            anta.fonteAudio = '';
+        }
+        await esperarQuadro();
+        conferir(el('modal-credito-imagem').textContent === 'Crédito da imagem: © Fieker & Reis', 'Crédito ausente do rodapé.');
+        conferir(el('modal-fonte-audio').textContent === 'Fonte do som: Gravação de exemplo', 'Fonte do som ausente.');
+        const credito = el('modal-credito-foto');
+        conferir(!credito.hidden && credito.textContent === '© Fieker & Reis' && credito.getAttribute('aria-hidden') === 'true',
+            'Crédito ausente da foto ou lido em duplicidade.');
+        const foto = el('modal-img').parentElement.getBoundingClientRect();
+        const caixa = credito.getBoundingClientRect();
+        conferir(getComputedStyle(credito).writingMode === 'vertical-rl' && caixa.height > caixa.width,
+            'O crédito não está na lateral da foto.');
+        conferir(caixa.right <= foto.right && foto.right - caixa.right < 20 && caixa.bottom <= foto.bottom
+            && foto.bottom - caixa.bottom < 20 && caixa.top >= foto.top, 'O crédito não está no canto inferior direito da foto.');
+        clicar('btn-fechar-animal');
+        avancarTempo(220);
+        clicar('card-coruja');
+        conferir(el('modal-credito-foto').hidden && el('modal-fonte-audio').hidden, 'Dados da anta permaneceram no animal seguinte.');
+        clicar('btn-fechar-animal');
         avancarTempo(220);
     });
     await testar('Foto alternativa e crédito vazio são respeitados', () => {
@@ -450,7 +501,7 @@ async function executarTestes() {
     await testar('Erros de mídia mostram mensagens', async () => {
         clicar('card-anta');
         reproducoes.at(-1).dispatchEvent(new Event('error'));
-        conferir(el('modal-status-som').textContent === 'Áudio ainda não adicionado', 'Falta mensagem de áudio.');
+        conferir(el('modal-status-som').textContent === 'Som indisponível', 'Falta mensagem de áudio.');
         clicar('btn-fechar-animal');
         avancarTempo(220);
         if (comVideo) {
@@ -459,7 +510,7 @@ async function executarTestes() {
         }
         await Promise.resolve();
     });
-    await testar('Inatividade só funciona na galeria: aviso em 105s e reinício em 120s', async () => {
+    await testar('Inatividade: aviso em 105s e reinício em 120s na galeria e nas falas após as boas-vindas', async () => {
         abrirGaleria();
         avancarTempo(104999);
         conferir(el('modal-inatividade').hidden, 'Aviso adiantado.');
@@ -471,11 +522,18 @@ async function executarTestes() {
         avancarTempo(1);
         conferir(tela('dante') && el('modal-inatividade').hidden, 'Não reiniciou em 120s.');
         avancarTempo(240000);
-        conferir(tela('dante') && el('modal-inatividade').hidden, 'Há inatividade na apresentação.');
+        conferir(tela('dante') && el('modal-inatividade').hidden, 'Há inatividade nas boas-vindas.');
         tocarTela();
-        avancarTempo(240000);
-        conferir(tela('dante') && el('modal-inatividade').hidden, 'Há inatividade na segunda fala do Dante.');
+        avancarTempo(104999);
+        conferir(el('modal-inatividade').hidden, 'Aviso adiantado na segunda fala.');
+        avancarTempo(1);
+        conferir(!el('modal-inatividade').hidden, 'A segunda fala do Dante não avisou a inatividade.');
+        await esperarQuadro();
+        avancarTempo(15000);
+        conferir(tela('dante') && estado.etapaDanteAtual === 0 && el('modal-inatividade').hidden,
+            'A segunda fala não voltou às boas-vindas.');
         if (comVideo) {
+            tocarTela();
             tocarTela();
             avancarTempo(240000);
             conferir(tela('video') && el('modal-inatividade').hidden, 'Há inatividade no vídeo.');
@@ -672,12 +730,25 @@ async function executarTestes() {
         const imagem = el('modal-img');
         imagem.dispatchEvent(new Event('error'));
         conferir(imagem.src.startsWith('data:image/svg+xml'), 'Foto do modal sem substituto.');
+        conferir(el('modal-credito-foto').hidden && !el('modal-credito-imagem').hidden,
+            'O crédito ficou sobre o substituto ou sumiu do rodapé.');
         const substituta = imagem.src;
         imagem.dispatchEvent(new Event('error'));
         conferir(imagem.src === substituta, 'Substituto falhou de forma recursiva.');
         const card = el('card-anta').querySelector('img');
         card.dispatchEvent(new Event('error'));
         conferir(card.src.startsWith('data:image/svg+xml'), 'Card sem substituto.');
+        conferir(!el('card-anta').querySelector('.credito-foto'), 'O crédito ficou sobre o substituto do card.');
+    });
+    await testar('Touchscreen: sem menu de toque longo, arrasto de imagem, zoom por gesto ou seleção', () => {
+        const imagem = document.querySelector('.imagem-card');
+        const menu = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
+        const arrasto = new Event('dragstart', { bubbles: true, cancelable: true });
+        conferir(!imagem.dispatchEvent(menu) && menu.defaultPrevented, 'O toque longo abre o menu do navegador.');
+        conferir(!imagem.dispatchEvent(arrasto), 'A imagem pode ser arrastada.');
+        const raiz = getComputedStyle(document.documentElement);
+        conferir(raiz.touchAction === 'pan-x pan-y' && raiz.overscrollBehaviorX === 'none', 'Zoom ou navegação por gesto continuam ativos.');
+        conferir(getComputedStyle(document.body).userSelect === 'none', 'Textos da interface podem ser selecionados.');
     });
     await testar('Galeria mantém o mosaico em telas grandes e cards uniformes em telas menores', () => {
         abrirGaleria();

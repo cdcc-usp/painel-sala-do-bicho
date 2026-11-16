@@ -11,7 +11,8 @@
     --texto-escuro: #17231f;
     --texto-suave: #d8e5df;
     --sombra: 0 18px 50px rgba(3, 20, 16, 0.28);
-    --fonte: "Segoe UI", Arial, Helvetica, sans-serif;
+    /* Fontes de emoji ao final garantem os ícones fora do Windows, se instaladas. */
+    --fonte: "Segoe UI", Arial, Helvetica, sans-serif, "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji";
     --tamanho-seta: clamp(80px, 4.5vw, 160px);
     --margem-seta: clamp(12px, 1vw, 32px);
     --espaco-lateral: calc(var(--tamanho-seta) + var(--margem-seta) * 2 + 16px);
@@ -28,6 +29,9 @@
 html {
     min-height: 100%;
     scroll-behavior: smooth;
+    /* Painel touchscreen: sem zoom por pinça ou toque duplo e sem voltar a página por gesto. */
+    touch-action: pan-x pan-y;
+    overscroll-behavior: none;
 }
 
 body {
@@ -39,6 +43,8 @@ body {
         linear-gradient(150deg, var(--verde-950), var(--verde-800));
     color: var(--branco);
     font-family: var(--fonte);
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 body.modal-aberto {
@@ -700,6 +706,11 @@ body.tutorial-ativo .rodape-versao {
     pointer-events: none;
 }
 
+/* O nome não avança sobre o crédito no canto inferior direito. */
+.card.com-credito .nome-animal {
+    right: clamp(30px, 1.6vw, 56px);
+}
+
 /* O card fica acima do escurecimento, enquanto Dante permanece em primeiro plano. */
 .card.alvo-tutorial,
 .card.alvo-tutorial:hover,
@@ -870,6 +881,7 @@ body.tutorial-ativo .rodape-versao {
 }
 
 .modal-hero {
+    position: relative;
     min-width: 0;
     overflow: hidden;
     border-radius: clamp(12px, calc(14 * var(--escala-animal)), 36px);
@@ -879,6 +891,33 @@ body.tutorial-ativo .rodape-versao {
     display: block;
     width: 100%;
     height: auto;
+}
+
+/* Crédito discreto na lateral da foto (card e modal), lido de baixo para cima no canto inferior direito. */
+.credito-foto {
+    --margem-credito: clamp(4px, 0.35vw, 14px);
+    position: absolute;
+    right: var(--margem-credito);
+    bottom: var(--margem-credito);
+    z-index: 2;
+    max-height: calc(100% - var(--margem-credito) * 2);
+    border-radius: 0.55em;
+    padding: 0.65em 0.3em;
+    background: rgba(0, 0, 0, 0.42);
+    color: rgba(255, 255, 255, 0.9);
+    font-size: clamp(0.625rem, 0.45vw, 1.1rem);
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    pointer-events: none;
+}
+
+.modal-hero .credito-foto {
+    --margem-credito: clamp(4px, calc(6 * var(--escala-animal)), 16px);
+    font-size: clamp(0.625rem, calc(9 * var(--escala-animal)), 1.4rem);
 }
 
 .modal-resumo {

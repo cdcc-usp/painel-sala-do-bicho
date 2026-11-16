@@ -11,7 +11,8 @@ const animais = [
         classeTamanho: '',
         descricao: 'É tipicamente solitário na natureza.\nÉ duas vezes maior que um gato doméstico.\nPossui coloração uniforme composta pelas cores cinza e vermelho.',
         fonte: 'https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/guiapredadores-pdf',
-        creditoImagem: 'teste'
+        fonteAudio: '',
+        creditoImagem: ''
     },
     {
         id: 'gafanhoto',
@@ -23,6 +24,7 @@ const animais = [
         classeTamanho: 'tamanho-alto',
         descricao: 'Tem ampla distribuição no Brasil, América do Sul e América Central.\nOs adultos apresentam coloração verde e amarela e as ninfas são negras com manchas vermelhas.\nSe alimentam de Solanáceas (grupo de plantas com flor do grupo das dicotiledôneas), como a Lobeira.',
         fonte: 'https://www.inaturalist.org/taxa/320746-Chromacris-speciosa | https://g1.globo.com/sp/campinas-regiao/terra-da-gente/fauna/noticia/2015/01/gafanhoto-soldado.html',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -35,6 +37,7 @@ const animais = [
         classeTamanho: '',
         descricao: 'Facilmente reconhecida pelo chocalho caudal.\nÉ uma espécie venenosa, apesar de não ser agressiva.\nPodem gerar cerca de 14 filhotes por gestação.',
         fonte: 'https://www.nationalgeographicbrasil.com/animais/2024/01/conheca-5-caracteristicas-da-cascavel-uma-das-cobras-mais-perigosas-do-mundo | https://www.inaturalist.org/taxa/30693-Crotalus-durissus | https://www.britannica.com/animal/rattlesnake#ref837078',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -47,6 +50,7 @@ const animais = [
         classeTamanho: 'tamanho-largo',
         descricao: 'Por se alimentarem exclusivamente de cupins e formigas, eles não apresentam dentes.\nSua língua possui 60 centímetros de comprimento.\nSão animais solitários.',
         fonte: 'https://www.inaturalist.org/taxa/47107-Myrmecophaga-tridactyla | https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/publicacoes/publicacoes-diversas/fauna-e-flora/Fogo_e_Fauna_da_Canastra_Guia_de_Mamiferos_compressed.pdf',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -60,6 +64,7 @@ const animais = [
         classeTamanho: 'tamanho-alto',
         descricao: 'É o maior canídeo da América do Sul.\nCaracterizado por pernas longas e finas e uma densa pelagem avermelhada.\nSeu habitat é, principalmente, campos abertos, com vegetação arbustiva e áreas florestais com dossel aberto.',
         fonte: 'https://www.inaturalist.org/taxa/42091-Chrysocyon-brachyurus | https://procarnivoros.org.br/animais/lobo-guara/',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -72,6 +77,7 @@ const animais = [
         classeTamanho: '',
         descricao: 'Marcado por toda a face na cor preta, assim como os pés e mãos, e o resto do corpo de cor amarronzada.\nPossui apenas um filho por ano.\nPodem ser geofágicos, se alimentando de solo às vezes.',
         fonte: 'https://www.inaturalist.org/taxa/43683-Callicebus-personatus | https://neprimateconservancy.org/masked-titi/',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -82,8 +88,9 @@ const animais = [
         cientifico: 'Rhinella marina',
         destaques: ['🐾 Grupo: Anfíbio', '🍽️ Alimentação: Onívora', '🕒 Hábito: Noturno'],
         classeTamanho: '',
-        descricao: 'Considerado como praga em regiões onde foi introduzido.\nPossui glândulas de veneno e os adultos e girinos são altamente tóxicos quando ingeridos.\nApresentam dimorfismo sexual, na qual, as fêmeas são maiores de cor sépia ou marrom, enquanto os machos são menores e mais claros.',
+        descricao: 'Considerado como praga em regiões onde foi introduzido.\nPossui glândulas de veneno e os adultos e girinos são altamente tóxicos quando ingeridos.\nApresentam dimorfismo sexual, no qual as fêmeas são maiores de cor sépia ou marrom, enquanto os machos são menores e mais claros.',
         fonte: 'https://www.inaturalist.org/taxa/553515-Rhinella-marina | https://riodejaneiroambiental.blogspot.com/2009/08/rhinella-icterica-sapo-cururu.html',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -96,6 +103,7 @@ const animais = [
         classeTamanho: 'tamanho-gigante',
         descricao: 'É um felino de médio porte nativo do continente americano.\nExcelente escaladora e nadadora, possui pelagem amarelada com rosetas e manchas pretas que garantem camuflagem na vegetação densa.',
         fonte: 'https://www.inaturalist.org/taxa/41980-Leopardus-pardalis | https://procarnivoros.org.br/animais/jaguatirica/',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -106,8 +114,9 @@ const animais = [
         cientifico: 'Cariama cristata',
         destaques: ['🐾 Grupo: Ave', '🍽️ Alimentação: Onívora', '🕒 Hábito: Diurno'],
         classeTamanho: 'tamanho-alto',
-        descricao: 'Não apresentam dimorfismo sexual, ou seja, os machos e fêmeas são iguais.\nSão monogâmicas\nPodem alcançar velocidades de até 25km/h antes de levantar voo.',
+        descricao: 'Não apresentam dimorfismo sexual, ou seja, os machos e fêmeas são iguais.\nSão monogâmicas.\nPodem alcançar velocidades de até 25km/h antes de levantar voo.',
         fonte: 'https://www.inaturalist.org/taxa/14-Cariama-cristata',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -120,6 +129,7 @@ const animais = [
         classeTamanho: '',
         descricao: 'São extensos cavadores, suas tocas chegam a ter 2,1 metros de profundidade.\nMachos são agressivos quando se trata de território, principalmente quando outro macho se aproxima da sua área de vida.',
         fonte: 'https://www.inaturalist.org/taxa/47075-Dasypus-novemcinctus',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -132,6 +142,7 @@ const animais = [
         classeTamanho: 'tamanho-gigante',
         descricao: 'Os cupins são a base da sua alimentação.\nUtilizam tocas de tatus abandonadas para criar seus filhotes.\nÉ uma raposa pequena, pesando apenas 4kg.',
         fonte: 'https://pt.wikipedia.org/wiki/Raposa-do-campo',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -144,7 +155,8 @@ const animais = [
         classeTamanho: '',
         descricao: 'Maior mamífero terrestre do Brasil.\nSua gestação pode durar 400 dias.\nPodem viver até 35 anos de idade.',
         fonte: 'https://www.inaturalist.org/taxa/43353-Tapirus-terrestris | https://prefeitura.pbh.gov.br/fundacao-de-parques-e-zoobotanica/informacoes/educacao-ambiental/datas-comemorativas/dia-mundial-da-anta | https://ipe.org.br/images/Uso-de-passagens-inferiores.pdf',
-        creditoImagem: ''
+        fonteAudio: '',
+        creditoImagem: '© Fieker & Reis'
     },
     {
         id: 'coruja',
@@ -155,8 +167,9 @@ const animais = [
         cientifico: 'Athene cunicularia',
         destaques: ['🐾 Grupo: Ave', '🍽️ Alimentação: Carnívora', '🕒 Hábito: Diurno e noturno'],
         classeTamanho: 'tamanho-alto',
-        descricao: 'Apresentam um voo suave e silencioso.\nOs machos são ligeiramente maiores que as fêmeas, sendo elas ligeiramente mais escuras que os machos, principalmente na face.\nAo qualquer sinal de perigo emitem um som forte, alto e estridente',
-        fonte: 'https://www.wikiaves.com.br/wiki/coruja-buraqueira?s[]=coruja&s[]=buraqueira',
+        descricao: 'Apresentam um voo suave e silencioso.\nOs machos são ligeiramente maiores que as fêmeas, sendo elas ligeiramente mais escuras que os machos, principalmente na face.\nA qualquer sinal de perigo, emitem um som forte, alto e estridente.',
+        fonte: 'https://www.wikiaves.com.br/wiki/coruja-buraqueira',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -167,8 +180,9 @@ const animais = [
         cientifico: 'Alouatta caraya',
         destaques: ['🐾 Grupo: Mamífero', '🍽️ Alimentação: Predominantemente folívora', '🕒 Hábito: Diurno'],
         classeTamanho: 'tamanho-alto',
-        descricao: 'Dimorfismo sexual, de modo que os machos são totalmente pretos e as fêmeas um coloração de castanho claro.\nVocalização principalmente para sinalizar a outros grupos a posse de determinado espaço.',
+        descricao: 'Apresentam dimorfismo sexual, de modo que os machos são totalmente pretos e as fêmeas têm coloração castanho-clara.\nVocalização principalmente para sinalizar a outros grupos a posse de determinado espaço.',
         fonte: 'https://www.inaturalist.org/taxa/43435-Alouatta-caraya',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -181,6 +195,7 @@ const animais = [
         classeTamanho: 'tamanho-alto',
         descricao: 'O terceiro maior felino do mundo.\nConhecida como Onça-Preta em indivíduos melânicos.\nApresentam a mordida mais forte entre todos os felinos.',
         fonte: 'https://www.inaturalist.org/taxa/41970-Panthera-onca | https://procarnivoros.org.br/animais/onca-pintada/',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -192,7 +207,8 @@ const animais = [
         destaques: ['🐾 Grupo: Ave', '🍽️ Alimentação: Onívora', '🕒 Hábito: Diurno'],
         classeTamanho: 'tamanho-alto',
         descricao: 'Para encontrar seus alimentos, começa a dar fortes pancadas, retirando lascas grandes de madeira e usando a longa língua (que tem cerdas nas pontas) para capturar formigas e insetos.\nVivem em pares ou em grupos familiares.\nAmbos (macho e fêmea) apresentam cuidado parental com a prole.',
-        fonte: 'https://www.wikiaves.com.br/wiki/pica-pau-de-banda-branca?s[]=dryocopus&s[]=lineatus',
+        fonte: 'https://www.wikiaves.com.br/wiki/pica-pau-de-banda-branca',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -203,8 +219,9 @@ const animais = [
         cientifico: 'Caiman latirostris',
         destaques: ['🐾 Grupo: Réptil', '🍽️ Alimentação: Carnívora', '🕒 Hábito: Noturno'],
         classeTamanho: 'tamanho-gigante',
-        descricao: 'Dentre os crocodilianos, possuem o focinho mais largo, vivendo aproximadamente cerca de 50 anos.\nO cuidado parental ocorre tanto pela parte da fêmea quanto do macho no primeiro ano de vida.',
+        descricao: 'Dentre os crocodilianos, possuem o focinho mais largo, vivendo cerca de 50 anos.\nO cuidado parental ocorre tanto pela parte da fêmea quanto do macho no primeiro ano de vida.',
         fonte: 'https://www.inaturalist.org/taxa/116518-Caiman-latirostris | https://prefeitura.pbh.gov.br/sites/default/files/estrutura-de-governo/fundacao-de-parques-e-zoobotanica/zoo-botanica/livro-colorir-vol-1_v2_digital.pdf',
+        fonteAudio: '',
         creditoImagem: ''
     },
     {
@@ -217,6 +234,7 @@ const animais = [
         classeTamanho: 'tamanho-largo',
         descricao: 'Mamífero com maior distribuição geográfica no Ocidente.\nÉ um importante predador de cervídeos.\nTem hábitos de um animal solitário.',
         fonte: 'https://www.inaturalist.org/taxa/42007-Puma-concolor',
+        fonteAudio: '',
         creditoImagem: ''
     }
 ];

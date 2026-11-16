@@ -12,8 +12,8 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   parâmetros de som e tempos em milissegundos. `video.ativo` está `false` para o
   lançamento sem vídeo. `Object.freeze` é superficial.
 - `js/dados.js`: array `animais`, contendo `id`, `nome`, `img`, `audio`,
-  `cientifico`, `destaques`, `classeTamanho`, `descricao`, `fonte`, `creditoImagem`
-  e `imgModal` opcional. Quebras `\n` na descrição viram parágrafos.
+  `cientifico`, `destaques`, `classeTamanho`, `descricao`, `fonte`, `fonteAudio`,
+  `creditoImagem` e `imgModal` opcional. Quebras `\n` na descrição viram parágrafos.
 - `js/main.js`: estado compartilhado em `estado`, mapeamento de IDs em `elementos`,
   inicialização em `DOMContentLoaded`, eventos globais, navegação e reinício.
 - `js/galeria.js`: cards e conteúdo do modal de animal.
@@ -56,7 +56,7 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   não há botão para pular. Ao fechar pelo X, o amarelo não reaparece: hover e
   foco comuns usam branco. Reiniciar cancela o lembrete e restaura as boas-vindas.
   A galeria usa `fundo-tutorial` enquanto Dante está ativo; permanece sem a
-  classe `ativa`, sem inatividade e com `inert` até a etapa interativa, quando
+  classe `ativa` e com `inert` até a etapa interativa, quando
   apenas o card iluminado é liberado. Tab fica nos controles e nesse card.
   As falas avançam por toque em qualquer lugar da tela, com exceção do card
   obrigatório. Início, Som e a seta do vídeo mantêm suas próprias ações.
@@ -106,14 +106,20 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   sem faixa lateral, corte ou distorção. Em telas estreitas, o cabeçalho é vertical.
   O X fica em um contêiner sem altura com `position: sticky` e permanece acessível
   ao rolar a descrição. A rolagem é zerada depois de abrir o modal, já visível.
-  Fonte e crédito da imagem ficam juntos no rodapé do conteúdo. `creditoImagem`
-  só aparece quando informado; creditar a foto exibida no modal (`imgModal`, quando
-  existir). O gato-mourisco contém `teste` no crédito; os outros 17 créditos estão
-  vazios. A fonte do gato-mourisco foi substituída por referência do ICMBio.
+  O rodapé do conteúdo reúne “Fonte das informações” (`fonte`), “Fonte do som”
+  (`fonteAudio`) e “Crédito da imagem” (`creditoImagem`); cada linha só aparece
+  quando informada. O crédito também aparece sobre a foto do card e do modal,
+  discreto, na vertical no canto inferior direito (`.credito-foto`, `aria-hidden`),
+  e some se a foto falhar e virar substituto. No card, `.com-credito` afasta o nome
+  do crédito. Creditar a foto exibida no modal (`imgModal`, quando existir); o card
+  usa o mesmo `creditoImagem`. Só a anta tem crédito (`© Fieker & Reis`), usado como exemplo
+  na regressão; os outros 17 e todas as fontes de som estão vazios. A fonte do gato-mourisco foi substituída por referência do ICMBio.
   Não preencher créditos por suposição.
-- Inatividade é monitorada apenas na galeria, por `pointerdown` e `keydown`.
-  Reinício após 120000ms sem interação; aviso nos últimos 15000ms (começa em
-  105000ms). Vídeo e apresentação não têm reinício por inatividade.
+- Inatividade é monitorada na galeria e nas falas do Dante após as boas-vindas
+  (`inatividadeMonitorada()`), por `pointerdown` e `keydown`. Reinício após
+  120000ms sem interação; aviso nos últimos 15000ms (começa em 105000ms).
+  Boas-vindas e vídeo não têm reinício por inatividade. Continuar o aviso
+  preserva a fala ou a etapa interativa atual.
   Voltar à aba/janela não renova o prazo: `verificarInatividade()` confere o
   horário ao retomar o foco/visibilidade e antes de registrar interação. Se os
   callbacks ficaram suspensos e o prazo venceu, retorna às boas-vindas completas.
@@ -142,6 +148,10 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   do HTML; os eventos devem usar esses mesmos IDs.
 - Preservar os estados CSS `ativa`, `ativo`, `hidden`, `oculto` e `modal-aberto`.
   O fechamento de modal usa 220ms no JS, correspondente à transição CSS.
+- O painel é touchscreen público: `touch-action: pan-x pan-y`, `overscroll-behavior:
+  none` e `user-select: none` impedem zoom, navegação por gesto e seleção;
+  `contextmenu` e `dragstart` são cancelados em `main.js`. Mensagens de falha
+  exibidas ao visitante não citam o projeto ou a manutenção.
 - Manter caminhos relativos e mídias locais: deve funcionar offline e ao abrir
   `index.html` diretamente. Preservar substitutos de imagens e mensagens de erro.
 - Conferir ordem, quantidade e posicionamento dos cards ao alterar o catálogo.
@@ -194,12 +204,13 @@ O runner confere a área útil exata e usa um frame quando o Firefox limita a ja
   e `🕒 Hábito`. Grupo usa mamífero, ave, réptil, anfíbio ou inseto; alimentação
   fica no feminino e hábito indica o período de atividade. Os destaques foram
   padronizados e completados com referências; as descrições foram preservadas.
-  Múltiplas fontes ficam no campo `fonte`, separadas por ` | `.
+  Múltiplas fontes ficam no campo `fonte` (ou `fonteAudio`), separadas por ` | `.
   Não completar ou revisar conteúdo científico por suposição.
 - Todas as imagens e áudios referenciados atualmente existem. O vídeo local está em
   `assets/videos/fauna.mp4`, preservado mas desativado; não há capa de vídeo na galeria.
 - Há mídias não referenciadas, inclusive de ema, tico-tico e urutu. Não removê-las
-  automaticamente. `tico-tico/imagem.jpg` contém uma imagem WebP.
+  automaticamente. As pastas `.comments/` guardam metadados de autoria (por exemplo,
+  o fotógrafo da coruja) e devem ser preservadas. `tico-tico/imagem.jpg` contém uma imagem WebP.
 - Os três modais contêm o foco e o devolvem à origem ao fechar. O aviso de
   inatividade pode sobrepor o animal, preservando seu conteúdo ao continuar.
 - `README.md`, `TUTORIAL-DE-ALTERACOES.md` e `assets/LEIA-ME.txt` descrevem a

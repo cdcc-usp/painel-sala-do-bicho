@@ -174,6 +174,10 @@ def executar(opcoes):
             'datareporting.policy.dataSubmissionEnabled': False,
             'focusmanager.testmode': True,
             'layout.frame_rate': 60,
+            # O Firefox 156 abre uma página privilegiada que recusa ExecuteScript.
+            'browser.startup.page': 0,
+            'browser.startup.homepage': 'about:blank',
+            'browser.newtabpage.enabled': False,
         }
         (pasta / 'user.js').write_text(''.join(
             f'user_pref({json.dumps(chave)}, {json.dumps(valor)});\n'
