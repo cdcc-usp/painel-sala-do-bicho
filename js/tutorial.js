@@ -43,6 +43,8 @@ function atualizarTutorialDante() {
             cardTutorial.classList.add('alvo-tutorial');
             cardTutorial.setAttribute('aria-describedby', 'complemento-dante');
             cardTutorial.focus({ preventScroll: true });
+            // Em telas menores a galeria rola: o card sobe para a área livre acima do Dante.
+            cardTutorial.scrollIntoView({ block: 'start', behavior: 'instant' });
             temporizadorDestaque = window.setTimeout(() => {
                 cardTutorial?.classList.add('aguardando-toque');
             }, CONFIG.tutorial.tempoDestaqueMs);

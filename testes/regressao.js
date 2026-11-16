@@ -151,7 +151,7 @@ async function executarTestes() {
         conferir(tela('dante') && el('fala-dante').textContent === CONFIG.dante.etapas[0].fala, 'Não iniciou nas boas-vindas.');
         conferir(el('indicador-etapas').children.length === 4, 'O progresso não contém as quatro falas ativas.');
         conferir(el('tela-galeria').classList.contains('fundo-tutorial') && el('tela-galeria').inert, 'A galeria não está visível e bloqueada sob o tutorial.');
-        clicar('card-gato-mourisco');
+        clicar(`card-${CONFIG.tutorial.animalId}`);
         conferir(el('modal-animal').hidden, 'Um card abriu antes da etapa interativa.');
         conferir(el('btn-inicio').classList.contains('oculto'), 'Início deve ficar oculto na primeira fala.');
         tocarTela();
@@ -193,7 +193,7 @@ async function executarTestes() {
         const etapaObrigatoria = estado.etapaDanteAtual;
         for (const id of ['tela-dante', 'fala-dante', 'imagem-dante', 'balao-dante', 'card-anta']) clicar(id);
         conferir(tela('dante') && estado.etapaDanteAtual === etapaObrigatoria && el('modal-animal').hidden,
-            'Tocar fora do gato-mourisco pulou a etapa obrigatória.');
+            'Tocar fora do card iluminado pulou a etapa obrigatória.');
         concluirTutorial();
     });
     await testar('Enter e Espaço avançam as falas sem repetir nem pular o toque obrigatório', () => {
@@ -350,6 +350,23 @@ async function executarTestes() {
         avancarTempo(220);
         conferir(el('modal-animal').hidden, 'O fundo não voltou a fechar a ficha após a orientação.');
     });
+    await testar('Card iluminado fica visível e livre para o toque, acima do Dante', async () => {
+        abrirPassoInterativo();
+        await esperarQuadro();
+        const card = el(`card-${CONFIG.tutorial.animalId}`);
+        const area = card.getBoundingClientRect();
+        conferir(area.top >= 0 && area.bottom <= innerHeight, 'O card iluminado ficou fora da tela.');
+        const centro = document.elementFromPoint(area.left + area.width / 2, area.top + area.height / 2);
+        conferir(card.contains(centro), `O card iluminado está coberto por ${centro?.className || centro?.id}.`);
+        // O Dante não recebe toques, mas não pode esconder o card. A caixa da imagem tem
+        // margem transparente acima das orelhas, então só o centro do card precisa ficar fora dela.
+        const dante = el('imagem-dante').getBoundingClientRect();
+        const [x, y] = [area.left + area.width / 2, area.top + area.height / 2];
+        conferir(x < dante.left || x > dante.right || y < dante.top || y > dante.bottom, 'O Dante cobre o card iluminado.');
+        conferir(document.activeElement === card, 'O foco não está no card iluminado.');
+        reiniciarExperiencia();
+        conferir(scrollY === 0, 'Reiniciar não voltou a galeria ao topo.');
+    });
     await testar('Tutorial exige tocar no animal; inatividade na etapa avisa e pode ser continuada', async () => {
         abrirPassoInterativo();
         const etapaInterativa = estado.etapaDanteAtual;
@@ -400,7 +417,7 @@ async function executarTestes() {
         conferir(el('modal-texto').children.length === 3, 'Quebras de parágrafo perdidas.');
         conferir(!el('modal-fonte').hidden && el('modal-fonte').textContent.startsWith('Fonte das informações: '),
             'A fonte das informações não aparece.');
-        conferir(el('modal-fonte-audio').textContent === 'Fonte do som: https://www.youtube.com/watch?v=iBmmnGVO0bM',
+        conferir(el('modal-fonte-audio').textContent === 'Fonte do som: https://www.youtube.com/shorts/PBo4ZPu15ec',
             'A fonte do som não aparece.');
         conferir(el('modal-credito-imagem').textContent === 'Crédito da imagem: © Leandro Kenji Takao'
             && !el('modal-credito-foto').hidden, 'O crédito do gato-mourisco não aparece.');

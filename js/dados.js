@@ -11,7 +11,7 @@ const animais = [
         classeTamanho: '',
         descricao: 'É tipicamente solitário na natureza.\nÉ duas vezes maior que um gato doméstico.\nPossui coloração uniforme composta pelas cores cinza e vermelho.',
         fonte: 'https://www.gov.br/icmbio/pt-br/centrais-de-conteudo/guiapredadores-pdf',
-        fonteAudio: 'https://www.youtube.com/watch?v=iBmmnGVO0bM',
+        fonteAudio: 'https://www.youtube.com/shorts/PBo4ZPu15ec',
         creditoImagem: '© Leandro Kenji Takao'
     },
     {

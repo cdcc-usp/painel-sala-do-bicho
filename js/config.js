@@ -17,7 +17,7 @@ const CONFIG = Object.freeze({
     },
 
     tutorial: {
-        animalId: 'gato-mourisco',
+        animalId: 'tatu-galinha',
         tempoDestaqueMs: 8000
     },
 

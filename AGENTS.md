@@ -51,7 +51,10 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 - Dante e seu balão aparecem sobre o mosaico escurecido, na parte inferior da
   janela, como um tutorial de jogo. As falas existentes foram preservadas e a
   etapa de toque tem `interativa: true`. `CONFIG.tutorial.animalId` define o card
-  iluminado (gato-mourisco); após `tempoDestaqueMs: 8000`, o contorno pulsa.
+  iluminado (tatu-galinha; antes era o gato-mourisco, trocado pelo áudio); após
+  `tempoDestaqueMs: 8000`, o contorno pulsa. O selo “Toque aqui” fica no canto
+  superior esquerdo, longe do crédito. Em telas até 1100px, a galeria ganha espaço
+  inferior no tutorial e o card iluminado rola para o topo, acima do Dante.
   Tocar no card é obrigatório para abrir o animal com som;
   não há botão para pular. Ao fechar pelo X, o amarelo não reaparece: hover e
   foco comuns usam branco. Reiniciar cancela o lembrete e restaura as boas-vindas.
@@ -76,7 +79,7 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   e o texto “Fechar e explorar”, recebe foco e descreve a orientação com
   `aria-describedby`. Fechar remove a fala e o destaque; aberturas seguintes são
   normais. Um toque na orientação também a dispensa sem fechar a ficha; o toque
-  usado para abrir o gato-mourisco não pode dispensá-la na mesma ação.
+  usado para abrir o card iluminado não pode dispensá-la na mesma ação.
   Início/inatividade limpam a orientação e a restauram na nova sessão.
   O aviso de inatividade pode sobrepor essa etapa; continuar a preserva.
   `prepararImagemDante()` prepara a imagem e o substituto nas duas apresentações.

@@ -42,13 +42,15 @@ O alvo e a demora até o contorno pulsar ficam em `CONFIG.tutorial`:
 
 ```js
 tutorial: {
-    animalId: 'gato-mourisco',
+    animalId: 'tatu-galinha',
     tempoDestaqueMs: 8000
 },
 ```
 
-O alvo padrão é o primeiro card, visível também em telas menores. Ao trocar o
-animal, confira se ele permanece visível e livre do balão em todas as resoluções.
+O alvo é o tatu-galinha. Em telas até 1100px, a galeria rola durante o tutorial
+e o card iluminado sobe para a área livre acima do Dante. Ao trocar o animal,
+confira nas capturas que ele permanece visível e livre do Dante e do balão em
+todas as resoluções; a regressão também verifica isso.
 O lembrete é cancelado ao concluir ou reiniciar. A preferência do sistema
 por movimento reduzido desativa a pulsação contínua.
 

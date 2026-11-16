@@ -14,7 +14,7 @@ da tela, com um ícone de mão e uma onda suave de toque. O movimento
 respeita a preferência do sistema por movimento reduzido.
 Não há botões de conversa; Enter e Espaço também permitem avançar.
 A etapa de toque
-ilumina o card do gato-mourisco; após 8 segundos de espera, o contorno pulsa.
+ilumina o card do tatu-galinha; após 8 segundos de espera, o contorno pulsa.
 É preciso tocar nele para abrir o animal com seu som. Nessa primeira janela,
 Dante aparece sobreposto à frente do painel de informações, no mesmo estilo das etapas anteriores,
 e orienta a fechar pelo X destacado e escolher outros animais. A fala fica

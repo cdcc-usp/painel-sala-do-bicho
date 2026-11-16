@@ -148,7 +148,7 @@ def verificarInteracoes(navegador, recarregar):
         etapa = js('return estado.etapaDanteAtual;')
         tocarTela()
         clicar('#fala-dante')
-        conferir(js('return estado.etapaDanteAtual;') == etapa, 'Um toque fora do card pulou o gato-mourisco.')
+        conferir(js('return estado.etapaDanteAtual;') == etapa, 'Um toque fora do card iluminado pulou a etapa.')
         clicar('.alvo-tutorial')
         esperar("getComputedStyle(document.getElementById('modal-animal')).opacity === '1'", 'Animal guiado não abriu.')
         conferir(js("return !document.getElementById('guia-fechar-animal').hidden;"), 'O toque do card dispensou a última fala.')
@@ -157,7 +157,7 @@ def verificarInteracoes(navegador, recarregar):
                  'A última fala não foi dispensada por toque mantendo a ficha aberta.')
         fecharAnimal()
 
-    testar('Entrada real: fala, teclado e orientação final avançam; gato-mourisco continua obrigatório', avancarTutorial)
+    testar('Entrada real: fala, teclado e orientação final avançam; card iluminado continua obrigatório', avancarTutorial)
 
     def catalogo():
         abrirGaleria()

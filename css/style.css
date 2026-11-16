@@ -724,11 +724,16 @@ body.tutorial-ativo .rodape-versao {
     transition: none;
 }
 
+.card.alvo-tutorial {
+    scroll-margin-top: var(--espaco-superior);
+}
+
+/* À esquerda, o selo não disputa o canto direito com o crédito da foto. */
 .card.alvo-tutorial::before {
     content: "Toque aqui";
     position: absolute;
     top: clamp(8px, 0.7vw, 28px);
-    right: clamp(8px, 0.7vw, 28px);
+    left: clamp(8px, 0.7vw, 28px);
     z-index: 3;
     border-radius: 999px;
     padding: 7px 12px;
@@ -1226,6 +1231,11 @@ body.tutorial-ativo .rodape-versao {
         height: auto;
         min-height: 100vh;
         min-height: 100dvh;
+    }
+
+    /* Espaço extra para o card iluminado poder subir acima do Dante. */
+    body.tutorial-ativo .tela-galeria {
+        padding-bottom: 60vh;
     }
 
     .grid-container {
