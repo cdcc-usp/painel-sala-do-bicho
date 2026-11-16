@@ -113,12 +113,15 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
   (`fonteAudio`) e “Crédito da imagem” (`creditoImagem`); cada linha só aparece
   quando informada. O crédito também aparece sobre a foto do card e do modal,
   discreto, na vertical no canto inferior direito (`.credito-foto`, `aria-hidden`),
-  e some se a foto falhar e virar substituto. No card, `.com-credito` afasta o nome
+  sempre em uma coluna (`white-space: nowrap`); `ajustarCreditoFoto()`, acionada por um
+  `ResizeObserver` no card e na foto do modal, reduz a fonte dos créditos longos até caberem.
+  Some se a foto falhar e virar substituto. No card, `.com-credito` afasta o nome
   do crédito. Creditar a foto exibida no modal (`imgModal`, quando existir); o card
   usa o mesmo `creditoImagem`. Créditos usam `© Nome`; obras com licença aberta
   incluem licença e origem (jacaré: CC BY-SA 3.0, via Wikimedia Commons). Os 18 animais
   têm crédito confirmado pelo usuário; a seriema credita J. C. Motta-Junior na foto
-  atual e a coruja segue os metadados `.comments` das originais.
+  atual e a coruja segue os metadados `.comments` das originais. O fotógrafo
+  José Carlos Motta-Junior aparece sempre abreviado: `© J. C. Motta-Junior`.
   Segundo C2PA, as imagens usadas de sauá, gafanhoto, pica-pau e coruja (card) foram
   geradas por IA (`gpt-image`); as de cascavel e onça-parda parecem recriações das
   originais. A decisão sobre manter essas imagens ou indicar IA no crédito está pendente. Os 18 animais
@@ -128,7 +131,9 @@ vídeo e galeria de animais com informações e sons. Versão em `CONFIG.versao`
 - Inatividade é monitorada na galeria e nas falas do Dante após as boas-vindas
   (`inatividadeMonitorada()`), por `pointerdown` e `keydown`. Reinício após
   120000ms sem interação; aviso nos últimos 15000ms (começa em 105000ms).
-  Boas-vindas e vídeo não têm reinício por inatividade. Continuar o aviso
+  O vídeo não tem reinício por inatividade. As boas-vindas só têm quando o som foi
+  alterado (`somAlterado()`): o reinício restaura o som para o próximo visitante.
+  `alternarSom()` reagenda o prazo, pois o toque chega antes da troca. Continuar o aviso
   preserva a fala ou a etapa interativa atual.
   Voltar à aba/janela não renova o prazo: `verificarInatividade()` confere o
   horário ao retomar o foco/visibilidade e antes de registrar interação. Se os
@@ -209,13 +214,20 @@ O runner confere a área útil exata e usa um frame quando o Firefox limita a ja
 - Textos de 17 animais foram atualizados com o documento fornecido pelo usuário;
   o jacaré agora é Jacaré-de-Papo-Amarelo (`Caiman latirostris`). A jaguatirica
   mantém o texto anterior, pois não constava no documento. Urutu, ema, tico-tico
-  e rã-touro ficam para depois, conforme confirmado pelo usuário.
+  e rã-touro ficam para depois, conforme confirmado pelo usuário. O sapo-cururu
+  passou a `Rhinella icterica` por decisão do usuário; a fonte do iNaturalist e a
+  frase sobre praga onde foi introduzido ainda se referem a *Rhinella marina*.
 - Todos os animais têm três destaques, nesta ordem: `🐾 Grupo`, `🍽️ Alimentação`
   e `🕒 Hábito`. Grupo usa mamífero, ave, réptil, anfíbio ou inseto; alimentação
   fica no feminino e hábito indica o período de atividade. Os destaques foram
   padronizados e completados com referências; as descrições foram preservadas.
   Múltiplas fontes ficam no campo `fonte` (ou `fonteAudio`), separadas por ` | `.
   Não completar ou revisar conteúdo científico por suposição.
+- Os 18 áudios do catálogo foram normalizados para −16 LUFS integrado, pico −1,5 dBTP
+  (ffmpeg `loudnorm` em duas passagens), mantendo taxa de amostragem, canais e duração.
+  Normalizar da mesma forma ao trocar um áudio (comando em `TUTORIAL-DE-ALTERACOES.md`).
+- `docs/CHECKUP-2026-11-16.md` registra o checkup completo da versão 1.1.0 e o
+  que foi decidido sobre cada ponto.
 - Todas as imagens e áudios referenciados atualmente existem. O vídeo local está em
   `assets/videos/fauna.mp4`, preservado mas desativado; não há capa de vídeo na galeria.
 - Há mídias não referenciadas, inclusive de ema, tico-tico e urutu. Não removê-las

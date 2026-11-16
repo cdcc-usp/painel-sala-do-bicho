@@ -23,6 +23,9 @@ Animais:
   exibida no modal (aparece no rodapé e sobre as fotos do card e do modal). fonteAudio informa a
   origem da gravação do som. Não invente créditos ou licenças.
 
+Os áudios estão normalizados para -16 LUFS (pico -1,5 dBTP). Ao trocar um áudio,
+normalize-o da mesma forma (veja TUTORIAL-DE-ALTERACOES.md, seção 5).
+
 Ao substituir um arquivo, mantenha o caminho ou atualize a configuração/catálogo.
 Confira a reprodução real no navegador do painel e sem conexão com a internet.
 A aplicação mostra substitutos de imagens e mensagens quando uma mídia falha.

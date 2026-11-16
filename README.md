@@ -24,10 +24,15 @@ o X fecha a ficha. Ao fechar pelo X, a orientação termina e a galeria fica liv
 amarelo do tutorial. As próximas janelas abrem normalmente, sem repetir a ajuda.
 O efeito respeita a preferência por movimento reduzido.
 
-A galeria contém 18 animais com foto, informações e som. O botão Início restaura
+A galeria contém 18 animais com foto, informações e som. Cada foto traz o crédito
+discreto na lateral, sempre em uma coluna; créditos longos diminuem para caber.
+O painel de informações mostra também a fonte das informações e a fonte do som. O botão Início restaura
 as boas-vindas e o progresso da apresentação; a galeria não tem seta de retorno.
-Após dois minutos sem toque ou tecla na galeria, o painel reinicia; o aviso aparece
-nos últimos 15 segundos. O mediador pode pausar esse reinício usando um PIN local.
+Após dois minutos sem toque ou tecla na galeria ou nas falas do Dante depois das
+boas-vindas, o painel reinicia; o aviso aparece nos últimos 15 segundos. Nas
+boas-vindas, o reinício só acontece se o som tiver sido desligado ou religado:
+assim o próximo visitante não encontra o painel mudo. O mediador pode pausar esse
+reinício na galeria usando um PIN local.
 Voltar à aba ou à janela não renova o prazo. Se o navegador suspender os
 temporizadores, ao retomar o painel ele confere o horário e restaura as boas-vindas
 quando os dois minutos já passaram.
@@ -158,15 +163,23 @@ Todos os caminhos de mídia atualmente referenciados existem no repositório.
 Existem também imagens e sons de animais fora do catálogo e originais não usados;
 esses arquivos foram preservados.
 
+Os 18 áudios foram normalizados para o mesmo volume percebido (−16 LUFS, pico
+−1,5 dBTP). Ao trocar um áudio, normalize-o da mesma forma; o comando está no
+[tutorial de alterações](TUTORIAL-DE-ALTERACOES.md#5-alterar-um-animal).
+
 Fontes, créditos, licenças e conteúdo científico ainda precisam de revisão humana.
 Todos os animais têm `creditoImagem` e fonte do som (`fonteAudio`). Algumas
 imagens foram geradas ou recriadas por IA (ver AGENTS.md); a indicação disso no
 crédito ainda depende de decisão da equipe. As pastas `.comments/` de algumas mídias
 guardam metadados de autoria e devem ser consultadas ao preencher os créditos.
 Não invente atribuições. A fonte do gato-mourisco foi substituída por referência do
-ICMBio. Todos os animais têm os destaques `🐾 Grupo`, `🍽️ Alimentação` e `🕒 Hábito`,
+ICMBio. O sapo-cururu passou a *Rhinella icterica*; a fonte do iNaturalist e a frase
+sobre praga em regiões onde foi introduzido ainda se referem a *Rhinella marina*. Todos os animais têm os destaques `🐾 Grupo`, `🍽️ Alimentação` e `🕒 Hábito`,
 com referências para os dados completados ou corrigidos. As descrições foram
 preservadas; a jaguatirica mantém a descrição anterior ao documento dos demais animais.
+
+O checkup completo da versão 1.1.0, com as decisões sobre cada ponto, está em
+[docs/CHECKUP-2026-11-16.md](docs/CHECKUP-2026-11-16.md).
 
 O histórico de alterações está no Git (`git log`). Não há arquivo de changelog,
 build, lint ou CI configurados.

@@ -122,11 +122,16 @@ function registrarAtividade() {
     agendarInatividade();
 }
 
-// A galeria e as falas após as boas-vindas reiniciam; boas-vindas e vídeo não.
+// A galeria e as falas após as boas-vindas reiniciam; o vídeo não. As boas-vindas
+// só reiniciam com o som alterado, para o próximo visitante não encontrar o painel mudo.
 function inatividadeMonitorada() {
     if (estado.reinicioAutomaticoPausado) return false;
     return estado.telaAtual === 'galeria'
-        || (estado.telaAtual === 'dante' && estado.etapaDanteAtual > 0);
+        || (estado.telaAtual === 'dante' && (estado.etapaDanteAtual > 0 || somAlterado()));
+}
+
+function somAlterado() {
+    return CONFIG.restaurarSomAoReiniciar && estado.somAtivo !== CONFIG.somInicialmenteAtivo;
 }
 
 function verificarInatividade() {

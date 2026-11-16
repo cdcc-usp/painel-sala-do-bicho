@@ -1,6 +1,6 @@
 // Configurações que podem ser alteradas sem mexer na lógica da aplicação.
 const CONFIG = Object.freeze({
-    versao: '1.0.0',
+    versao: '1.1.0',
 
     // Reinicia após 2 minutos sem interação, com aviso nos últimos 15 segundos.
     tempoInatividadeMs: 120000,

@@ -1,6 +1,12 @@
 'use strict';
 
+// Créditos ficam em uma coluna: ao mudar o tamanho da foto ou do card, o texto é reajustado.
+const observadorCreditos = new ResizeObserver((entradas) => {
+    entradas.forEach((entrada) => ajustarCreditoFoto(entrada.target.querySelector('.credito-foto')));
+});
+
 function configurarGaleria() {
+    observadorCreditos.observe(elementos['modal-credito-foto'].parentElement);
     elementos['btn-fechar-animal'].addEventListener('click', fecharAnimal);
     elementos['modal-animal'].addEventListener('click', (evento) => {
         if (evento.target === elementos['modal-animal'] && elementos['guia-fechar-animal'].hidden) fecharAnimal();
@@ -35,6 +41,7 @@ function gerarCards() {
             creditoFoto.textContent = credito;
             card.classList.add('com-credito');
             card.appendChild(creditoFoto);
+            observadorCreditos.observe(card);
         }
         // Um substituto não leva o crédito da foto original.
         prepararImagemAnimal(imagem, animal.img, animal.nome, () => {
@@ -45,6 +52,18 @@ function gerarCards() {
         fragmento.appendChild(card);
     });
     elementos['grid-animais'].replaceChildren(fragmento);
+}
+
+function ajustarCreditoFoto(credito) {
+    if (!credito || credito.hidden) return;
+    credito.style.fontSize = '';
+    // Texto e espaçamento usam em: reduzir a fonte na proporção do excesso faz o texto caber.
+    for (let tentativa = 0; tentativa < 3 && credito.clientHeight; tentativa += 1) {
+        const excesso = credito.scrollHeight / credito.clientHeight;
+        if (excesso <= 1) return;
+        const tamanho = parseFloat(getComputedStyle(credito).fontSize) / excesso;
+        credito.style.fontSize = `${Math.floor(tamanho * 10) / 10}px`;
+    }
 }
 
 function abrirAnimal(animalId) {
@@ -62,6 +81,7 @@ function abrirAnimal(animalId) {
     // O crédito sobre a foto é discreto e some se a foto for trocada pelo substituto.
     elementos['modal-credito-foto'].textContent = credito;
     elementos['modal-credito-foto'].hidden = !credito;
+    ajustarCreditoFoto(elementos['modal-credito-foto']);
     prepararImagemAnimal(elementos['modal-img'], animal.imgModal || animal.img, animal.nome, () => {
         elementos['modal-credito-foto'].hidden = true;
     });

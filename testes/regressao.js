@@ -477,6 +477,28 @@ async function executarTestes() {
         conferir(el('modal-img').src.endsWith('/coruja/imagem-modal.png'), 'Foto alternativa ignorada.');
         conferir(el('modal-credito-foto').textContent === '© J. C. Motta-Junior', 'Crédito da foto alternativa ausente.');
     });
+    await testar('Créditos ficam em uma coluna, sem cortes, nos cards e na foto do modal', async () => {
+        abrirGaleria();
+        await esperarQuadro();
+        await esperarQuadro();
+        const umaColuna = (credito) => {
+            const estilo = getComputedStyle(credito);
+            return estilo.whiteSpace === 'nowrap' && credito.offsetWidth < parseFloat(estilo.fontSize) * 2.5
+                && credito.scrollHeight <= credito.clientHeight + 1;
+        };
+        const quebrados = [...document.querySelectorAll('.card .credito-foto')].filter((credito) => !umaColuna(credito));
+        conferir(!quebrados.length, `Crédito fora de uma coluna: ${quebrados.map((credito) => credito.parentElement.id).join(', ')}.`);
+        // O jacaré tem o crédito mais longo do catálogo.
+        clicar('card-jacare');
+        for (let quadro = 0; quadro < 120 && !(el('modal-img').complete && el('modal-img').naturalWidth); quadro += 1) {
+            await esperarQuadro();
+        }
+        await esperarQuadro();
+        await esperarQuadro();
+        conferir(umaColuna(el('modal-credito-foto')), 'O crédito do jacaré quebrou em colunas na foto do modal.');
+        clicar('btn-fechar-animal');
+        avancarTempo(220);
+    });
     await testar('X continua visível e recebe toque depois de rolar a descrição do animal', async () => {
         abrirGaleria();
         clicar('card-bugio');
@@ -563,6 +585,25 @@ async function executarTestes() {
             avancarTempo(240000);
             conferir(tela('video') && el('modal-inatividade').hidden, 'Há inatividade no vídeo.');
         }
+    });
+    await testar('Som alterado nas boas-vindas é restaurado após o prazo de inatividade', async () => {
+        reiniciarExperiencia();
+        clicar('btn-som');
+        conferir(!estado.somAtivo && estado.etapaDanteAtual === 0, 'O som não foi desligado nas boas-vindas.');
+        avancarTempo(104999);
+        conferir(el('modal-inatividade').hidden, 'Aviso adiantado nas boas-vindas.');
+        avancarTempo(1);
+        conferir(!el('modal-inatividade').hidden, 'Som desligado nas boas-vindas não avisou a inatividade.');
+        await esperarQuadro();
+        avancarTempo(15000);
+        conferir(tela('dante') && estado.etapaDanteAtual === 0 && estado.somAtivo && el('modal-inatividade').hidden,
+            'O som não foi restaurado nas boas-vindas.');
+        avancarTempo(240000);
+        conferir(el('modal-inatividade').hidden, 'Som restaurado manteve a inatividade nas boas-vindas.');
+        clicar('btn-som');
+        clicar('btn-som');
+        avancarTempo(240000);
+        conferir(el('modal-inatividade').hidden && estado.somAtivo, 'Religar o som manteve o prazo nas boas-vindas.');
     });
     await testar('Voltar ao navegador preserva o prazo e reinicia nas boas-vindas do CDCC', () => {
         abrirGaleria();

@@ -84,10 +84,11 @@ Os valores estão em milissegundos:
 - `15000` = aviso nos últimos 15 segundos (aparece após 1 minuto e 45 segundos).
 
 O temporizador funciona na galeria e nas falas do Dante após as boas-vindas,
-inclusive no toque guiado. Ele é renovado a cada `pointerdown` ou `keydown`,
+inclusive no toque guiado. Nas boas-vindas, ele só funciona quando o som foi
+alterado: o reinício restaura o som para o próximo visitante. Ele é renovado a cada `pointerdown` ou `keydown`,
 inclusive dentro dos modais de animal e PIN. Quando o aviso aparece, o botão
 “Continuar explorando” ou Escape inicia um novo prazo e mantém a fala atual.
-As boas-vindas e o vídeo não têm reinício por inatividade. Ao reiniciar, a aplicação fecha os modais,
+O vídeo não tem reinício por inatividade. Ao reiniciar, a aplicação fecha os modais,
 para as mídias, retorna à primeira fala do Dante e restaura o estado inicial do som.
 Voltar à aba ou recuperar o foco da janela apenas confere o prazo existente,
 sem renová-lo. Se os callbacks ficaram suspensos em segundo plano e o prazo
@@ -174,14 +175,28 @@ um navegador externo e saia do quiosque.
 Preencha `fonteAudio` com a origem da gravação (acervo, autor e/ou licença).
 Ela aparece como “Fonte do som”, abaixo de “Fonte das informações”.
 
+Os áudios do catálogo estão normalizados para −16 LUFS, pico −1,5 dBTP. Ao trocar um
+áudio, normalize-o para manter o volume igual aos demais. Com o ffmpeg instalado:
+
+```bash
+ffmpeg -i original.mp3 -af loudnorm=I=-16:TP=-1.5:LRA=11:print_format=summary \
+    -c:a libmp3lame -q:a 2 assets/animais/<id>/audio.mp3
+```
+
+Para maior precisão, use duas passagens: rode primeiro com `print_format=json` e
+`-f null -`, e informe os valores medidos (`measured_I`, `measured_TP`,
+`measured_LRA`, `measured_thresh`, `offset`) com `linear=true` na segunda.
+Mantenha a taxa de amostragem original (`-ar`) e confira o resultado ouvindo.
+
 Preencha `creditoImagem` com o nome do fotógrafo, instituição e/ou licença da
 foto, conforme as informações da mídia, por exemplo `'© Fieker & Reis'`. Esse
 crédito aparece no rodapé do painel de informações e também sobre a foto do card
 e do painel, de forma discreta, na vertical no canto inferior direito. Quando
 `imgModal` for uma foto de outro autor, o card exibirá o mesmo crédito; nesse
-caso, use a mesma foto nos dois ou informe ambos os autores. Prefira textos curtos:
-créditos longos ocupam mais de uma coluna sobre a foto. Campos vazios não são
-exibidos.
+caso, use a mesma foto nos dois ou informe ambos os autores. Sobre a foto, o
+crédito fica sempre em uma coluna; textos longos têm a fonte reduzida até caber,
+por isso prefira textos curtos. Campos vazios não são exibidos. Use a mesma grafia
+para o mesmo autor (por exemplo, sempre `'© J. C. Motta-Junior'`).
 Quando houver `imgModal`, informe o crédito dessa foto. Não invente atribuições.
 
 O painel de informações usa a variável CSS `--escala-animal`, baseada na altura
@@ -240,7 +255,7 @@ somInicialmenteAtivo: false
 Altere apenas esta linha em `js/config.js`:
 
 ```js
-versao: '1.0.0'
+versao: '1.1.0'
 ```
 
 Use, por exemplo:

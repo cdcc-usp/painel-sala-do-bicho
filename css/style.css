@@ -898,7 +898,8 @@ body.tutorial-ativo .rodape-versao {
     height: auto;
 }
 
-/* Crédito discreto na lateral da foto (card e modal), lido de baixo para cima no canto inferior direito. */
+/* Crédito discreto na lateral da foto (card e modal), lido de baixo para cima no canto inferior direito.
+   Fica sempre em uma coluna; ajustarCreditoFoto() reduz a fonte dos textos longos. */
 .credito-foto {
     --margem-credito: clamp(4px, 0.35vw, 14px);
     position: absolute;
@@ -906,6 +907,8 @@ body.tutorial-ativo .rodape-versao {
     bottom: var(--margem-credito);
     z-index: 2;
     max-height: calc(100% - var(--margem-credito) * 2);
+    overflow: hidden;
+    white-space: nowrap;
     border-radius: 0.55em;
     padding: 0.65em 0.3em;
     background: rgba(0, 0, 0, 0.42);

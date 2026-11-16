@@ -100,6 +100,8 @@ function alternarSom() {
         pararAudioAnimal();
         if (estado.animalAberto) atualizarStatusSom('Som desativado', false);
     }
+    // Nas boas-vindas, o som alterado passa a ter prazo para ser restaurado.
+    agendarInatividade();
 }
 
 function atualizarControleSom() {

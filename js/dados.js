@@ -85,7 +85,7 @@ const animais = [
         nome: 'Sapo-Cururu',
         img: 'assets/animais/sapo-cururu/imagem.jpg',
         audio: 'assets/animais/sapo-cururu/audio.mp3',
-        cientifico: 'Rhinella marina',
+        cientifico: 'Rhinella icterica',
         destaques: ['🐾 Grupo: Anfíbio', '🍽️ Alimentação: Onívora', '🕒 Hábito: Noturno'],
         classeTamanho: '',
         descricao: 'Considerado como praga em regiões onde foi introduzido.\nPossui glândulas de veneno e os adultos e girinos são altamente tóxicos quando ingeridos.\nApresentam dimorfismo sexual, no qual as fêmeas são maiores de cor sépia ou marrom, enquanto os machos são menores e mais claros.',
@@ -209,7 +209,7 @@ const animais = [
         descricao: 'Para encontrar seus alimentos, começa a dar fortes pancadas, retirando lascas grandes de madeira e usando a longa língua (que tem cerdas nas pontas) para capturar formigas e insetos.\nVivem em pares ou em grupos familiares.\nAmbos (macho e fêmea) apresentam cuidado parental com a prole.',
         fonte: 'https://www.wikiaves.com.br/wiki/pica-pau-de-banda-branca',
         fonteAudio: 'https://www.youtube.com/watch?v=1lT_Df9KAk8',
-        creditoImagem: '© José Carlos Motta-Junior'
+        creditoImagem: '© J. C. Motta-Junior'
     },
     {
         id: 'jacare',
