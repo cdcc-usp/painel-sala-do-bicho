@@ -417,7 +417,7 @@ async function executarTestes() {
         conferir(el('modal-texto').children.length === 3, 'Quebras de parágrafo perdidas.');
         conferir(!el('modal-fonte').hidden && el('modal-fonte').textContent.startsWith('Fonte das informações: '),
             'A fonte das informações não aparece.');
-        conferir(el('modal-fonte-audio').textContent === 'Fonte do som: https://www.youtube.com/shorts/PBo4ZPu15ec',
+        conferir(el('modal-fonte-audio').textContent === 'Fonte do som: Criadouro de Fortaleza',
             'A fonte do som não aparece.');
         conferir(el('modal-credito-imagem').textContent === 'Crédito da imagem: © Leandro Kenji Takao'
             && !el('modal-credito-foto').hidden, 'O crédito do gato-mourisco não aparece.');
