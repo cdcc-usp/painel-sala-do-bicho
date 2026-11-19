@@ -78,7 +78,7 @@ const animais = [
         descricao: 'Marcado por toda a face na cor preta, assim como os pés e mãos, e o resto do corpo de cor amarronzada.\nPossui apenas um filho por ano.\nPodem ser geofágicos, se alimentando de solo às vezes.',
         fonte: 'https://www.inaturalist.org/taxa/43683-Callicebus-personatus | https://neprimateconservancy.org/masked-titi/',
         fonteAudio: 'Criadouro de Fortaleza',
-        creditoImagem: '© Rodrigo Z. Damiano'
+        creditoImagem: '© Gabrielly Benaducci Tolentino, CC BY-NC, via iNaturalist'
     },
     {
         id: 'sapo-cururu',
